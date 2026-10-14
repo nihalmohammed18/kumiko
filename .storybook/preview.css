@@ -1,5 +1,7 @@
-@import "tailwindcss";
+/* No automatic scanning: Storybook gets the classes an installed app gets (styles.css scans src/), plus this folder's. */
+@import "tailwindcss" source(none);
 @import "../src/styles.css";
+@source "./";
 
 /* Storybook only. Apps put these on their own <body> when they adopt Kumiko. */
 body {
