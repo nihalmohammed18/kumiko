@@ -6,7 +6,7 @@ design/out
 examples/next/.next
 examples/next/node_modules
 examples/next/package-lock.json
-.vitest-attachments
+.vitest
 __screenshots__/**/*-actual.png
 __screenshots__/**/*-diff.png
 *.tgz

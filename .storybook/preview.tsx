@@ -7,6 +7,7 @@ const arabicLabels = { close: "إغلاق", loading: "جارٍ التحميل" }
 declare global {
   interface Window {
     __kumikoSkipVrt?: boolean;
+    __kumikoVrtPage?: boolean;
   }
 }
 
@@ -18,6 +19,7 @@ const withKumiko: Decorator = (Story, { globals, parameters }) => {
   root.dir = dir;
   root.lang = dir === "rtl" ? "ar" : "en";
   window.__kumikoSkipVrt = parameters.vrt === false;
+  window.__kumikoVrtPage = parameters.vrt === "page";
   return (
     <KumikoProvider direction={dir} labels={dir === "rtl" ? arabicLabels : undefined}>
       <Story />

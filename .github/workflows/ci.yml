@@ -72,7 +72,7 @@ jobs:
           name: screenshots-${{ matrix.mode }}
           path: |
             **/__screenshots__/**/*.png
-            .vitest-attachments
+            .vitest/attachments
           if-no-files-found: ignore
 
   consumer:
