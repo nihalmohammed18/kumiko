@@ -1,5 +1,5 @@
 import { afterEach, expect, inject } from "vitest";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 
 declare module "vitest" {
   export interface ProvidedContext {
@@ -13,6 +13,9 @@ declare module "vitest" {
 afterEach(async ({ task }) => {
   if (!inject("vrt") || task.result?.errors?.length || window.__kumikoSkipVrt) return;
   await document.fonts.ready;
+  // Storybook's userEvent is simulated, and browsers only draw focus rings after real keyboard input. One real key
+  // press makes the focused element look the way a keyboard user sees it.
+  if (document.activeElement && document.activeElement !== document.body) await userEvent.keyboard("{Shift}");
   // Just the story, unless it opens something outside it (dialogs, menus, toasts): those set parameters.vrt = "page".
   const story = document.querySelector<HTMLElement>("[data-kumiko-story]");
   const target = window.__kumikoVrtPage || !story ? document.body : story;
