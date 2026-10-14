@@ -10,7 +10,7 @@ export const buttonStyles = tv({
   base: [
     "inline-flex shrink-0 cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap",
     "rounded-control border font-medium transition-[background-color,border-color,color,box-shadow,translate]",
-    "duration-fast ease-kumiko outline-none focus-visible:outline-2 focus-visible:outline-offset-2",
+    "duration-fast ease-kumiko focus-visible:outline-2 focus-visible:outline-offset-2",
     "focus-visible:outline-focus active:not-data-disabled:translate-y-px",
     "data-disabled:cursor-not-allowed data-disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0",
   ],

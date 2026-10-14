@@ -1,5 +1,6 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
 import { KumikoProvider } from "../src/provider.tsx";
+import { mirrorDemoStates } from "./demo-states.ts";
 import "./preview.css";
 
 const arabicLabels = { close: "إغلاق", loading: "جارٍ التحميل" };
@@ -7,20 +8,26 @@ const arabicLabels = { close: "إغلاق", loading: "جارٍ التحميل" }
 declare global {
   interface Window {
     __kumikoSkipVrt?: boolean;
+    __kumikoVrtPage?: boolean;
   }
 }
 
 /** Applies the toolbar's theme and direction the way an app would: a class and `dir` on <html>. */
 const withKumiko: Decorator = (Story, { globals, parameters }) => {
+  mirrorDemoStates();
   const dir = globals.dir === "rtl" ? "rtl" : "ltr";
   const root = document.documentElement;
   root.classList.toggle("dark", globals.theme === "dark");
   root.dir = dir;
   root.lang = dir === "rtl" ? "ar" : "en";
   window.__kumikoSkipVrt = parameters.vrt === false;
+  window.__kumikoVrtPage = parameters.vrt === "page";
   return (
     <KumikoProvider direction={dir} labels={dir === "rtl" ? arabicLabels : undefined}>
-      <Story />
+      {/* The screenshot target; the padding keeps focus rings inside the picture. */}
+      <div data-kumiko-story className="p-3">
+        <Story />
+      </div>
     </KumikoProvider>
   );
 };

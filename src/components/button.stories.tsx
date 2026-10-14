@@ -84,6 +84,27 @@ export const IconOnly: Story = {
   ),
 };
 
+/** Hover, keyboard focus and pressed, drawn statically so screenshots catch changes to them. */
+export const States: Story = {
+  render: (args) => (
+    <div className="grid gap-3">
+      {(["primary", "secondary", "outline", "ghost", "danger", "link"] as const).map((variant) => (
+        <div key={variant} className="flex flex-wrap items-center gap-3">
+          <Button {...args} variant={variant} data-demo="hover">
+            Hover
+          </Button>
+          <Button {...args} variant={variant} data-demo="focus">
+            Focus
+          </Button>
+          <Button {...args} variant={variant} data-demo="active">
+            Pressed
+          </Button>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
 export const Disabled: Story = {
   args: { variant: "primary", disabled: true },
   play: async ({ args, canvas, userEvent }) => {
@@ -118,7 +139,10 @@ export const ClickRunsAction: Story = {
 export const KeyboardRunsAction: Story = {
   play: async ({ args, canvas, userEvent }) => {
     await userEvent.tab();
-    await expect(canvas.getByRole("button", { name: "Save changes" })).toHaveFocus();
+    const button = canvas.getByRole("button", { name: "Save changes" });
+    await expect(button).toHaveFocus();
+    // Keyboard focus must draw a ring. (A base "outline-none" once hid it: Tailwind's outline-2 reuses its style.)
+    await expect(getComputedStyle(button).outlineStyle).toBe("solid");
     await userEvent.keyboard("{Enter}");
     await userEvent.keyboard(" ");
     await expect(args.onClick).toHaveBeenCalledTimes(2);

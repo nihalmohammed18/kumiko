@@ -13,5 +13,8 @@ declare module "vitest" {
 afterEach(async ({ task }) => {
   if (!inject("vrt") || task.result?.errors?.length || window.__kumikoSkipVrt) return;
   await document.fonts.ready;
-  await expect.element(page.elementLocator(document.body)).toMatchScreenshot(`${task.name}-${inject("mode")}`);
+  // Just the story, unless it opens something outside it (dialogs, menus, toasts): those set parameters.vrt = "page".
+  const story = document.querySelector<HTMLElement>("[data-kumiko-story]");
+  const target = window.__kumikoVrtPage || !story ? document.body : story;
+  await expect.element(page.elementLocator(target)).toMatchScreenshot(`${task.name}-${inject("mode")}`);
 });
