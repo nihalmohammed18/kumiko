@@ -1,0 +1,892 @@
+<title>Kumiko directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="__FONTS_HREF__">
+<script>
+  (() => {
+    var ids = __DIRECTION_IDS__;
+    var h = (location.hash || "").slice(1);
+    document.documentElement.dataset.direction = ids.indexOf(h) >= 0 ? h : ids[0];
+  })();
+</script>
+<style>
+/* Layout: a sticky control bar, then one long page for the chosen direction: intro, app screen, component sheet. */
+/*__TOKENS__*/
+:root {
+  --brand: var(--b-brand, var(--d-brand));
+  --brand-fg: var(--b-brand-fg, var(--d-brand-fg));
+  --brand-hover: color-mix(in oklab, var(--brand) 84%, var(--fg));
+  --brand-subtle: color-mix(in oklab, var(--brand) 12%, var(--surface));
+  --brand-text: color-mix(in oklab, var(--brand) 78%, var(--fg));
+  --hover: color-mix(in oklab, var(--fg) 6%, transparent);
+  --selected: color-mix(in oklab, var(--brand) 9%, transparent);
+  --r-avatar: 999px;
+  --icon-stroke: 1.75;
+  --page-bg: var(--canvas);
+}
+:root[data-direction="porcelain"], :root[data-direction="kumiko"], :root[data-direction="oxblood"] { --icon-stroke: 1.5; }
+:root[data-direction="poster"] { --icon-stroke: 2.25; --r-avatar: 0px; }
+:root[data-direction="instrument"] { --r-avatar: 4px; }
+:root[data-direction="kumiko"] { --r-avatar: 2px; }
+:root[data-direction="oxblood"] { --page-bg: radial-gradient(1200px 600px at 85% -10%, color-mix(in oklab, var(--d-brand) 16%, transparent), transparent 70%), var(--canvas); }
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--page-bg); background-attachment: fixed; color: var(--fg); font: 400 var(--fs-body)/1.55 var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3, h4, p { margin: 0; }
+a { color: var(--brand-text); text-underline-offset: 3px; }
+.num, td.num, .tabular { font-variant-numeric: tabular-nums; }
+:root[data-direction="instrument"] .num { font-family: var(--font-mono); font-size: .92em; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: var(--icon-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.i--lg { width: 20px; height: 20px; }
+[dir="rtl"] .flip { transform: scaleX(-1); }
+.display { font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); font-stretch: var(--display-stretch); text-transform: var(--display-transform); line-height: 1.05; text-wrap: balance; }
+.label { font-family: var(--label-font); text-transform: var(--label-transform); letter-spacing: var(--label-tracking); font-size: var(--label-size); font-weight: var(--label-weight); color: var(--muted); }
+[dir="rtl"] .label, [dir="rtl"] .display { letter-spacing: 0; text-transform: none; }
+.muted { color: var(--muted); }
+
+/* Control bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in oklab, var(--canvas) 88%, transparent); backdrop-filter: blur(10px); border-bottom: var(--bw) solid var(--line); }
+.bar__in { max-width: 1280px; margin-inline: auto; padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.bar__name { font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.mark { width: 18px; height: 18px; display: grid; grid-template: 1fr 1fr / 1fr 1fr; gap: 2px; }
+.mark span { background: var(--brand); border-radius: 1px; }
+.mark span:nth-child(2) { background: var(--accent); }
+.dirs { display: flex; gap: 4px; overflow-x: auto; min-width: 0; flex: 1 1 420px; scrollbar-width: none; }
+.dirs button, .seg button { border: var(--bw) solid transparent; background: none; padding: 6px 10px; border-radius: var(--r-control); cursor: pointer; white-space: nowrap; color: var(--muted); font-weight: 500; }
+.dirs button:hover, .seg button:hover { color: var(--fg); background: var(--hover); }
+.dirs button[aria-pressed="true"], .seg button[aria-pressed="true"] { color: var(--fg); background: var(--surface); border-color: var(--line); }
+:root[data-direction="poster"] .dirs button[aria-pressed="true"], :root[data-direction="poster"] .seg button[aria-pressed="true"] { background: var(--fg); color: var(--canvas); }
+.dirs button:focus-visible, .seg button:focus-visible, .bar select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.seg { display: inline-flex; gap: 2px; padding: 2px; border: var(--bw) solid var(--line); border-radius: calc(var(--r-control) + 2px); }
+.seg button { padding: 4px 10px; }
+.bar select { height: 32px; border: var(--bw) solid var(--line-strong); border-radius: var(--r-control); background: var(--fill); padding-inline: 8px; }
+.bar__ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* Page */
+.page { max-width: 1280px; margin-inline: auto; padding-inline: 16px; padding-block: 32px 96px; display: grid; gap: 56px; }
+@media (min-width: 720px) { .page { padding-inline: 24px; } }
+.intro { display: grid; gap: 20px; }
+.intro h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); }
+.intro p.lede { font-size: 1.15rem; max-width: 62ch; color: var(--muted); }
+:root[data-direction="poster"] .intro h1 { font-size: clamp(3.4rem, 11vw, 8.5rem); }
+.specs { display: flex; flex-wrap: wrap; gap: 8px; }
+.spec { border: var(--bw) solid var(--line); border-radius: var(--r-control); padding: 4px 10px; font-size: .8125rem; color: var(--muted); background: var(--surface); }
+.spec b { color: var(--fg); font-weight: 600; }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+.sw { display: grid; gap: 6px; font-size: .75rem; color: var(--muted); }
+.sw i { display: block; height: 44px; border-radius: var(--r-control); border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent); }
+.sw b { color: var(--fg); font-weight: 500; }
+.specimen { display: grid; gap: 6px; }
+.specimen .ar { font-size: 1.25rem; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 12px; border-bottom: var(--bw) solid var(--line); }
+.section-head h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
+:root[data-direction="kumiko"] .section-head { border-bottom: 3px double var(--line-strong); }
+:root[data-direction="poster"] .section-head { border-bottom: 4px solid var(--fg); }
+
+/* Surfaces */
+.card { background: var(--surface); border: var(--card-border); border-radius: var(--r-card); box-shadow: var(--card-shadow); }
+:root[data-direction="oxblood"] .card { background: color-mix(in oklab, var(--surface) 78%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.pad { padding: calc(16px * var(--space)); }
+.stack { display: grid; gap: 12px; }
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.grow { flex: 1 1 auto; min-width: 0; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--h-control); padding-inline: 14px; border-radius: var(--r-control); border: var(--bw) solid transparent; font-weight: 500; line-height: 1.1; cursor: pointer; white-space: nowrap; text-decoration: none; transition: background-color var(--dur) ease, color var(--dur) ease, border-color var(--dur) ease, box-shadow var(--dur) ease, transform var(--dur) ease; }
+.btn--primary { background: var(--brand); color: var(--brand-fg); }
+.btn--primary:hover, .btn--primary.is-hover { background: var(--brand-hover); }
+.btn--secondary { background: var(--surface); color: var(--fg); border-color: var(--line); }
+.btn--secondary:hover, .btn--secondary.is-hover { background: color-mix(in oklab, var(--fg) 5%, var(--surface)); }
+.btn--outline { background: transparent; color: var(--fg); border-color: var(--line-strong); }
+.btn--outline:hover, .btn--outline.is-hover { background: var(--hover); }
+.btn--ghost { background: transparent; color: var(--fg); }
+.btn--ghost:hover, .btn--ghost.is-hover { background: var(--hover); }
+.btn--danger { background: var(--danger); color: var(--danger-fg); }
+.btn--danger:hover, .btn--danger.is-hover { background: color-mix(in oklab, var(--danger) 86%, var(--fg)); }
+.btn--link { background: none; color: var(--brand-text); padding-inline: 2px; min-height: 0; text-decoration: underline; text-underline-offset: 3px; }
+.btn:focus-visible, .btn.is-focus { outline: 2px solid var(--focus); outline-offset: 2px; }
+.btn:active, .btn.is-active { transform: translateY(1px); }
+.btn[disabled] { opacity: .4; cursor: not-allowed; transform: none; }
+.btn--sm { min-height: calc(var(--h-control) - 8px); padding-inline: 10px; font-size: .875em; }
+.btn--lg { min-height: calc(var(--h-control) + 8px); padding-inline: 20px; font-size: 1.05em; }
+.btn--icon { width: var(--h-control); padding: 0; }
+.btn--icon.btn--sm { width: calc(var(--h-control) - 8px); }
+:root[data-direction="poster"] .btn { text-transform: uppercase; letter-spacing: .03em; font-weight: 700; border-color: var(--fg); }
+:root[data-direction="poster"] .btn--secondary, :root[data-direction="poster"] .btn--outline { background: var(--canvas); }
+:root[data-direction="poster"] .btn--secondary:hover, :root[data-direction="poster"] .btn--outline:hover, :root[data-direction="poster"] .btn--ghost:hover, :root[data-direction="poster"] .btn.is-hover:not(.btn--primary):not(.btn--danger) { background: var(--fg); color: var(--canvas); }
+:root[data-direction="poster"] .btn--primary:hover, :root[data-direction="poster"] .btn--primary.is-hover { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+:root[data-direction="poster"] .btn--ghost, :root[data-direction="poster"] .btn--link { border-color: transparent; }
+:root[data-direction="poster"] .btn--danger { border-color: var(--danger); }
+:root[data-direction="oxblood"] .btn--primary { box-shadow: 0 0 0 1px color-mix(in oklab, var(--brand) 60%, transparent), 0 8px 24px -6px color-mix(in oklab, var(--brand) 55%, transparent); }
+:root[data-direction="oxblood"] .btn:focus-visible, :root[data-direction="oxblood"] .btn.is-focus { outline: none; box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--focus), 0 0 18px 2px color-mix(in oklab, var(--focus) 45%, transparent); }
+:root[data-direction="porcelain"] .btn--secondary { border-color: transparent; background: var(--brand-subtle); color: var(--brand-text); }
+:root[data-direction="instrument"] .btn { font-weight: 600; }
+.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-inline-end-color: transparent; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin, .skel { animation: none !important; } * { transition-duration: 0ms !important; } }
+
+/* Forms */
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .field .flabel { font-weight: 500; font-size: .9375em; }
+.hint { color: var(--muted); font-size: .8125rem; }
+.err { color: var(--danger); font-size: .8125rem; display: flex; gap: 6px; align-items: center; }
+.input { display: flex; align-items: center; gap: 8px; width: 100%; min-height: var(--h-control); padding-inline: 12px; border: var(--bw) solid var(--line-strong); border-radius: var(--r-control); background: var(--fill); color: var(--fg); transition: border-color var(--dur), box-shadow var(--dur); }
+.input input, .input textarea { border: 0; outline: 0; background: none; width: 100%; min-width: 0; padding: 0; }
+input.input, textarea.input { display: block; }
+.input::placeholder, .input input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
+.input:hover, .input.is-hover { border-color: color-mix(in oklab, var(--line-strong) 55%, var(--fg)); }
+.input:focus-within, .input.is-focus, input.input:focus, textarea.input:focus { outline: 2px solid var(--focus); outline-offset: -1px; border-color: var(--focus); }
+:root[data-direction="oxblood"] .input:focus-within, :root[data-direction="oxblood"] .input.is-focus { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--focus) 30%, transparent); }
+.input[aria-invalid="true"], .input.is-invalid { border-color: var(--danger); }
+.input.is-invalid:focus-within { outline-color: var(--danger); }
+.input.is-disabled { background: var(--surface); color: var(--muted); border-style: dashed; }
+textarea.input { min-height: 104px; padding-block: 10px; resize: vertical; line-height: 1.5; }
+.input .i { color: var(--muted); }
+.select-btn { justify-content: space-between; cursor: pointer; text-align: start; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px 2px 8px; border-radius: var(--r-control); background: var(--brand-subtle); color: var(--brand-text); font-size: .8125rem; font-weight: 500; white-space: nowrap; }
+:root[data-direction="poster"] .chip { background: var(--fg); color: var(--canvas); }
+.chip button { border: 0; background: none; padding: 0; display: grid; cursor: pointer; color: inherit; }
+.grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 20px; }
+.span-all { grid-column: 1 / -1; }
+
+/* Choices */
+.choice { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; min-height: 24px; }
+.box, .dot { width: 18px; height: 18px; flex: none; display: grid; place-items: center; border: var(--bw) solid var(--line-strong); background: var(--fill); color: var(--brand-fg); transition: background-color var(--dur), border-color var(--dur); }
+.box { border-radius: calc(var(--r-control) * .6); }
+.dot { border-radius: 50%; }
+.box .i { width: 12px; height: 12px; stroke-width: 3; }
+.is-checked .box, .is-mixed .box { background: var(--brand); border-color: var(--brand); }
+.is-checked .dot { border: 5px solid var(--brand); background: var(--fill); }
+.choice.is-focus .box, .choice.is-focus .dot { outline: 2px solid var(--focus); outline-offset: 2px; }
+.choice.is-disabled { opacity: .45; cursor: not-allowed; }
+.switch { width: 38px; height: 22px; flex: none; border-radius: 999px; background: var(--line-strong); position: relative; transition: background-color var(--dur); }
+.switch::after { content: ""; position: absolute; inset-block-start: 3px; inset-inline-start: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--canvas); transition: inset-inline-start var(--dur); }
+.is-on .switch { background: var(--brand); }
+.is-on .switch::after { inset-inline-start: 19px; background: var(--brand-fg); }
+:root[data-direction="kumiko"] .switch, :root[data-direction="kumiko"] .switch::after, :root[data-direction="poster"] .switch, :root[data-direction="poster"] .switch::after { border-radius: 0; }
+:root[data-direction="instrument"] .switch, :root[data-direction="instrument"] .switch::after { border-radius: 3px; }
+.slider { position: relative; height: 22px; display: flex; align-items: center; }
+.slider__track { position: absolute; inset-inline: 0; height: 4px; border-radius: 999px; background: color-mix(in oklab, var(--fg) 14%, transparent); }
+.slider__range { position: absolute; height: 4px; border-radius: 999px; background: var(--brand); }
+.slider__thumb { position: absolute; width: 18px; height: 18px; margin-inline-start: -9px; border-radius: 50%; background: var(--fill); border: 2px solid var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+:root[data-direction="kumiko"] .slider__thumb, :root[data-direction="poster"] .slider__thumb { border-radius: 0; }
+.numfield { display: inline-flex; align-items: stretch; border: var(--bw) solid var(--line-strong); border-radius: var(--r-control); background: var(--fill); overflow: hidden; min-height: var(--h-control); }
+.numfield button { border: 0; background: none; width: var(--h-control); display: grid; place-items: center; cursor: pointer; color: var(--fg); }
+.numfield button:hover { background: var(--hover); }
+.numfield span { min-width: 48px; display: grid; place-items: center; border-inline: var(--bw) solid var(--line); font-variant-numeric: tabular-nums; }
+.drop { border: var(--bw) dashed var(--line-strong); border-radius: var(--r-card); padding: 18px; display: grid; justify-items: center; gap: 6px; text-align: center; background: color-mix(in oklab, var(--fg) 2%, transparent); }
+.drop.is-over { border-color: var(--brand); background: var(--brand-subtle); }
+.files { display: grid; gap: 8px; }
+.file { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: center; padding: 8px 10px; border: var(--bw) solid var(--line); border-radius: var(--r-control); background: var(--fill); }
+.file .progress { grid-column: 2 / 3; }
+
+/* Feedback */
+.alert { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; padding: 12px 14px; border-radius: var(--r-card); border: var(--bw) solid color-mix(in oklab, var(--tone) 35%, transparent); background: var(--tone-subtle); }
+.alert .i { color: var(--tone); margin-top: 2px; }
+.alert b { font-weight: 600; }
+.alert p { grid-column: 2; color: var(--fg); font-size: .9375em; }
+.tone-success { --tone: var(--success); --tone-subtle: var(--success-subtle); --tone-fg: var(--success-fg); }
+.tone-warning { --tone: var(--warning); --tone-subtle: var(--warning-subtle); --tone-fg: var(--warning-fg); }
+.tone-danger { --tone: var(--danger); --tone-subtle: var(--danger-subtle); --tone-fg: var(--danger-fg); }
+.tone-info { --tone: var(--info); --tone-subtle: var(--info-subtle); --tone-fg: var(--info-fg); }
+:root[data-direction="poster"] .alert { border: 2px solid var(--fg); border-inline-start: 8px solid var(--tone); background: var(--canvas); }
+:root[data-direction="instrument"] .alert { border-inline-start: 3px solid var(--tone); }
+.banner { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 10px 16px; background: var(--brand); color: var(--brand-fg); border-radius: var(--r-card); }
+.banner .btn--outline { color: var(--brand-fg); border-color: color-mix(in oklab, var(--brand-fg) 60%, transparent); min-height: calc(var(--h-control) - 8px); }
+.banner .btn--outline:hover { background: color-mix(in oklab, var(--brand-fg) 14%, transparent); }
+.toast { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--raised); border: var(--bw) solid var(--line); border-radius: var(--r-overlay); box-shadow: var(--shadow-overlay); max-width: 420px; }
+:root[data-direction="poster"] .toast { border: 2px solid var(--fg); }
+:root[data-direction="graphite"] .toast, :root[data-direction="instrument"] .toast { background: var(--fg); color: var(--canvas); border-color: var(--fg); }
+:root[data-direction="graphite"] .toast .btn--link, :root[data-direction="instrument"] .toast .btn--link { color: var(--canvas); }
+:root[data-direction="graphite"] .toast .btn--ghost, :root[data-direction="instrument"] .toast .btn--ghost { color: var(--canvas); }
+:root[data-direction="graphite"] .toast .ticon, :root[data-direction="instrument"] .toast .ticon { color: var(--canvas); }
+.toast .grow b { display: block; font-weight: 600; }
+.toast .grow span { font-size: .875em; opacity: .85; }
+.ticon { color: var(--tone, var(--fg)); display: grid; }
+.progress { height: 6px; border-radius: 999px; background: color-mix(in oklab, var(--fg) 12%, transparent); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--brand); border-radius: inherit; }
+:root[data-direction="kumiko"] .progress, :root[data-direction="poster"] .progress { border-radius: 0; }
+:root[data-direction="poster"] .progress { height: 10px; border: 2px solid var(--fg); background: var(--canvas); }
+.ring { --v: 72; width: 56px; height: 56px; border-radius: 50%; background: conic-gradient(var(--brand) calc(var(--v) * 1%), color-mix(in oklab, var(--fg) 12%, transparent) 0); display: grid; place-items: center; }
+.ring::after { content: attr(data-v) "%"; width: 44px; height: 44px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-size: .75rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.skel { background: linear-gradient(90deg, color-mix(in oklab, var(--fg) 7%, transparent) 25%, color-mix(in oklab, var(--fg) 13%, transparent) 50%, color-mix(in oklab, var(--fg) 7%, transparent) 75%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; border-radius: var(--r-control); }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.empty { display: grid; justify-items: center; text-align: center; gap: 10px; padding: 32px 20px; border: var(--bw) dashed var(--line-strong); border-radius: var(--r-card); }
+.empty .art { width: 64px; height: 64px; display: grid; place-items: center; border-radius: var(--r-card); background: var(--brand-subtle); color: var(--brand-text); }
+:root[data-direction="kumiko"] .empty { border-style: solid; background-image: repeating-linear-gradient(60deg, transparent 0 14px, color-mix(in oklab, var(--line) 70%, transparent) 14px 15px), repeating-linear-gradient(-60deg, transparent 0 14px, color-mix(in oklab, var(--line) 70%, transparent) 14px 15px), repeating-linear-gradient(0deg, transparent 0 24px, color-mix(in oklab, var(--line) 70%, transparent) 24px 25px); }
+:root[data-direction="kumiko"] .empty > :not(.btn) { background: var(--canvas); padding-inline: 6px; }
+:root[data-direction="kumiko"] .empty .art { background: var(--surface); border: 1px solid var(--line); }
+
+/* Overlays and navigation */
+.pop { background: var(--raised); border: var(--bw) solid var(--line); border-radius: var(--r-overlay); box-shadow: var(--shadow-overlay); padding: 4px; min-width: 220px; }
+:root[data-direction="poster"] .pop { border: 2px solid var(--fg); }
+:root[data-direction="oxblood"] .pop { background: color-mix(in oklab, var(--raised) 85%, transparent); backdrop-filter: blur(16px); }
+.item { display: flex; align-items: center; gap: 10px; min-height: 34px; padding-inline: 10px; border-radius: calc(var(--r-overlay) - 4px); cursor: pointer; }
+.item:hover, .item.is-hl { background: var(--hover); }
+:root[data-direction="poster"] .item:hover, :root[data-direction="poster"] .item.is-hl { background: var(--fg); color: var(--canvas); }
+:root[data-direction="porcelain"] .item.is-hl, :root[data-direction="oxblood"] .item.is-hl { background: var(--brand-subtle); }
+.item .k { margin-inline-start: auto; color: var(--muted); font-size: .75rem; }
+.item.is-hl .k { color: inherit; }
+.item.danger { color: var(--danger); }
+.sep { height: 1px; background: var(--line); margin: 4px -4px; }
+:root[data-direction="kumiko"] .sep { height: 3px; border-block: 1px solid var(--line); background: none; }
+.grp { padding: 8px 10px 4px; }
+kbd, .kbd { font-family: var(--font-mono); font-size: .75rem; min-width: 20px; height: 20px; padding-inline: 5px; display: inline-grid; place-items: center; border: var(--bw) solid var(--line); border-bottom-width: calc(var(--bw) + 1px); border-radius: calc(var(--r-control) * .6); background: var(--surface); color: var(--muted); }
+.tip { display: inline-block; background: var(--fg); color: var(--canvas); padding: 6px 10px; border-radius: calc(var(--r-control) * .8); font-size: .8125rem; position: relative; }
+.tip::after { content: ""; position: absolute; inset-block-end: -5px; inset-inline-start: 50%; margin-inline-start: -5px; border: 5px solid transparent; border-bottom: 0; border-top-color: var(--fg); }
+.scrim { background: var(--scrim); border-radius: var(--r-card); padding: 40px 16px; display: grid; place-items: center; min-height: 300px; }
+.dialog { background: var(--raised); border: var(--bw) solid var(--line); border-radius: var(--r-overlay); box-shadow: var(--shadow-overlay); padding: calc(20px * var(--space)); width: min(440px, 100%); display: grid; gap: 12px; }
+:root[data-direction="poster"] .dialog { border: 2px solid var(--fg); }
+.dialog h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: var(--display-weight); font-stretch: var(--display-stretch); }
+:root[data-direction="poster"] .dialog h3 { text-transform: uppercase; font-size: 1.6rem; }
+.dialog .actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.drawer { display: grid; grid-template-columns: 1fr minmax(0, 300px); min-height: 300px; border-radius: var(--r-card); overflow: hidden; border: var(--bw) solid var(--line); }
+.drawer__scrim { background: var(--scrim); }
+.drawer__panel { background: var(--raised); border-inline-start: var(--bw) solid var(--line); padding: 16px; display: grid; align-content: start; gap: 14px; box-shadow: var(--shadow-overlay); }
+.tabs { display: flex; gap: 4px; border-bottom: var(--bw) solid var(--line); }
+.tab { border: 0; background: none; padding: 10px 12px; cursor: pointer; color: var(--muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: calc(var(--bw) * -1); }
+.tab:hover { color: var(--fg); }
+.tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--brand); }
+.tab:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+:root[data-direction="porcelain"] .tabs, :root[data-direction="oxblood"] .tabs { border: 0; background: color-mix(in oklab, var(--fg) 5%, transparent); padding: 4px; border-radius: calc(var(--r-control) + 4px); display: inline-flex; }
+:root[data-direction="porcelain"] .tab, :root[data-direction="oxblood"] .tab { border: 0; margin: 0; border-radius: var(--r-control); padding: 6px 14px; }
+:root[data-direction="porcelain"] .tab[aria-selected="true"], :root[data-direction="oxblood"] .tab[aria-selected="true"] { background: var(--raised); box-shadow: var(--shadow-raised); }
+:root[data-direction="poster"] .tabs { border-bottom: 2px solid var(--fg); gap: 0; }
+:root[data-direction="poster"] .tab { text-transform: uppercase; font-weight: 700; border-bottom-width: 6px; }
+:root[data-direction="poster"] .tab[aria-selected="true"] { border-bottom-color: var(--accent); }
+:root[data-direction="kumiko"] .tabs { border-bottom: 3px double var(--line-strong); }
+.crumbs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: var(--muted); font-size: .875rem; }
+.crumbs a { color: var(--muted); text-decoration: none; }
+.crumbs a:hover { color: var(--fg); text-decoration: underline; }
+.crumbs [aria-current] { color: var(--fg); font-weight: 500; }
+.pager { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.pager .btn { min-width: calc(var(--h-control) - 4px); padding-inline: 8px; }
+.pager .btn[aria-current] { background: var(--brand); color: var(--brand-fg); border-color: var(--brand); }
+.palette { width: min(560px, 100%); }
+.palette__search { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: var(--bw) solid var(--line); }
+.palette__search input { border: 0; outline: 0; background: none; width: 100%; font-size: 1rem; }
+
+/* Badges, avatars, stats */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: calc(var(--r-control) * .75); font-size: .75rem; font-weight: 600; white-space: nowrap; background: var(--tone-subtle, color-mix(in oklab, var(--fg) 7%, transparent)); color: var(--tone, var(--fg)); line-height: 1.6; }
+.badge.tone-brand { --tone: var(--brand-text); --tone-subtle: var(--brand-subtle); }
+.badge.tone-seal { --tone: color-mix(in oklab, var(--accent) 78%, var(--fg)); --tone-subtle: color-mix(in oklab, var(--accent) 10%, var(--surface)); }
+.badge .bd { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+:root[data-direction="poster"] .badge { border: 2px solid currentColor; background: var(--canvas); }
+:root[data-direction="instrument"] .badge { font-family: var(--font-mono); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; font-size: .6875rem; }
+:root[data-direction="kumiko"] .badge { border: 1px solid color-mix(in oklab, currentColor 40%, transparent); }
+.avatar { width: 32px; height: 32px; border-radius: var(--r-avatar); display: inline-grid; place-items: center; font-size: .75rem; font-weight: 600; flex: none; background: color-mix(in oklab, var(--av, var(--brand)) 16%, var(--surface)); color: var(--fg); border: 1px solid color-mix(in oklab, var(--av, var(--brand)) 30%, transparent); }
+.avatars { display: flex; }
+.avatars .avatar { border: 2px solid var(--surface); margin-inline-start: -8px; }
+.avatars .avatar:first-child { margin-inline-start: 0; }
+.stat { display: grid; gap: 6px; }
+.stat .v { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); font-variant-numeric: tabular-nums; line-height: 1.1; }
+:root[data-direction="instrument"] .stat .v { font-family: var(--font-mono); font-weight: 500; letter-spacing: -0.02em; }
+:root[data-direction="kumiko"] .stat .v { font-stretch: 112%; }
+.delta { font-size: .8125rem; display: inline-flex; gap: 4px; align-items: center; }
+.delta.up { color: var(--success); }
+.delta.down { color: var(--danger); }
+
+/* App screen */
+.app { position: relative; display: grid; grid-template-columns: 232px minmax(0, 1fr); border-radius: calc(var(--r-card) + 4px); overflow: hidden; border: var(--card-border); box-shadow: var(--card-shadow); background: var(--canvas); }
+:root[data-direction="poster"] .app { border-width: 3px; }
+:root[data-direction="oxblood"] .app { background: transparent; }
+.side { background: var(--surface); border-inline-end: var(--bw) solid var(--line); padding: 16px 12px; display: grid; align-content: start; gap: 18px; }
+:root[data-direction="oxblood"] .side { background: color-mix(in oklab, var(--surface) 70%, transparent); backdrop-filter: blur(12px); }
+:root[data-direction="porcelain"] .side { border-inline-end-color: transparent; }
+:root[data-direction="kumiko"] .side { background-image: repeating-linear-gradient(60deg, transparent 0 17px, color-mix(in oklab, var(--line) 55%, transparent) 17px 18px), repeating-linear-gradient(-60deg, transparent 0 17px, color-mix(in oklab, var(--line) 55%, transparent) 17px 18px), repeating-linear-gradient(0deg, transparent 0 30px, color-mix(in oklab, var(--line) 55%, transparent) 30px 31px); }
+:root[data-direction="kumiko"] .side .nav a, :root[data-direction="kumiko"] .side .logo { background-color: var(--surface); }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 700; padding-inline: 8px; }
+.logo .mark { width: 22px; height: 22px; }
+:root[data-direction="kumiko"] .logo, :root[data-direction="poster"] .logo { font-family: var(--font-display); font-stretch: var(--display-stretch); text-transform: var(--display-transform); }
+.nav { display: grid; gap: 2px; }
+.nav a { display: flex; align-items: center; gap: 10px; min-height: 36px; padding-inline: 10px; border-radius: var(--r-control); color: var(--muted); text-decoration: none; font-weight: 500; position: relative; }
+.nav a:hover { background: var(--hover); color: var(--fg); }
+.nav a[aria-current="page"] { color: var(--fg); background: color-mix(in oklab, var(--fg) 7%, transparent); }
+:root[data-direction="porcelain"] .nav a[aria-current="page"] { background: var(--brand-subtle); color: var(--brand-text); }
+:root[data-direction="instrument"] .nav a[aria-current="page"] { background: color-mix(in oklab, var(--fg) 5%, transparent); border-radius: 0; box-shadow: inset 2px 0 0 var(--brand); }
+:root[data-direction="instrument"][dir="rtl"] .nav a[aria-current="page"] { box-shadow: inset -2px 0 0 var(--brand); }
+:root[data-direction="kumiko"] .nav a[aria-current="page"] { background: none; color: var(--brand-text); }
+:root[data-direction="kumiko"] .nav a[aria-current="page"]::before { content: ""; position: absolute; inset-inline-start: -2px; width: 6px; height: 6px; background: var(--accent); }
+:root[data-direction="poster"] .nav a { text-transform: uppercase; font-weight: 700; letter-spacing: .02em; border-radius: 0; }
+:root[data-direction="poster"] .nav a[aria-current="page"] { background: var(--fg); color: var(--canvas); }
+:root[data-direction="oxblood"] .nav a[aria-current="page"] { background: var(--brand-subtle); color: var(--fg); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--brand) 30%, transparent); }
+.nav .count { margin-inline-start: auto; font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nav a[aria-current="page"] .count { color: inherit; }
+.main { padding: 20px; display: grid; gap: 20px; min-width: 0; }
+@media (min-width: 720px) { .main { padding: 24px 28px; } }
+.main__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 20px; }
+.main__head h2 { font-size: clamp(1.6rem, 3.4vw, 2.4rem); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.chart { align-content: start; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+#chart-donut svg { max-width: 220px; margin-inline: auto; }
+.chart .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .8125rem; color: var(--muted); }
+.chart .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-inline-end: 6px; vertical-align: -1px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.toolbar .search { flex: 1 1 220px; }
+.tablewrap { overflow-x: auto; border: var(--card-border); border-radius: var(--r-card); background: var(--surface); box-shadow: var(--card-shadow); }
+:root[data-direction="oxblood"] .tablewrap { background: color-mix(in oklab, var(--surface) 78%, transparent); backdrop-filter: blur(12px); }
+table.t { width: 100%; border-collapse: collapse; min-width: 720px; }
+.t th, .t td { text-align: start; padding-inline: 14px; height: var(--h-row); border-bottom: var(--bw) solid var(--line); white-space: nowrap; }
+.t th { font-family: var(--label-font); text-transform: var(--label-transform); letter-spacing: var(--label-tracking); font-size: var(--label-size); font-weight: var(--label-weight); color: var(--muted); height: calc(var(--h-row) - 6px); background: color-mix(in oklab, var(--fg) 2.5%, var(--surface)); }
+[dir="rtl"] .t th { text-transform: none; letter-spacing: 0; }
+.t tbody tr:hover { background: var(--hover); }
+.t tr.is-sel { background: var(--selected); }
+.t tbody tr:last-child td { border-bottom: 0; }
+.t .who { display: flex; align-items: center; gap: 10px; }
+.t .who small { display: block; color: var(--muted); font-size: .8125rem; }
+.t td.num, .t th.num { text-align: end; }
+.sort { display: inline-flex; align-items: center; gap: 4px; }
+:root[data-direction="kumiko"] .t th, :root[data-direction="kumiko"] .t td { border-inline-end: 1px solid var(--line); }
+:root[data-direction="kumiko"] .t th:last-child, :root[data-direction="kumiko"] .t td:last-child { border-inline-end: 0; }
+:root[data-direction="kumiko"] .t thead th { border-bottom: 3px double var(--line-strong); }
+:root[data-direction="poster"] .t thead th { border-bottom: 3px solid var(--fg); background: var(--canvas); color: var(--fg); }
+:root[data-direction="poster"] .t td { border-bottom-width: 1px; }
+:root[data-direction="porcelain"] .t th { background: transparent; }
+.selbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; border-radius: var(--r-control); background: var(--brand-subtle); color: var(--fg); }
+:root[data-direction="poster"] .selbar { background: var(--fg); color: var(--canvas); }
+:root[data-direction="poster"] .selbar .btn { background: var(--canvas); color: var(--fg); }
+.tablefoot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.phone { width: min(340px, 100%); border: var(--bw) solid var(--line-strong); border-radius: 28px; padding: 12px; background: var(--canvas); display: grid; gap: 10px; }
+:root[data-direction="kumiko"] .phone, :root[data-direction="poster"] .phone { border-radius: 4px; }
+.mcard { display: grid; gap: 8px; padding: 12px; }
+.mcard .meta { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: .8125rem; }
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: start; }
+.toast-dock { position: absolute; inset-block-end: 16px; inset-inline-end: 16px; z-index: 2; }
+@media (max-width: 899px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { display: none; }
+  .toast-dock { position: static; padding: 0 16px 16px; }
+}
+
+/* Sheet */
+.sheet { display: grid; gap: 40px; }
+.group { display: grid; gap: 16px; }
+.group > h3 { font-family: var(--font-display); font-size: 1.35rem; font-weight: var(--display-weight); font-stretch: var(--display-stretch); text-transform: var(--display-transform); letter-spacing: var(--display-tracking); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; align-items: start; }
+.tile { display: grid; gap: 12px; align-content: start; }
+.tile > .label { display: block; }
+.matrix { overflow-x: auto; }
+.matrix table { border-collapse: separate; border-spacing: 10px 8px; margin-inline: -10px; }
+.matrix th { text-align: start; font-weight: 500; color: var(--muted); font-size: .8125rem; white-space: nowrap; }
+.cal { width: 100%; max-width: 300px; }
+.cal__head { display: flex; align-items: center; justify-content: space-between; padding: 6px 4px 10px; font-weight: 600; }
+.cal table { width: 100%; border-collapse: collapse; text-align: center; font-variant-numeric: tabular-nums; }
+.cal th { font-size: .75rem; color: var(--muted); font-weight: 500; height: 28px; }
+.cal td { padding: 1px; }
+.cal td span { display: grid; place-items: center; height: 34px; border-radius: var(--r-control); cursor: pointer; }
+.cal td span:hover { background: var(--hover); }
+.cal td span { font-weight: 500; }
+.cal td.out span { color: var(--muted); font-weight: 400; }
+.cal td.in span { background: var(--selected); border-radius: 0; }
+.cal td.edge span { background: var(--brand); color: var(--brand-fg); font-weight: 600; }
+.cal td.today span { box-shadow: inset 0 0 0 1px var(--line-strong); }
+.mail { background: #FFFFFF; color: #1F2328; border-radius: var(--r-card); overflow: hidden; border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.55; }
+.mail__chrome { padding: 8px 12px; background: #F3F4F6; color: #4B5563; font-size: 12px; border-bottom: 1px solid #E5E7EB; display: grid; gap: 2px; }
+.mail__chrome b { color: #111827; font-weight: 600; }
+.mail__body { padding: 20px; display: grid; gap: 12px; }
+.mail__brand { display: flex; align-items: center; gap: 8px; font-weight: 700; color: #111827; }
+.mail__brand i { width: 16px; height: 16px; background: var(--d-brand); display: inline-block; border-radius: 3px; }
+.mail h4 { font-size: 18px; color: #111827; }
+.mail a.mbtn { display: inline-block; justify-self: start; padding: 10px 18px; border-radius: 6px; background: #1F2328; color: #FFFFFF; text-decoration: none; font-weight: 600; }
+.mail .row-i { display: flex; justify-content: space-between; gap: 12px; padding-block: 8px; border-bottom: 1px solid #E5E7EB; }
+.mail .row-i small { color: #57606A; display: block; }
+.mail .tot { display: flex; justify-content: space-between; font-weight: 700; padding-top: 4px; }
+.mail .foot { color: #57606A; font-size: 12px; border-top: 1px solid #E5E7EB; padding-top: 10px; }
+.mail.plain { font-family: Georgia, "Times New Roman", serif; }
+.mail.plain .mail__body { gap: 10px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M21 4h-7"/><path d="M10 4H3"/><path d="M21 12h-9"/><path d="M8 12H3"/><path d="M21 20h-5"/><path d="M12 20H3"/><path d="M14 2v4"/><path d="M8 10v4"/><path d="M16 18v4"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-columns" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-userplus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></symbol>
+  <symbol id="i-panel" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></symbol>
+  <symbol id="i-up-r" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+  <symbol id="i-trend-up" viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-trend-down" viewBox="0 0 24 24"><path d="M22 17 13.5 8.5 8.5 13.5 2 7"/><path d="M16 17h6v-6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+</svg>
+
+<header class="bar">
+  <div class="bar__in">
+    <div class="bar__name"><span class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span> Kumiko</div>
+    <div class="dirs" id="dirs" role="group" aria-label="Design direction"></div>
+    <div class="bar__ctl">
+      <div class="seg" role="group" aria-label="Theme"><button type="button" data-theme-btn="light">Light</button><button type="button" data-theme-btn="dark">Dark</button></div>
+      <div class="seg" role="group" aria-label="Language"><button type="button" data-dir-btn="ltr">English</button><button type="button" data-dir-btn="rtl" lang="ar">العربية</button></div>
+      <label class="sr" for="brand">Brand preview</label>
+      <select id="brand" aria-label="Brand preview"><option value="">Kumiko brand</option></select>
+    </div>
+  </div>
+</header>
+
+<main class="page" id="top">
+  <section class="intro" aria-labelledby="dname">
+    <span class="label" id="dcount">Direction 1 of 6</span>
+    <h1 class="display" id="dname">Graphite</h1>
+    <p class="lede" id="dmood"></p>
+    <div class="specs" id="dspecs"></div>
+    <div class="swatches" id="swatches"></div>
+    <div class="specimen card pad">
+      <span class="label" data-t="typeSample">Type sample</span>
+      <p class="display" style="font-size:clamp(1.6rem,4vw,2.6rem)" data-t="headline">Find the people who will build what's next.</p>
+      <p style="max-width:62ch" data-t="bodyCopy">Kumiko is the shared toolkit for First Jobby, Wifaqa and every future product: the same accessible components, each wearing its own brand.</p>
+      <p class="ar" lang="ar" dir="rtl">نماذج واضحة، وجداول سريعة، وتنبيهات لا تضيع.</p>
+      <p class="ar" lang="ur" dir="rtl">ڈیٹا ٹیم کے لیے یہ اردو میں ایک مثال ہے۔</p>
+      <p class="num muted" style="font-family:var(--font-mono)">0123456789 · €85,000 · 92%</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="app-h" class="group">
+    <div class="section-head"><h2 class="display" id="app-h" data-t="appScreen">App screen</h2><span class="muted" data-t="appNote">Same content in every direction, so you can compare like for like.</span></div>
+
+    <div class="app">
+      <aside class="side" aria-label="Main">
+        <div class="logo"><span class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span> Hirebase</div>
+        <nav class="nav" aria-label="Sections">
+          <a href="#top"><svg class="i"><use href="#i-home"/></svg><span data-t="overview">Overview</span></a>
+          <a href="#top"><svg class="i"><use href="#i-briefcase"/></svg><span data-t="jobs">Jobs</span><span class="count">12</span></a>
+          <a href="#top" aria-current="page"><svg class="i"><use href="#i-users"/></svg><span data-t="applicants">Applicants</span><span class="count">1,284</span></a>
+          <a href="#top"><svg class="i"><use href="#i-message"/></svg><span data-t="messages">Messages</span><span class="count">3</span></a>
+          <a href="#top"><svg class="i"><use href="#i-chart"/></svg><span data-t="reports">Reports</span></a>
+          <a href="#top"><svg class="i"><use href="#i-sliders"/></svg><span data-t="settings">Settings</span></a>
+        </nav>
+        <div class="card pad stack" style="--space:.9">
+          <span class="label" data-t="plan">Plan</span>
+          <b data-t="teamPlan">Team · 4 of 5 seats</b>
+          <div class="progress" role="progressbar" aria-label="Seats used" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"><i style="width:80%"></i></div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="#top" data-t="jobs">Jobs</a><svg class="i flip" aria-hidden="true"><use href="#i-right"/></svg>
+          <a href="#top" data-t="productDesigner">Product designer</a><svg class="i flip" aria-hidden="true"><use href="#i-right"/></svg>
+          <span aria-current="page" data-t="applicants">Applicants</span>
+        </nav>
+        <div class="main__head">
+          <div class="stack" style="gap:6px">
+            <h2 class="display" data-t="applicants">Applicants</h2>
+            <p class="muted" data-t="headSub">Product designer · Lisbon or remote in the EU</p>
+          </div>
+          <div class="row">
+            <button class="btn btn--outline" type="button"><svg class="i"><use href="#i-download"/></svg><span data-t="export">Export</span></button>
+            <button class="btn btn--primary" type="button"><svg class="i"><use href="#i-plus"/></svg><span data-t="newJob">New job</span></button>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="card pad stat"><span class="label" data-t="totalApplicants">Total applicants</span><span class="v">1,284</span><span class="delta up"><svg class="i"><use href="#i-trend-up"/></svg><span>12% <span data-t="vsLast">vs last month</span></span></span></div>
+          <div class="card pad stat"><span class="label" data-t="interviews">Interviews</span><span class="v">86</span><span class="delta up"><svg class="i"><use href="#i-trend-up"/></svg><span>8% <span data-t="vsLast">vs last month</span></span></span></div>
+          <div class="card pad stat"><span class="label" data-t="offers">Offers</span><span class="v">14</span><span class="delta down"><svg class="i"><use href="#i-trend-down"/></svg><span>3% <span data-t="vsLast">vs last month</span></span></span></div>
+          <div class="card pad stat"><span class="label" data-t="daysToHire">Days to hire</span><span class="v">18</span><span class="delta up"><svg class="i"><use href="#i-trend-down"/></svg><span>2 <span data-t="fasterDays">days faster</span></span></span></div>
+        </div>
+
+        <div class="charts">
+          <figure class="card pad chart stack" style="margin:0"><figcaption class="label" data-t="perWeek">Applications per week</figcaption><div id="chart-bar"></div><p class="muted" style="font-size:.8125rem"><span data-t="barSummary">289 this week, 13% more than last week</span></p></figure>
+          <figure class="card pad chart stack" style="margin:0"><figcaption class="label" data-t="rate">Interview rate</figcaption><div id="chart-line"></div><p class="muted" style="font-size:.8125rem"><span data-t="lineSummary">31% this week, up from 18% in week 35</span></p></figure>
+          <figure class="card pad chart stack" style="margin:0"><figcaption class="label" data-t="sources">Where applicants come from</figcaption><div id="chart-donut"></div></figure>
+        </div>
+
+        <div class="stack" style="gap:10px">
+          <div class="toolbar">
+            <label class="input search"><svg class="i"><use href="#i-search"/></svg><span class="sr" data-t="searchApplicants">Search applicants</span><input type="search" id="q" placeholder="Search applicants" data-tp="searchApplicants" value=""></label>
+            <button class="btn btn--outline select-btn" type="button" aria-haspopup="listbox"><svg class="i"><use href="#i-filter"/></svg><span data-t="allStatuses">All statuses</span><svg class="i"><use href="#i-down"/></svg></button>
+            <button class="btn btn--outline" type="button"><svg class="i"><use href="#i-calendar"/></svg><span class="num" dir="ltr">Oct 1 – Oct 14</span></button>
+            <button class="btn btn--outline" type="button"><svg class="i"><use href="#i-columns"/></svg><span data-t="columns">Columns</span></button>
+          </div>
+          <div class="selbar"><b class="num"><span data-t="selected3">3 selected</span></b><span class="grow"></span><button class="btn btn--secondary btn--sm" type="button"><svg class="i"><use href="#i-archive"/></svg><span data-t="archive">Archive</span></button><button class="btn btn--danger btn--sm" type="button"><svg class="i"><use href="#i-trash"/></svg><span data-t="delete">Delete</span></button></div>
+          <div class="tablewrap" tabindex="0" role="region" aria-label="Applicants table">
+            <table class="t">
+              <thead><tr>
+                <th style="width:44px"><span class="choice is-mixed"><span class="box"><svg class="i"><use href="#i-minus"/></svg></span><span class="sr" data-t="selectAll">Select all</span></span></th>
+                <th><span class="sort"><span data-t="name">Name</span><svg class="i"><use href="#i-up"/></svg></span></th>
+                <th data-t="stage">Stage</th>
+                <th data-t="applied">Applied</th>
+                <th class="num"><span class="sort"><span data-t="score">Score</span><svg class="i"><use href="#i-sort"/></svg></span></th>
+                <th style="width:52px"><span class="sr" data-t="actions">Actions</span></th>
+              </tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <div class="tablefoot">
+            <span class="muted num" data-t="showing">Showing 1–8 of 1,284</span>
+            <nav class="pager" aria-label="Pages">
+              <button class="btn btn--ghost btn--sm" type="button"><svg class="i flip"><use href="#i-left"/></svg><span data-t="previous">Previous</span></button>
+              <button class="btn btn--ghost btn--sm num" type="button" aria-current="page">1</button>
+              <button class="btn btn--ghost btn--sm num" type="button">2</button>
+              <button class="btn btn--ghost btn--sm num" type="button">3</button>
+              <span class="muted" aria-hidden="true">…</span>
+              <button class="btn btn--ghost btn--sm num" type="button">161</button>
+              <button class="btn btn--ghost btn--sm" type="button"><span data-t="next">Next</span><svg class="i flip"><use href="#i-right"/></svg></button>
+            </nav>
+          </div>
+        </div>
+
+        <div class="split">
+          <form class="card pad stack" onsubmit="event.preventDefault()" aria-labelledby="form-h" style="gap:18px">
+            <div class="stack" style="gap:4px"><h3 class="display" style="font-size:1.4rem" id="form-h" data-t="createJob">Create a job</h3><p class="muted" data-t="createJobSub">Published jobs appear on your careers page and job alerts.</p></div>
+            <div class="grid-form">
+              <div class="field span-all">
+                <label for="f-title" data-t="jobTitle">Job title</label>
+                <div class="input is-invalid"><input id="f-title" aria-invalid="true" aria-describedby="f-title-err" placeholder="Senior product designer" data-tp="titlePh"></div>
+                <span class="err" id="f-title-err"><svg class="i"><use href="#i-alert"/></svg><span data-t="titleErr">Enter a job title</span></span>
+              </div>
+              <div class="field">
+                <span class="flabel" id="f-dept-l" data-t="department">Department</span>
+                <button class="input select-btn" type="button" aria-labelledby="f-dept-l f-dept-v" aria-haspopup="listbox"><span id="f-dept-v" data-t="design">Design</span><svg class="i"><use href="#i-down"/></svg></button>
+              </div>
+              <div class="field">
+                <label for="f-open" data-t="openings">Openings</label>
+                <div class="numfield"><button type="button" aria-label="Decrease"><svg class="i"><use href="#i-minus"/></svg></button><span id="f-open" class="num">2</span><button type="button" aria-label="Increase"><svg class="i"><use href="#i-plus"/></svg></button></div>
+              </div>
+              <div class="field span-all">
+                <label for="f-loc" data-t="locations">Locations</label>
+                <div class="input" style="flex-wrap:wrap;padding-block:6px"><span class="chip"><span data-t="lisbon">Lisbon</span><button type="button" aria-label="Remove Lisbon"><svg class="i" style="width:12px;height:12px"><use href="#i-x"/></svg></button></span><span class="chip"><span data-t="remoteEu">Remote · EU</span><button type="button" aria-label="Remove Remote EU"><svg class="i" style="width:12px;height:12px"><use href="#i-x"/></svg></button></span><input id="f-loc" style="flex:1 1 120px" placeholder="Add a city" data-tp="addCity"></div>
+              </div>
+              <fieldset class="field span-all" style="border:0;padding:0;margin:0">
+                <legend class="flabel" style="margin-bottom:8px" data-t="employmentType">Employment type</legend>
+                <div class="row" style="gap:20px">
+                  <span class="choice is-checked" role="radio" aria-checked="true" tabindex="0"><span class="dot"></span><span data-t="fullTime">Full-time</span></span>
+                  <span class="choice" role="radio" aria-checked="false" tabindex="-1"><span class="dot"></span><span data-t="partTime">Part-time</span></span>
+                  <span class="choice" role="radio" aria-checked="false" tabindex="-1"><span class="dot"></span><span data-t="internship">Internship</span></span>
+                </div>
+              </fieldset>
+              <div class="field span-all">
+                <div class="row" style="justify-content:space-between"><span class="flabel" data-t="salaryRange">Salary range</span><span class="num muted" dir="ltr">€60,000 – €85,000</span></div>
+                <div class="slider" aria-hidden="true"><span class="slider__track"></span><span class="slider__range" style="inset-inline-start:30%;inset-inline-end:28%"></span><span class="slider__thumb" style="inset-inline-start:30%"></span><span class="slider__thumb" style="inset-inline-start:72%"></span></div>
+              </div>
+              <div class="field">
+                <label for="f-start" data-t="startDate">Start date</label>
+                <div class="input"><input id="f-start" class="num" value="Nov 3, 2026"><svg class="i"><use href="#i-calendar"/></svg></div>
+              </div>
+              <div class="field" style="align-content:end">
+                <span class="choice is-on" role="switch" aria-checked="true" tabindex="0"><span class="switch"></span><span data-t="remoteFriendly">Remote friendly</span></span>
+              </div>
+              <div class="field span-all">
+                <label for="f-desc" data-t="description">Description</label>
+                <textarea class="input" id="f-desc" data-t="descText">You'll shape how thousands of people find their first job, from the search page to the moment they apply.</textarea>
+                <span class="hint" data-t="descHint">Shown at the top of the job page. Keep it to two or three sentences.</span>
+              </div>
+              <div class="field span-all">
+                <span class="flabel" data-t="attachments">Attachments</span>
+                <div class="drop"><svg class="i i--lg" style="color:var(--muted)"><use href="#i-upload"/></svg><span><b data-t="dropFiles">Drop files here</b> <span class="muted" data-t="or">or</span> <button class="btn btn--link" type="button" data-t="browse">browse</button></span><span class="hint" data-t="fileHint">PDF or DOCX, up to 10 MB each</span></div>
+                <div class="files">
+                  <div class="file"><svg class="i" style="color:var(--muted)"><use href="#i-file"/></svg><span class="grow">team-handbook.pdf</span><span class="muted num" style="font-size:.8125rem">64%</span><div class="progress"><i style="width:64%"></i></div></div>
+                  <div class="file"><svg class="i" style="color:var(--success)"><use href="#i-ok"/></svg><span class="grow">interview-guide.docx</span><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Remove interview-guide.docx"><svg class="i"><use href="#i-x"/></svg></button></div>
+                </div>
+              </div>
+              <div class="field span-all"><span class="choice is-checked" role="checkbox" aria-checked="true" tabindex="0"><span class="box"><svg class="i"><use href="#i-check"/></svg></span><span data-t="confirmOpen">I confirm this role is open and approved</span></span></div>
+            </div>
+            <div class="row" style="justify-content:flex-end">
+              <button class="btn btn--ghost" type="button" data-t="cancel">Cancel</button>
+              <button class="btn btn--secondary" type="button" data-t="saveDraft">Save draft</button>
+              <button class="btn btn--primary" type="submit" data-t="publishJob">Publish job</button>
+            </div>
+          </form>
+
+          <div class="stack" style="gap:20px">
+            <div class="stack">
+              <span class="label" data-t="onPhones">On phones, this table becomes cards</span>
+              <div class="phone" id="phone"></div>
+            </div>
+            <div class="scrim" style="min-height:0;padding:28px 16px">
+              <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-h" aria-describedby="dlg-d">
+                <h3 id="dlg-h" data-t="deleteQ">Delete 3 applicants?</h3>
+                <p class="muted" id="dlg-d" data-t="deleteD">Their applications and notes will be removed. This can't be undone.</p>
+                <div class="actions"><button class="btn btn--outline" type="button" data-t="cancel">Cancel</button><button class="btn btn--danger" type="button"><svg class="i"><use href="#i-trash"/></svg><span data-t="delete">Delete</span></button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="toast-dock">
+        <div class="toast" role="status"><span class="ticon tone-success"><svg class="i i--lg"><use href="#i-ok"/></svg></span><span class="grow"><b data-t="archived3">3 applicants archived</b><span data-t="archivedSub">They're hidden from this list.</span></span><button class="btn btn--link" type="button"><svg class="i flip"><use href="#i-undo"/></svg><span data-t="undo">Undo</span></button><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Dismiss"><svg class="i"><use href="#i-x"/></svg></button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="sheet-h">
+    <div class="section-head"><h2 class="display" id="sheet-h" data-t="components">Components</h2><span class="muted" data-t="componentsNote">Every v1 component, in its states.</span></div>
+
+    <div class="group">
+      <h3 data-t="buttons">Buttons</h3>
+      <div class="matrix card pad">
+        <table>
+          <thead><tr><th></th><th data-t="sDefault">Default</th><th data-t="sHover">Hover</th><th data-t="sFocus">Focus</th><th data-t="sPressed">Pressed</th><th data-t="sDisabled">Disabled</th><th data-t="sLoading">Loading</th></tr></thead>
+          <tbody id="btn-matrix"></tbody>
+        </table>
+      </div>
+      <div class="row card pad" style="gap:12px">
+        <button class="btn btn--primary btn--sm" type="button" data-t="small">Small</button>
+        <button class="btn btn--primary" type="button" data-t="medium">Medium</button>
+        <button class="btn btn--primary btn--lg" type="button" data-t="large">Large</button>
+        <span class="grow"></span>
+        <button class="btn btn--outline btn--icon" type="button" aria-label="Edit"><svg class="i"><use href="#i-pencil"/></svg></button>
+        <button class="btn btn--ghost btn--icon" type="button" aria-label="Copy link"><svg class="i"><use href="#i-link"/></svg></button>
+        <button class="btn btn--secondary btn--icon" type="button" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg></button>
+        <span class="row" style="gap:0"><button class="btn btn--outline" type="button" style="border-start-end-radius:0;border-end-end-radius:0" data-t="day">Day</button><button class="btn btn--outline" type="button" style="border-radius:0;border-inline-start:0;background:var(--hover)" data-t="week">Week</button><button class="btn btn--outline" type="button" style="border-start-start-radius:0;border-end-start-radius:0;border-inline-start:0" data-t="month">Month</button></span>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3 data-t="inputs">Inputs</h3>
+      <div class="tiles">
+        <div class="tile card pad">
+          <span class="label" data-t="textField">Text field</span>
+          <div class="field"><label for="s1" data-t="sDefault">Default</label><div class="input"><input id="s1" placeholder="name@company.com"></div></div>
+          <div class="field"><label for="s2" data-t="sHover">Hover</label><div class="input is-hover"><input id="s2" placeholder="name@company.com"></div></div>
+          <div class="field"><label for="s3" data-t="sFocus">Focus</label><div class="input is-focus"><input id="s3" value="maya@hirebase.io"></div></div>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="moreStates">More states</span>
+          <div class="field"><label for="s4" data-t="withHint">With hint</label><div class="input"><svg class="i"><use href="#i-mail"/></svg><input id="s4" value="maya@hirebase.io"></div><span class="hint" data-t="hintText">We'll send interview invites here.</span></div>
+          <div class="field"><label for="s5" data-t="sInvalid">Invalid</label><div class="input is-invalid"><input id="s5" aria-invalid="true" aria-describedby="s5e" value="maya@hirebase"></div><span class="err" id="s5e"><svg class="i"><use href="#i-alert"/></svg><span data-t="emailErr">Enter an email like name@company.com</span></span></div>
+          <div class="field"><label for="s6" data-t="sDisabled">Disabled</label><div class="input is-disabled"><input id="s6" disabled value="Team plan"></div></div>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="selectOpen">Select, open</span>
+          <button class="input select-btn is-focus" type="button" aria-expanded="true" aria-haspopup="listbox"><span data-t="interview">Interview</span><svg class="i"><use href="#i-down"/></svg></button>
+          <div class="pop" role="listbox" aria-label="Stage">
+            <div class="item" role="option" aria-selected="false"><span class="badge tone-info"><span class="bd"></span><span data-t="new">New</span></span></div>
+            <div class="item" role="option" aria-selected="false"><span class="badge"><span class="bd"></span><span data-t="screening">Screening</span></span></div>
+            <div class="item is-hl" role="option" aria-selected="true"><span class="badge tone-brand"><span class="bd"></span><span data-t="interview">Interview</span></span><svg class="i k"><use href="#i-check"/></svg></div>
+            <div class="item" role="option" aria-selected="false"><span class="badge tone-success"><span class="bd"></span><span data-t="offer">Offer</span></span></div>
+          </div>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="comboOpen">Combobox, typing</span>
+          <div class="input is-focus" style="flex-wrap:wrap;padding-block:6px"><span class="chip"><span data-t="lisbon">Lisbon</span><button type="button" aria-label="Remove Lisbon"><svg class="i" style="width:12px;height:12px"><use href="#i-x"/></svg></button></span><input aria-label="City" value="Ber" style="flex:1 1 60px"></div>
+          <div class="pop" role="listbox" aria-label="Cities">
+            <div class="item is-hl" role="option" aria-selected="false"><svg class="i"><use href="#i-pin"/></svg><span><b>Ber</b>lin, Germany</span></div>
+            <div class="item" role="option" aria-selected="false"><svg class="i"><use href="#i-pin"/></svg><span><b>Ber</b>gen, Norway</span></div>
+            <div class="item" role="option" aria-selected="false"><svg class="i"><use href="#i-pin"/></svg><span><b>Ber</b>n, Switzerland</span></div>
+          </div>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="textareaNumber">Textarea and number</span>
+          <div class="field"><label for="s7" data-t="notes">Notes</label><textarea class="input" id="s7" data-t="notesText">Strong portfolio. Ask about the onboarding redesign.</textarea></div>
+          <div class="field"><span class="flabel" data-t="rounds">Interview rounds</span><div class="numfield"><button type="button" aria-label="Decrease"><svg class="i"><use href="#i-minus"/></svg></button><span class="num">3</span><button type="button" aria-label="Increase"><svg class="i"><use href="#i-plus"/></svg></button></div></div>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="datePicker">Date range picker</span>
+          <div class="input is-focus"><svg class="i"><use href="#i-calendar"/></svg><span class="num grow" dir="ltr" style="text-align:start">Oct 6 – Oct 10, 2026</span></div>
+          <div class="pop cal" style="padding:8px">
+            <div class="cal__head"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Previous month"><svg class="i flip"><use href="#i-left"/></svg></button><span data-t="october">October 2026</span><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Next month"><svg class="i flip"><use href="#i-right"/></svg></button></div>
+            <table><thead><tr id="cal-dow"></tr></thead><tbody id="cal-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3 data-t="choices">Choices</h3>
+      <div class="tiles">
+        <div class="tile card pad">
+          <span class="label" data-t="checkboxes">Checkboxes</span>
+          <span class="choice" role="checkbox" aria-checked="false" tabindex="0"><span class="box"></span><span data-t="unchecked">Unchecked</span></span>
+          <span class="choice is-checked" role="checkbox" aria-checked="true" tabindex="0"><span class="box"><svg class="i"><use href="#i-check"/></svg></span><span data-t="checked">Checked</span></span>
+          <span class="choice is-mixed" role="checkbox" aria-checked="mixed" tabindex="0"><span class="box"><svg class="i"><use href="#i-minus"/></svg></span><span data-t="mixed">Some selected</span></span>
+          <span class="choice is-focus" role="checkbox" aria-checked="false" tabindex="0"><span class="box"></span><span data-t="sFocus">Focus</span></span>
+          <span class="choice is-disabled" role="checkbox" aria-checked="false" aria-disabled="true"><span class="box"></span><span data-t="sDisabled">Disabled</span></span>
+        </div>
+        <div class="tile card pad" role="radiogroup" aria-label="Notify me">
+          <span class="label" data-t="radios">Radio group</span>
+          <span class="choice is-checked" role="radio" aria-checked="true" tabindex="0"><span class="dot"></span><span data-t="everyApp">Every application</span></span>
+          <span class="choice" role="radio" aria-checked="false" tabindex="-1"><span class="dot"></span><span data-t="dailyDigest">Daily digest</span></span>
+          <span class="choice is-focus" role="radio" aria-checked="false" tabindex="-1"><span class="dot"></span><span data-t="weeklyDigest">Weekly digest</span></span>
+          <span class="choice is-disabled" role="radio" aria-checked="false" aria-disabled="true"><span class="dot"></span><span data-t="never">Never</span></span>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="switches">Switches</span>
+          <span class="choice" role="switch" aria-checked="false" tabindex="0"><span class="switch"></span><span data-t="off">Off</span></span>
+          <span class="choice is-on" role="switch" aria-checked="true" tabindex="0"><span class="switch"></span><span data-t="on">On</span></span>
+          <span class="choice is-on is-disabled" role="switch" aria-checked="true" aria-disabled="true"><span class="switch"></span><span data-t="sDisabled">Disabled</span></span>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="sliders">Sliders</span>
+          <div class="field"><div class="row" style="justify-content:space-between"><span data-t="minScore">Minimum score</span><span class="num muted">70</span></div><div class="slider" aria-hidden="true"><span class="slider__track"></span><span class="slider__range" style="inset-inline-start:0;inset-inline-end:30%"></span><span class="slider__thumb" style="inset-inline-start:70%"></span></div></div>
+          <div class="field"><div class="row" style="justify-content:space-between"><span data-t="experience">Years of experience</span><span class="num muted" dir="ltr">0 – 2</span></div><div class="slider" aria-hidden="true"><span class="slider__track"></span><span class="slider__range" style="inset-inline-start:0;inset-inline-end:80%"></span><span class="slider__thumb" style="inset-inline-start:0%"></span><span class="slider__thumb" style="inset-inline-start:20%"></span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3 data-t="feedback">Feedback</h3>
+      <div class="tiles">
+        <div class="tile">
+          <div class="alert tone-info" role="status"><svg class="i"><use href="#i-info"/></svg><b data-t="aInfoT">New applicants arrive every hour</b><p data-t="aInfoD">We check every job board you've connected.</p></div>
+          <div class="alert tone-success" role="status"><svg class="i"><use href="#i-ok"/></svg><b data-t="aOkT">Job published</b><p data-t="aOkD">It's live on your careers page and in job alerts.</p></div>
+          <div class="alert tone-warning" role="status"><svg class="i"><use href="#i-warn"/></svg><b data-t="aWarnT">Your trial ends in 3 days</b><p data-t="aWarnD">Add a payment method to keep your jobs online.</p></div>
+          <div class="alert tone-danger" role="alert"><svg class="i"><use href="#i-alert"/></svg><b data-t="aErrT">Payment failed</b><p data-t="aErrD">Your card was declined. Try another card.</p></div>
+        </div>
+        <div class="tile">
+          <div class="toast"><span class="ticon tone-success"><svg class="i i--lg"><use href="#i-ok"/></svg></span><span class="grow"><b data-t="tSaved">Changes saved</b></span><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Dismiss"><svg class="i"><use href="#i-x"/></svg></button></div>
+          <div class="toast"><span class="ticon tone-danger"><svg class="i i--lg"><use href="#i-alert"/></svg></span><span class="grow"><b data-t="tFail">Couldn't send the offer</b><span data-t="tFailSub">The email server didn't answer.</span></span><button class="btn btn--link" type="button" data-t="retry">Retry</button></div>
+          <div class="toast"><span class="ticon"><span class="spin" aria-hidden="true"></span></span><span class="grow"><b data-t="tExport">Exporting 1,284 applicants…</b></span></div>
+          <div class="toast"><span class="ticon tone-success"><svg class="i i--lg"><use href="#i-archive"/></svg></span><span class="grow"><b data-t="archived3">3 applicants archived</b></span><button class="btn btn--link" type="button"><svg class="i flip"><use href="#i-undo"/></svg><span data-t="undo">Undo</span></button></div>
+        </div>
+        <div class="tile card pad">
+          <span class="label" data-t="progressLabel">Progress</span>
+          <div class="stack" style="gap:6px"><div class="row" style="justify-content:space-between"><span data-t="uploading">Uploading résumés</span><span class="num muted">40%</span></div><div class="progress" role="progressbar" aria-label="Uploading" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><i style="width:40%"></i></div></div>
+          <div class="stack" style="gap:6px"><div class="row" style="justify-content:space-between"><span data-t="profileDone">Profile complete</span><span class="num muted">85%</span></div><div class="progress" role="progressbar" aria-label="Profile complete" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"><i style="width:85%"></i></div></div>
+          <div class="row" style="gap:16px"><div class="ring" style="--v:72" data-v="72" role="progressbar" aria-label="Goal" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div><span class="spin" style="width:20px;height:20px;color:var(--brand)" aria-hidden="true"></span><span class="muted" data-t="loading">Loading</span></div>
+          <span class="label" data-t="skeleton">Skeleton</span>
+          <div class="row" style="flex-wrap:nowrap"><span class="skel" style="width:40px;height:40px;border-radius:var(--r-avatar)"></span><span class="stack grow" style="gap:8px"><span class="skel" style="height:12px;width:70%"></span><span class="skel" style="height:12px;width:45%"></span></span></div>
+        </div>
+        <div class="tile">
+          <div class="banner"><svg class="i"><use href="#i-bell"/></svg><span class="grow" data-t="bannerText">Hirebase 3.0 adds team notes and interview kits.</span><button class="btn btn--outline btn--sm" type="button" data-t="seeWhatsNew">See what's new</button></div>
+          <div class="empty card"><span class="art"><svg class="i i--lg"><use href="#i-inbox"/></svg></span><b data-t="emptyT">No applicants yet</b><p class="muted" style="max-width:34ch" data-t="emptyD">Share the job link to start receiving applications.</p><button class="btn btn--primary btn--sm" type="button"><svg class="i"><use href="#i-copy"/></svg><span data-t="copyLink">Copy link</span></button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3 data-t="overlays">Overlays and navigation</h3>
+      <div class="tiles">
+        <div class="tile">
+          <span class="label" data-t="menu">Menu</span>
+          <button class="btn btn--outline" type="button" aria-expanded="true" style="justify-self:start"><span data-t="actions">Actions</span><svg class="i"><use href="#i-down"/></svg></button>
+          <div class="pop" role="menu" aria-label="Applicant actions" style="max-width:280px">
+            <div class="item" role="menuitem"><svg class="i"><use href="#i-pencil"/></svg><span data-t="edit">Edit</span><span class="k"><kbd>E</kbd></span></div>
+            <div class="item is-hl" role="menuitem"><svg class="i"><use href="#i-copy"/></svg><span data-t="duplicate">Duplicate</span><span class="k"><kbd>⌘</kbd> <kbd>D</kbd></span></div>
+            <div class="item" role="menuitem"><svg class="i"><use href="#i-briefcase"/></svg><span data-t="moveTo">Move to job</span><svg class="i k flip"><use href="#i-right"/></svg></div>
+            <div class="sep" role="separator"></div>
+            <div class="item" role="menuitemcheckbox" aria-checked="true"><svg class="i"><use href="#i-check"/></svg><span data-t="showArchived">Show archived</span></div>
+            <div class="sep" role="separator"></div>
+            <div class="item danger" role="menuitem"><svg class="i"><use href="#i-trash"/></svg><span data-t="delete">Delete</span></div>
+          </div>
+        </div>
+        <div class="tile">
+          <span class="label" data-t="tooltipPopover">Tooltip and popover</span>
+          <div class="row" style="gap:14px;padding-top:8px"><span class="tip" role="tooltip" data-t="copyLink">Copy link</span></div>
+          <button class="btn btn--ghost btn--icon" type="button" aria-label="Copy link"><svg class="i"><use href="#i-link"/></svg></button>
+          <div class="pop pad stack" style="max-width:300px;--space:.9">
+            <div class="row" style="flex-wrap:nowrap"><span class="avatar" style="--av:var(--series-2)">MO</span><span><b>Maya Okafor</b><br><span class="muted" style="font-size:.875rem" data-t="productDesigner">Product designer</span></span></div>
+            <p class="muted" style="font-size:.875rem" data-t="popoverText">Applied 2 days ago from a referral. Portfolio and two references attached.</p>
+            <div class="row"><button class="btn btn--primary btn--sm" type="button" data-t="schedule">Schedule interview</button></div>
+          </div>
+        </div>
+        <div class="tile">
+          <span class="label" data-t="tabsLabel">Tabs</span>
+          <div class="tabs" role="tablist" aria-label="Applicant">
+            <button class="tab" role="tab" aria-selected="true" type="button" data-t="profile">Profile</button>
+            <button class="tab" role="tab" aria-selected="false" type="button" tabindex="-1" data-t="activity">Activity</button>
+            <button class="tab" role="tab" aria-selected="false" type="button" tabindex="-1" data-t="notes">Notes</button>
+          </div>
+          <span class="label" data-t="breadcrumbs">Breadcrumbs and pagination</span>
+          <nav class="crumbs" aria-label="Breadcrumb example"><a href="#top" data-t="jobs">Jobs</a><svg class="i flip" aria-hidden="true"><use href="#i-right"/></svg><a href="#top" data-t="productDesigner">Product designer</a><svg class="i flip" aria-hidden="true"><use href="#i-right"/></svg><span aria-current="page">Maya Okafor</span></nav>
+          <nav class="pager" aria-label="Pagination example"><button class="btn btn--outline btn--sm btn--icon" type="button" aria-label="Previous page"><svg class="i flip"><use href="#i-left"/></svg></button><button class="btn btn--ghost btn--sm num" type="button">1</button><button class="btn btn--ghost btn--sm num" type="button" aria-current="page">2</button><button class="btn btn--ghost btn--sm num" type="button">3</button><button class="btn btn--outline btn--sm btn--icon" type="button" aria-label="Next page"><svg class="i flip"><use href="#i-right"/></svg></button></nav>
+        </div>
+        <div class="tile">
+          <span class="label" data-t="palette">Command palette</span>
+          <div class="pop palette" style="padding:0">
+            <div class="palette__search"><svg class="i"><use href="#i-search"/></svg><input aria-label="Search commands" value="inv" class="grow"><kbd>esc</kbd></div>
+            <div style="padding:4px">
+              <div class="grp label" data-t="actionsGroup">Actions</div>
+              <div class="item is-hl"><svg class="i"><use href="#i-userplus"/></svg><span data-t="inviteTeammate">Invite teammate</span><span class="k"><kbd>↵</kbd></span></div>
+              <div class="item"><svg class="i"><use href="#i-mail"/></svg><span data-t="sendInvites">Send interview invites</span></div>
+              <div class="grp label" data-t="pages">Pages</div>
+              <div class="item"><svg class="i"><use href="#i-calendar"/></svg><span data-t="interviews">Interviews</span><svg class="i k flip"><use href="#i-up-r"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="split">
+        <div class="stack"><span class="label" data-t="dialogLabel">Dialog</span>
+          <div class="scrim"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg2-h">
+            <h3 id="dlg2-h" data-t="inviteTitle">Invite to interview</h3>
+            <div class="field"><label for="dlg2-e" data-t="emailLabel">Email</label><div class="input is-focus"><input id="dlg2-e" value="maya@hirebase.io"></div></div>
+            <span class="choice is-checked" role="checkbox" aria-checked="true" tabindex="0"><span class="box"><svg class="i"><use href="#i-check"/></svg></span><span data-t="attachKit">Attach the interview kit</span></span>
+            <div class="actions"><button class="btn btn--ghost" type="button" data-t="cancel">Cancel</button><button class="btn btn--primary" type="button" data-t="sendInvite">Send invite</button></div>
+          </div></div>
+        </div>
+        <div class="stack"><span class="label" data-t="drawerLabel">Drawer</span>
+          <div class="drawer"><div class="drawer__scrim"></div><div class="drawer__panel">
+            <div class="row" style="justify-content:space-between"><b data-t="filters">Filters</b><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Close filters"><svg class="i"><use href="#i-x"/></svg></button></div>
+            <span class="choice is-checked" role="checkbox" aria-checked="true" tabindex="0"><span class="box"><svg class="i"><use href="#i-check"/></svg></span><span data-t="interview">Interview</span></span>
+            <span class="choice" role="checkbox" aria-checked="false" tabindex="0"><span class="box"></span><span data-t="offer">Offer</span></span>
+            <span class="choice is-on" role="switch" aria-checked="true" tabindex="0"><span class="switch"></span><span data-t="remoteOnly">Remote only</span></span>
+            <div class="row"><button class="btn btn--outline btn--sm" type="button" data-t="reset">Reset</button><button class="btn btn--primary btn--sm" type="button" data-t="apply">Apply</button></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3 data-t="dataDisplay">Data display</h3>
+      <div class="tiles">
+        <div class="tile card pad">
+          <span class="label" data-t="badges">Badges</span>
+          <div class="row"><span class="badge"><span data-t="draft">Draft</span></span><span class="badge tone-brand"><span data-t="active">Active</span></span><span class="badge tone-success"><span class="bd"></span><span data-t="offer">Offer</span></span><span class="badge tone-warning"><span data-t="paused">Paused</span></span><span class="badge tone-danger"><span data-t="rejected">Rejected</span></span><span class="badge tone-info"><span data-t="new">New</span></span><span class="badge tone-seal" data-t="featured">Featured</span></div>
+          <span class="label" data-t="avatars">Avatars</span>
+          <div class="row" style="gap:16px"><span class="avatar" style="--av:var(--series-1)">MO</span><span class="avatar" style="--av:var(--series-2);width:40px;height:40px">DR</span><span class="avatars"><span class="avatar" style="--av:var(--series-1)">AT</span><span class="avatar" style="--av:var(--series-2)">OH</span><span class="avatar" style="--av:var(--series-3)">PN</span><span class="avatar" style="--av:var(--series-4)">+5</span></span></div>
+        </div>
+        <div class="tile card pad">
+          <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><span class="stack" style="gap:2px"><b style="font-size:1.05rem" data-t="seniorFe">Senior frontend engineer</b><span class="muted" style="font-size:.875rem" data-t="lisbonHybrid">Lisbon · Hybrid</span></span><span class="badge tone-success" data-t="active">Active</span></div>
+          <p class="muted" style="font-size:.9375rem" data-t="cardText">React, TypeScript and a taste for detail. Three interview rounds, decision within two weeks.</p>
+          <div class="row" style="justify-content:space-between"><span class="avatars"><span class="avatar" style="--av:var(--series-1)">AT</span><span class="avatar" style="--av:var(--series-3)">LM</span></span><span class="muted num" style="font-size:.875rem">48 <span data-t="applicantsLower">applicants</span></span></div>
+        </div>
+        <div class="tile card pad stat">
+          <span class="label" data-t="offerAccept">Offer acceptance</span>
+          <span class="v">86%</span>
+          <span class="delta up"><svg class="i"><use href="#i-trend-up"/></svg><span>4% <span data-t="vsLast">vs last month</span></span></span>
+          <div class="progress"><i style="width:86%"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3 data-t="emails">Emails</h3>
+      <p class="muted" style="max-width:68ch" data-t="emailsNote">Email clients don't support web fonts or CSS variables reliably, so the email kit uses system fonts and the brand color as a plain value.</p>
+      <div class="tiles" dir="ltr" lang="en">
+        <div class="mail"><div class="mail__chrome"><span><b>Hirebase</b> &lt;hello@hirebase.io&gt;</span><span>Your sign-in link</span></div><div class="mail__body"><div class="mail__brand"><i></i>Hirebase</div><h4>Sign in to Hirebase</h4><p>Use this link within 15 minutes. If you didn't ask for it, you can ignore this email.</p><a class="mbtn" href="#top" style="background:var(--d-brand);color:var(--d-brand-fg)">Sign in</a><p class="foot">Hirebase · You're getting this because someone used your address to sign in.</p></div></div>
+        <div class="mail"><div class="mail__chrome"><span><b>Hirebase alerts</b></span><span>5 new jobs match "product design, Lisbon"</span></div><div class="mail__body"><div class="mail__brand"><i></i>Hirebase</div><h4>5 new jobs for you</h4><div><div class="row-i"><span><b>Product designer</b><small>Lumen · Lisbon · €60–85k</small></span><span>Today</span></div><div class="row-i"><span><b>UX researcher</b><small>Northwind · Remote EU</small></span><span>Today</span></div><div class="row-i"><span><b>Design intern</b><small>Atlas Labs · Porto</small></span><span>1d</span></div></div><a class="mbtn" href="#top" style="background:var(--d-brand);color:var(--d-brand-fg)">See all 5 jobs</a><p class="foot">Weekly alert · Change or stop this alert</p></div></div>
+        <div class="mail"><div class="mail__chrome"><span><b>Hirebase billing</b></span><span>Receipt for October 2026</span></div><div class="mail__body"><div class="mail__brand"><i></i>Hirebase</div><h4>Payment received</h4><div><div class="row-i"><span>Team plan · 5 seats<small>Oct 14 – Nov 13, 2026</small></span><span>€49.00</span></div><div class="row-i"><span>VAT 23%</span><span>€11.27</span></div><div class="tot"><span>Total</span><span>€60.27</span></div></div><p style="color:#57606A">Paid with Visa ending 4242 · Receipt #HB-20391</p></div></div>
+        <div class="mail plain"><div class="mail__chrome"><span><b>Nihal M</b></span><span>Quick question about your design roles</span></div><div class="mail__body"><p>Hi Sam,</p><p>I saw you're hiring two product designers. Would it help if I sent you the five strongest portfolios from this week? No strings attached.</p><p>Nihal</p></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+/*__SCRIPT__*/
+</script>

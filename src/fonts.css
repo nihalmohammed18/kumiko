@@ -1,0 +1,3 @@
+/* Self-hosted fonts for Kumiko's default theme. Import from JavaScript (root layout or main.tsx) so the bundler
+   rewrites the font URLs: import "kumiko-ui/fonts.css". Apps using next/font can skip this file. Filled in once the
+   design direction is chosen. */

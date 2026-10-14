@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "../src/styles.css";
+
+/* Storybook only. Apps put these on their own <body> when they adopt Kumiko. */
+body {
+  background: var(--color-canvas);
+  color: var(--color-fg);
+  font-family: var(--kumiko-font-sans);
+}

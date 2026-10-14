@@ -1,0 +1,35 @@
+name: Update screenshots
+
+# Run on a branch after an intended visual change: gh workflow run update-screenshots.yml --ref <branch>
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec vitest run --project light --project dark --project rtl --update
+        env:
+          KUMIKO_VRT: "1"
+      - name: Commit changed baselines
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- '*__screenshots__*'
+          if git diff --cached --quiet; then echo "No screenshot changes." >> "$GITHUB_STEP_SUMMARY"; exit 0; fi
+          { echo "### Changed screenshots"; git diff --cached --name-only | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
+          git commit -m "test: update screenshot baselines"
+          git push

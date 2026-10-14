@@ -1,0 +1,23 @@
+{
+  "name": "kumiko-ui",
+  "version": "0.0.0",
+  "description": "Accessible React components on Base UI and Tailwind CSS. First release coming soon.",
+  "license": "MIT",
+  "author": "Nihal Mohammed",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nihalmohammed18/kumiko.git"
+  },
+  "homepage": "https://github.com/nihalmohammed18/kumiko",
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "base-ui",
+    "tailwindcss",
+    "design-system"
+  ],
+  "files": [
+    "README.md"
+  ]
+}

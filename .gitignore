@@ -1,0 +1,13 @@
+node_modules
+dist
+storybook-static
+coverage
+design/out
+examples/next/.next
+examples/next/node_modules
+examples/next/package-lock.json
+.vitest-attachments
+__screenshots__/**/*-actual.png
+__screenshots__/**/*-diff.png
+*.tgz
+.DS_Store

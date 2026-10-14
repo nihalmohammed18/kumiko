@@ -1,0 +1,98 @@
+/* Generated from src/tokens.ts by `pnpm tokens`. Don't edit by hand. */
+:root,
+.light,
+[data-theme="light"] {
+  color-scheme: light;
+  --kumiko-canvas: #FFFFFF;
+  --kumiko-surface: #F6F6F7;
+  --kumiko-raised: #FFFFFF;
+  --kumiko-field: #FFFFFF;
+  --kumiko-fg: #111113;
+  --kumiko-fg-muted: #63636B;
+  --kumiko-line: #E4E4E7;
+  --kumiko-line-strong: #8A8A93;
+  --kumiko-brand: #111113;
+  --kumiko-brand-fg: #FFFFFF;
+  --kumiko-highlight: #111113;
+  --kumiko-highlight-fg: #FFFFFF;
+  --kumiko-focus: #111113;
+  --kumiko-success: #157F3B;
+  --kumiko-success-subtle: #E9F6EE;
+  --kumiko-success-fg: #FFFFFF;
+  --kumiko-warning: #8F5400;
+  --kumiko-warning-subtle: #FFF4E0;
+  --kumiko-warning-fg: #FFFFFF;
+  --kumiko-danger: #C0262D;
+  --kumiko-danger-subtle: #FDECEC;
+  --kumiko-danger-fg: #FFFFFF;
+  --kumiko-info: #1F5FBF;
+  --kumiko-info-subtle: #EAF1FD;
+  --kumiko-info-fg: #FFFFFF;
+  --kumiko-series-1: #111113;
+  --kumiko-series-2: #3A63D8;
+  --kumiko-series-3: #63636B;
+  --kumiko-series-4: #B45309;
+  --kumiko-series-5: #8A8A93;
+  --kumiko-series-6: #157F3B;
+  --kumiko-scrim: rgba(17, 17, 19, 0.45);
+  --kumiko-shadow-raised: none;
+  --kumiko-shadow-overlay: 0 12px 32px rgb(17 17 19 / 0.12), 0 2px 6px rgb(17 17 19 / 0.06);
+  --kumiko-font-sans: 'Geist', 'Noto Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+  --kumiko-font-display: 'Geist', 'Noto Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+  --kumiko-font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --kumiko-radius: 6px;
+  --kumiko-control-sm: 2rem;
+  --kumiko-control-md: 2.25rem;
+  --kumiko-control-lg: 2.75rem;
+  --kumiko-duration-fast: 150ms;
+  --kumiko-duration-base: 200ms;
+  --kumiko-duration-slow: 250ms;
+  --kumiko-easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --kumiko-canvas: #0B0B0D;
+  --kumiko-surface: #141417;
+  --kumiko-raised: #1B1B1F;
+  --kumiko-field: #0B0B0D;
+  --kumiko-fg: #EDEDEF;
+  --kumiko-fg-muted: #9A9AA3;
+  --kumiko-line: #26262B;
+  --kumiko-line-strong: #6B6B74;
+  --kumiko-brand: #EDEDEF;
+  --kumiko-brand-fg: #0B0B0D;
+  --kumiko-highlight: #EDEDEF;
+  --kumiko-highlight-fg: #0B0B0D;
+  --kumiko-focus: #EDEDEF;
+  --kumiko-success: #4ADE80;
+  --kumiko-success-subtle: #0F2A1A;
+  --kumiko-success-fg: #0B0B0D;
+  --kumiko-warning: #FBBF24;
+  --kumiko-warning-subtle: #2E2209;
+  --kumiko-warning-fg: #0B0B0D;
+  --kumiko-danger: #F87171;
+  --kumiko-danger-subtle: #2D1314;
+  --kumiko-danger-fg: #0B0B0D;
+  --kumiko-info: #7AA7FF;
+  --kumiko-info-subtle: #13213D;
+  --kumiko-info-fg: #0B0B0D;
+  --kumiko-series-1: #EDEDEF;
+  --kumiko-series-2: #7AA7FF;
+  --kumiko-series-3: #9A9AA3;
+  --kumiko-series-4: #F59E0B;
+  --kumiko-series-5: #6B6B74;
+  --kumiko-series-6: #4ADE80;
+  --kumiko-scrim: rgba(0, 0, 0, 0.6);
+  --kumiko-shadow-raised: none;
+  --kumiko-shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kumiko-duration-fast: 0ms;
+    --kumiko-duration-base: 0ms;
+    --kumiko-duration-slow: 0ms;
+  }
+}

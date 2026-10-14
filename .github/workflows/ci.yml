@@ -1,0 +1,148 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  pr-title:
+    name: pr-title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      # The PR title becomes the squashed commit message, which decides the next version.
+      - uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm build
+      - run: pnpm validate
+      - run: pnpm build:storybook
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: storybook-static
+
+  browser:
+    name: browser (${{ matrix.mode }})
+    runs-on: ubuntu-latest
+    # The same image makes and checks screenshot baselines, so pixels match.
+    container: mcr.microsoft.com/playwright:v1.64.1-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [light, dark, rtl]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec vitest run --project ${{ matrix.mode }}
+        env:
+          KUMIKO_VRT: "1"
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshots-${{ matrix.mode }}
+          path: |
+            **/__screenshots__/**/*.png
+            .vitest-attachments
+          if-no-files-found: ignore
+
+  consumer:
+    name: consumer (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: next 15.5, webpack
+            next: 15.5.27
+            typescript: 5.8.3
+          - name: next 16.4, turbopack
+            next: 16.4.0
+            typescript: 6.0.3
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build && pnpm pack
+      - name: Build a Next app with the packed package
+        working-directory: examples/next
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-audit --no-fund ../../kumiko-ui-0.0.0-development.tgz next@${{ matrix.next }} typescript@${{ matrix.typescript }}
+          npx next build
+          node verify.mjs
+
+  pages:
+    name: pages
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [check, browser]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
+
+  release:
+    name: release
+    # Switched on after the 1.0 review: gh variable set RELEASE_ENABLED -b true
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.RELEASE_ENABLED == 'true'
+    needs: [check, browser, consumer]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+      # No registry-url here: it would make npm look for a token instead of using trusted publishing.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

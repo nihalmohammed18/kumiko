@@ -1,0 +1,99 @@
+/*
+ * Kumiko's Tailwind CSS v4 theme. In an app's global stylesheet:
+ *   @import "tailwindcss";
+ *   @import "kumiko-ui/styles.css";
+ * then override --kumiko-brand, --kumiko-brand-fg, --kumiko-font-sans, --kumiko-font-display and --kumiko-radius.
+ * Class names (bg-canvas, text-fg, rounded-control…) don't collide with Tailwind's or shadcn/ui's, and nothing here
+ * styles html or body, so importing Kumiko doesn't change screens that don't use it yet.
+ */
+@import "./tokens.css";
+
+/* Tailwind reads Kumiko's own class names from the files next to this one (relative to this stylesheet). */
+@source "./";
+@source not "./docs";
+
+@theme inline {
+  --color-canvas: var(--kumiko-canvas);
+  --color-surface: var(--kumiko-surface);
+  --color-surface-hover: color-mix(in oklab, var(--kumiko-fg) 6%, var(--kumiko-surface));
+  --color-raised: var(--kumiko-raised);
+  --color-field: var(--kumiko-field);
+  --color-fg: var(--kumiko-fg);
+  --color-fg-muted: var(--kumiko-fg-muted);
+  --color-line: var(--kumiko-line);
+  --color-line-strong: var(--kumiko-line-strong);
+  --color-brand: var(--kumiko-brand);
+  --color-brand-fg: var(--kumiko-brand-fg);
+  --color-brand-hover: color-mix(in oklab, var(--kumiko-brand) 86%, var(--kumiko-fg));
+  --color-brand-subtle: color-mix(in oklab, var(--kumiko-brand) 12%, var(--kumiko-surface));
+  --color-brand-text: color-mix(in oklab, var(--kumiko-brand) 78%, var(--kumiko-fg));
+  --color-highlight: var(--kumiko-highlight);
+  --color-highlight-fg: var(--kumiko-highlight-fg);
+  --color-focus: var(--kumiko-focus);
+  --color-success: var(--kumiko-success);
+  --color-success-subtle: var(--kumiko-success-subtle);
+  --color-success-fg: var(--kumiko-success-fg);
+  --color-warning: var(--kumiko-warning);
+  --color-warning-subtle: var(--kumiko-warning-subtle);
+  --color-warning-fg: var(--kumiko-warning-fg);
+  --color-danger: var(--kumiko-danger);
+  --color-danger-subtle: var(--kumiko-danger-subtle);
+  --color-danger-fg: var(--kumiko-danger-fg);
+  --color-danger-hover: color-mix(in oklab, var(--kumiko-danger) 86%, var(--kumiko-fg));
+  --color-info: var(--kumiko-info);
+  --color-info-subtle: var(--kumiko-info-subtle);
+  --color-info-fg: var(--kumiko-info-fg);
+  --color-series-1: var(--kumiko-series-1);
+  --color-series-2: var(--kumiko-series-2);
+  --color-series-3: var(--kumiko-series-3);
+  --color-series-4: var(--kumiko-series-4);
+  --color-series-5: var(--kumiko-series-5);
+  --color-series-6: var(--kumiko-series-6);
+  --color-scrim: var(--kumiko-scrim);
+
+  --radius-control: var(--kumiko-radius);
+  --radius-card: calc(var(--kumiko-radius) * 1.6);
+  --radius-overlay: calc(var(--kumiko-radius) * 2);
+
+  --shadow-raised: var(--kumiko-shadow-raised);
+  --shadow-overlay: var(--kumiko-shadow-overlay);
+
+  --font-display: var(--kumiko-font-display);
+  --font-code: var(--kumiko-font-mono);
+
+  --spacing-control-sm: var(--kumiko-control-sm);
+  --spacing-control: var(--kumiko-control-md);
+  --spacing-control-lg: var(--kumiko-control-lg);
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.125rem;
+  --text-body-sm: 0.8125rem;
+  --text-body-sm--line-height: 1.25rem;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.375rem;
+  --text-title-sm: 1rem;
+  --text-title-sm--line-height: 1.5rem;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.75rem;
+  --text-headline: 1.75rem;
+  --text-headline--line-height: 2.25rem;
+  --text-display: 2.5rem;
+  --text-display--line-height: 2.75rem;
+
+  --ease-kumiko: var(--kumiko-easing);
+}
+
+@utility duration-fast {
+  transition-duration: var(--kumiko-duration-fast);
+  animation-duration: var(--kumiko-duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--kumiko-duration-base);
+  animation-duration: var(--kumiko-duration-base);
+}
+@utility duration-slow {
+  transition-duration: var(--kumiko-duration-slow);
+  animation-duration: var(--kumiko-duration-slow);
+}
