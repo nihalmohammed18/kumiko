@@ -84,6 +84,34 @@ export const IconOnly: Story = {
   ),
 };
 
+/** Hover, keyboard focus and pressed, drawn statically so screenshots catch changes to them. */
+export const States: Story = {
+  render: (args) => (
+    <div className="grid gap-3">
+      {(["primary", "secondary", "outline", "ghost", "danger", "link"] as const).map((variant) => (
+        <div key={variant} className="flex flex-wrap items-center gap-3">
+          <Button {...args} variant={variant} data-state-demo="hover">
+            Hover
+          </Button>
+          <Button {...args} variant={variant} data-state-demo="focus">
+            Focus
+          </Button>
+          <Button {...args} variant={variant} data-state-demo="active">
+            Pressed
+          </Button>
+        </div>
+      ))}
+    </div>
+  ),
+  parameters: {
+    pseudo: {
+      hover: ['[data-state-demo="hover"]'],
+      focusVisible: ['[data-state-demo="focus"]'],
+      active: ['[data-state-demo="active"]'],
+    },
+  },
+};
+
 export const Disabled: Story = {
   args: { variant: "primary", disabled: true },
   play: async ({ args, canvas, userEvent }) => {
