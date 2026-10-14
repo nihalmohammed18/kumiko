@@ -14,6 +14,7 @@ afterEach(async ({ task }) => {
   if (!inject("vrt") || task.result?.errors?.length || window.__kumikoSkipVrt) return;
   await document.fonts.ready;
   // Just the story, unless it opens something outside it (dialogs, menus, toasts): those set parameters.vrt = "page".
-  const target = window.__kumikoVrtPage ? document.body : (document.getElementById("storybook-root") ?? document.body);
+  const story = document.querySelector<HTMLElement>("[data-kumiko-story]");
+  const target = window.__kumikoVrtPage || !story ? document.body : story;
   await expect.element(page.elementLocator(target)).toMatchScreenshot(`${task.name}-${inject("mode")}`);
 });

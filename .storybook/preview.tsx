@@ -22,7 +22,10 @@ const withKumiko: Decorator = (Story, { globals, parameters }) => {
   window.__kumikoVrtPage = parameters.vrt === "page";
   return (
     <KumikoProvider direction={dir} labels={dir === "rtl" ? arabicLabels : undefined}>
-      <Story />
+      {/* The screenshot target; the padding keeps focus rings inside the picture. */}
+      <div data-kumiko-story className="p-3">
+        <Story />
+      </div>
     </KumikoProvider>
   );
 };
