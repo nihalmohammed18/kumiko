@@ -25,12 +25,18 @@ export const RULE_IDS = [
   "stale-exception",
 ] as const;
 
+/** The projects supported by the UX harness.
+ * Use when: scoping a UX exception. Avoid when: naming a rule.
+ */
+export const MODES = ["light", "dark", "rtl", "touch", "forced", "motion"] as const;
+
 /** Debt packets whose exceptions must no longer suppress failures.
  * Use when: closing a completed debt packet. Avoid when: suppressing new violations.
  */
 export const CLOSED_DEBTS: string[] = [];
 
 const ruleIds: ReadonlySet<string> = new Set(RULE_IDS);
+const modes: ReadonlySet<string> = new Set(MODES);
 
 /** Validates the complete parameters.ux.except value without modifying it.
  * Use when: validating static or runtime exceptions. Avoid when: checking whether selectors still match.
@@ -54,6 +60,16 @@ export function validateUxExcept(value: unknown): string[] {
     if ("debt" in exception) {
       if (typeof exception.debt !== "string") problems.push(`${path}.debt must be a string`);
       else if (CLOSED_DEBTS.includes(exception.debt)) problems.push(`${path} refers to closed debt ${exception.debt}`);
+    }
+    if ("projects" in exception) {
+      const projects = exception.projects;
+      if (!Array.isArray(projects) || projects.length === 0)
+        problems.push(`${path}.projects must be a non-empty array of known modes`);
+      else {
+        if ([...projects].some((mode: unknown) => typeof mode !== "string" || !modes.has(mode)))
+          problems.push(`${path}.projects must contain only known modes`);
+        if (new Set(projects).size !== projects.length) problems.push(`${path}.projects must contain distinct modes`);
+      }
     }
   });
   return problems;
