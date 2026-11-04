@@ -43,6 +43,7 @@
     "dev": "storybook dev -p 6006 --no-open",
     "tokens": "node scripts/build-tokens.ts",
     "build": "node scripts/build-tokens.ts && rm -rf dist && tsc -p tsconfig.build.json && node scripts/copy-css.ts && node scripts/check.ts --dist",
+    "size": "node scripts/size.ts",
     "build:storybook": "storybook build -o storybook-static --quiet",
     "lint": "biome check .",
     "format": "biome check --write .",
@@ -51,6 +52,7 @@
     "check": "biome ci . && tsc --noEmit && node scripts/check.ts && vitest run --project unit",
     "test": "vitest run --project light --project dark --project rtl",
     "test:unit": "vitest run --project unit",
+    "test:coverage": "vitest run --project light --coverage",
     "vrt:docker": "sh scripts/vrt-docker.sh",
     "validate": "publint && attw --pack --profile esm-only --exclude-entrypoints styles.css fonts.css"
   },

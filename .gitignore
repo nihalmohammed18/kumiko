@@ -7,7 +7,8 @@ examples/next/.next
 examples/next/node_modules
 examples/next/package-lock.json
 .vitest
-__screenshots__/**/*-actual.png
-__screenshots__/**/*-diff.png
+**/__screenshots__/**/*-actual.png
+**/__screenshots__/**/*-diff.png
+**/__screenshots__/**/*-darwin.png
 *.tgz
 .DS_Store

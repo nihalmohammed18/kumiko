@@ -39,6 +39,13 @@ const stories = (mode: Mode, initialGlobals: Record<string, string>): TestProjec
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/**/*.stories.{ts,tsx}", "src/**/*.{test,spec}.{ts,tsx}", "src/tokens.ts", "src/index.ts"],
+      reporter: ["text-summary", "json-summary"],
+      reportsDirectory: "coverage/",
+    },
     projects: [
       {
         extends: true,
