@@ -10,7 +10,7 @@ import {
   readPaletteNames,
   sourceKind,
 } from "./check.ts";
-import { CLOSED_DEBTS, RULE_IDS, validateUxExcept } from "./ux-rules.ts";
+import { CLOSED_DEBTS, MODES, RULE_IDS, validateUxExcept } from "./ux-rules.ts";
 
 const palette = new Set(["red", "blue", "mauve", "olive", "mist", "taupe"]);
 const component = "src/components/example.tsx";
@@ -486,6 +486,38 @@ describe("ux-exception", () => {
   });
   it("accepts every shared rule id", () => {
     expect(validateUxExcept(RULE_IDS.map((rule) => ({ ...uxException, rule })))).toEqual([]);
+  });
+  it("accepts distinct known projects without modifying them", () => {
+    expect(MODES).toEqual(["light", "dark", "rtl", "touch", "forced", "motion"]);
+    const value = [{ ...uxException, projects: [...MODES] }];
+    const original = structuredClone(value);
+    expect(validateUxExcept(value)).toEqual([]);
+    expect(value).toEqual(original);
+    expect(
+      lintStory(story(`parameters: { ux: { except: ${JSON.stringify(value)} } }`), "src/example.stories.tsx"),
+    ).toEqual([]);
+  });
+  it.each([
+    { label: "undefined", projects: undefined },
+    { label: "null", projects: null },
+    { label: "a string", projects: "light" },
+    { label: "a number", projects: 1 },
+    { label: "an object", projects: {} },
+    { label: "an empty array", projects: [] },
+    { label: "an unknown project", projects: ["light", "unknown"] },
+    { label: "a non-string project", projects: ["light", 1] },
+    { label: "a null project", projects: [null] },
+    { label: "a sparse project array", projects: Array(1) },
+    { label: "a duplicate project", projects: ["light", "light"] },
+  ])("rejects projects containing $label in the validator and story guard", ({ projects }) => {
+    expect(validateUxExcept([{ ...uxException, projects }])).toContainEqual(
+      expect.stringContaining("except[0].projects"),
+    );
+    const properties = `parameters: { ux: { except: [{ rule: "cursor", selector: "button",
+      reason: ${JSON.stringify(reason)}, projects: ${JSON.stringify(projects) ?? "undefined"} }] } }`;
+    expect(lintStory(story(properties), "src/example.stories.tsx")).toContainEqual(
+      expect.objectContaining({ rule: "ux-exception", message: expect.stringContaining("except[0].projects") }),
+    );
   });
   it("rejects a closed debt in both the shared validator and story guard", () => {
     CLOSED_DEBTS.push("M2b");

@@ -49,7 +49,11 @@ export default defineConfig({
     projects: [
       {
         extends: true,
-        test: { name: "unit", environment: "node", include: ["src/**/*.test.ts", "scripts/**/*.test.ts"] },
+        test: {
+          name: "unit",
+          environment: "node",
+          include: ["src/**/*.test.ts", "scripts/**/*.test.ts", ".storybook/**/*.test.ts"],
+        },
       },
       stories("light", { theme: "light", dir: "ltr" }),
       stories("dark", { theme: "dark", dir: "ltr" }),
