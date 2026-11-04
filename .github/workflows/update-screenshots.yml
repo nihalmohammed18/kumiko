@@ -12,6 +12,8 @@ jobs:
     if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.64.1-noble
+    outputs:
+      pushed: ${{ steps.commit.outputs.pushed }}
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -20,10 +22,13 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec vitest run --project light --project dark --project rtl --update
+      - run: |
+          find src -path '*/__screenshots__/*' -name '*.png' -delete
+          pnpm exec vitest run --project light --project dark --project rtl --update
         env:
           KUMIKO_VRT: "1"
       - name: Commit changed baselines
+        id: commit
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
@@ -33,3 +38,16 @@ jobs:
           { echo "### Changed screenshots"; git diff --cached --name-only | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
           git commit -m "test: update screenshot baselines"
           git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+  retrigger:
+    needs: update
+    if: needs.update.outputs.pushed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - run: gh workflow run ci.yml --ref "$GITHUB_REF_NAME"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}

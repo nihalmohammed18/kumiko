@@ -3,8 +3,13 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, beta]
   workflow_dispatch:
+    inputs:
+      release_dry_run:
+        description: Verify the next release without publishing
+        type: boolean
+        default: false
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -16,15 +21,34 @@ permissions:
 jobs:
   pr-title:
     name: pr-title
-    if: github.event_name == 'pull_request'
+    if: github.event_name != 'push'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
     steps:
       # The PR title becomes the squashed commit message, which decides the next version.
-      - uses: amannn/action-semantic-pull-request@v6
+      - name: Validate PR title
+        shell: bash
+        run: |
+          # Read the live title, so re-running this job after fixing a title passes.
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            title="$(gh pr view "$PR_NUMBER" --json title -q .title)"
+          else
+            title="$(gh pr list --head "$GITHUB_REF_NAME" --state open --json title -q '.[0].title')"
+            if [[ -z "$title" ]]; then
+              echo "No open PR for $GITHUB_REF_NAME, so there is no title to check."
+              exit 0
+            fi
+          fi
+          pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?: .+$'
+          if [[ ! "$title" =~ $pattern ]]; then
+            echo "::error::PR title must use Conventional Commits, for example: chore: add CI guardrails."
+            exit 1
+          fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
 
   check:
     name: check
@@ -39,6 +63,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm build
+      - run: pnpm size
       - run: pnpm validate
       - run: pnpm build:storybook
       - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -63,9 +88,20 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec vitest run --project ${{ matrix.mode }}
+      - run: pnpm exec vitest run --project ${{ matrix.mode }} ${{ matrix.mode == 'light' && '--coverage' || '' }}
         env:
           KUMIKO_VRT: "1"
+      - name: Summarize coverage
+        if: matrix.mode == 'light'
+        run: |
+          node --input-type=module <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          import { readFileSync } from "node:fs";
+          const { total } = JSON.parse(readFileSync("coverage/coverage-summary.json", "utf8"));
+          console.log("### Coverage (light)\n\n| Metric | Coverage |\n| --- | ---: |");
+          for (const metric of ["statements", "branches", "functions", "lines"]) {
+            console.log(`| ${metric} | ${total[metric].pct}% |`);
+          }
+          NODE
       - if: failure()
         uses: actions/upload-artifact@v7
         with:
@@ -123,7 +159,7 @@ jobs:
   release:
     name: release
     # Switched on after the 1.0 review: gh variable set RELEASE_ENABLED -b true
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.RELEASE_ENABLED == 'true'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta') && vars.RELEASE_ENABLED == 'true'
     needs: [check, browser, consumer]
     runs-on: ubuntu-latest
     permissions:
@@ -144,5 +180,31 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-dry-run:
+    name: release-dry-run
+    if: github.event_name == 'workflow_dispatch' && inputs.release_dry_run
+    needs: [check, browser, consumer]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+      # No registry-url here: it would make npm look for a token instead of using trusted publishing.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec semantic-release --dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
