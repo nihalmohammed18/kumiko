@@ -72,6 +72,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
     "@biomejs/biome": "2.5.15",
+    "@hookform/resolvers": "5.9.2",
     "@storybook/addon-a11y": "10.6.2",
     "@storybook/addon-docs": "10.6.2",
     "@storybook/addon-vitest": "10.6.2",
@@ -87,12 +88,14 @@
     "publint": "0.3.25",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "react-hook-form": "7.91.0",
     "semantic-release": "25.0.9",
     "storybook": "10.6.2",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3",
     "vite": "8.3.4",
-    "vitest": "5.0.4"
+    "vitest": "5.0.4",
+    "zod": "4.6.7"
   },
   "packageManager": "pnpm@11.28.5",
   "devEngines": {
