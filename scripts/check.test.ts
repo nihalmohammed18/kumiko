@@ -555,6 +555,7 @@ describe("ux-exception", () => {
       "state-not-color",
       "directional",
       "color-scheme",
+      "dead-class",
       "stale-exception",
     ]);
     expect(CLOSED_DEBTS).toEqual(["M2b"]);

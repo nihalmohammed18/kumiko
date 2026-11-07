@@ -22,6 +22,7 @@ export const RULE_IDS = [
   "state-not-color",
   "directional",
   "color-scheme",
+  "dead-class",
   "stale-exception",
 ] as const;
 

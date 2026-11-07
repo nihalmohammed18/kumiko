@@ -76,6 +76,7 @@ Implementation agents (Codex) work without a browser or network. They:
 | `state-not-color` | Never show a state by colour alone. |
 | `directional` | Flip direction-dependent icons in right-to-left. |
 | `color-scheme` | Set `color-scheme` to match the theme. |
+| `dead-class` | Use only classes that some CSS rule styles: a misspelt utility or a missing token generates nothing. |
 | `stale-exception` | Remove exceptions that no longer match anything. |
 
 ## Component conventions
