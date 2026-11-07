@@ -129,6 +129,17 @@ export const fonts = {
   code: "ui-monospace, 'SF Mono', Menlo, monospace",
 } as const;
 
+/** System colour roles for controls in forced-colours mode.
+ * Use when: preserving checked fills, marks and focus in high contrast. Avoid when: colouring a regular theme.
+ */
+export const forcedColors = {
+  "forced-fill": "Highlight",
+  "forced-fg": "HighlightText",
+  "forced-ink": "CanvasText",
+  "forced-surface": "Canvas",
+  "forced-disabled": "GrayText",
+} as const;
+
 /** Type scale: [font size, line height].
  * Use when: reading a text role's dimensions. Avoid when: sizing controls; use controls.
  */
@@ -148,7 +159,7 @@ export const text = {
 /** Corner radii for controls, cards, overlays and pills.
  * Use when: choosing a shape by role. Avoid when: deriving unrelated radii from a control.
  */
-export const radii = { control: "14px", card: "20px", overlay: "24px", pill: "9999px" } as const;
+export const radii = { choice: "7px", control: "14px", card: "20px", overlay: "24px", pill: "9999px" } as const;
 
 /** Control border width.
  * Use when: drawing a control boundary. Avoid when: sizing the press edge or focus ring.
@@ -208,7 +219,7 @@ export const easings = {
  * Use when: configuring tailwind-merge. Avoid when: registering duration or layer classes; use class groups.
  */
 export const themeNames = {
-  color: Object.keys(colors.light),
+  color: [...Object.keys(colors.light), ...Object.keys(forcedColors)],
   text: Object.keys(text),
   radius: Object.keys(radii),
   spacing: ["control-sm", "control", "control-lg"],

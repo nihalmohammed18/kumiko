@@ -113,6 +113,11 @@
 }
 
 :root {
+  --kumiko-forced-fill: Highlight;
+  --kumiko-forced-fg: HighlightText;
+  --kumiko-forced-ink: CanvasText;
+  --kumiko-forced-surface: Canvas;
+  --kumiko-forced-disabled: GrayText;
   --kumiko-font-display: 'Fredoka Variable', 'Baloo Bhaijaan 2 Variable', ui-rounded, system-ui, sans-serif;
   --kumiko-font-body: 'Nunito Variable', 'Baloo Bhaijaan 2 Variable', ui-sans-serif, system-ui, sans-serif;
   --kumiko-font-code: ui-monospace, 'SF Mono', Menlo, monospace;
@@ -136,6 +141,7 @@
   --kumiko-text-display-leading: 2.75rem;
   --kumiko-text-hero: 4rem;
   --kumiko-text-hero-leading: 4.25rem;
+  --kumiko-radius-choice: 7px;
   --kumiko-radius-control: 14px;
   --kumiko-radius-card: 20px;
   --kumiko-radius-overlay: 24px;

@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from "node:fs";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
@@ -7,6 +8,22 @@ import { uxMouse } from "./.storybook/ux/commands.ts";
 import type { MODES } from "./scripts/ux-rules.ts";
 
 type Mode = (typeof MODES)[number];
+
+// Every Base UI module the components import, pre-bundled up front. Otherwise each of the six browser projects
+// discovers them mid-run, Vite re-optimises and reloads, and tests fail to load.
+const baseUiModules = [
+  ...new Set(
+    readdirSync("src", { recursive: true, withFileTypes: true })
+      // Screenshot folders are named after story files, so keep only real files.
+      .filter((entry) => entry.isFile() && /\.tsx?$/.test(entry.name))
+      .flatMap((entry) =>
+        Array.from(
+          readFileSync(`${entry.parentPath}/${entry.name}`, "utf8").matchAll(/from "(@base-ui\/react\/[\w-]+)"/g),
+          (match) => match[1]!,
+        ),
+      ),
+  ),
+];
 
 interface Project {
   dir?: "ltr" | "rtl";
@@ -63,6 +80,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: { include: baseUiModules },
   test: {
     coverage: {
       provider: "v8",

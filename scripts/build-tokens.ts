@@ -1,7 +1,20 @@
 // Writes src/tokens.css and src/theme.css. `node scripts/build-tokens.ts --check` fails if either is stale.
 import { readFileSync, writeFileSync } from "node:fs";
 import { cssScope, cssVars } from "../src/lib/theme-css.ts";
-import { border, colors, controls, durations, easings, edge, fonts, layers, radii, ring, text } from "../src/tokens.ts";
+import {
+  border,
+  colors,
+  controls,
+  durations,
+  easings,
+  edge,
+  fonts,
+  forcedColors,
+  layers,
+  radii,
+  ring,
+  text,
+} from "../src/tokens.ts";
 
 const themeVars = (names: string[], prefix: string, tokenPrefix = prefix) =>
   names.map((name) => `  --${prefix}${name}: var(--kumiko-${tokenPrefix}${name});`).join("\n");
@@ -11,6 +24,7 @@ const themeVars = (names: string[], prefix: string, tokenPrefix = prefix) =>
  */
 export function tokensCss(): string {
   const globals = [
+    cssVars(forcedColors),
     cssVars(fonts, "font-"),
     cssVars(
       Object.fromEntries(
@@ -46,7 +60,7 @@ export function tokensCss(): string {
 export function themeCss(): string {
   return `/* Generated from src/tokens.ts by \`pnpm tokens\`. Don't edit by hand. */
 @theme inline {
-${themeVars(Object.keys(colors.light), "color-", "")}
+${themeVars([...Object.keys(colors.light), ...Object.keys(forcedColors)], "color-", "")}
 ${themeVars(Object.keys(radii), "radius-")}
   --spacing-control-sm: var(--kumiko-control-sm);
   --spacing-control: var(--kumiko-control-md);
