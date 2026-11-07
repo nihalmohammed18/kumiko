@@ -105,38 +105,45 @@
   border-radius: calc(var(--kumiko-radius-overlay) - var(--kumiko-border));
 }
 
+/* A tail sized by --popup-arrow-h; it covers the border so the bubble reads as one shape. A tail on the sides or the
+ * bottom keeps the popup's edge under it. The edge offset is in the arrow's own, rotated coordinates. */
 @utility popup-arrow {
+  --arrow-h: var(--popup-arrow-h, 0.625rem);
+  --arrow-edge: var(--popup-arrow-edge, var(--kumiko-edge-h));
   display: block;
-  inline-size: 0.75rem;
-  block-size: 0.375rem;
+  inline-size: calc(2 * var(--arrow-h));
+  block-size: var(--arrow-h);
   overflow: clip;
 
   &[data-side="top"] {
-    inset-block-end: -0.375rem;
+    inset-block-end: calc(-1 * var(--arrow-h));
     rotate: 180deg;
+    filter: drop-shadow(0 calc(-1 * var(--arrow-edge)) 0 var(--kumiko-edge-neutral));
   }
 
   &[data-side="bottom"] {
-    inset-block-start: -0.375rem;
+    inset-block-start: calc(-1 * var(--arrow-h));
   }
 
   &:is([data-side="left"], [data-side="inline-start"]:dir(ltr), [data-side="inline-end"]:dir(rtl)) {
-    inset-inline-end: -0.5625rem;
+    inset-inline-end: calc(-1.5 * var(--arrow-h));
     rotate: 90deg;
+    filter: drop-shadow(var(--arrow-edge) 0 0 var(--kumiko-edge-neutral));
 
     &:dir(rtl) {
       inset-inline-end: auto;
-      inset-inline-start: -0.5625rem;
+      inset-inline-start: calc(-1.5 * var(--arrow-h));
     }
   }
 
   &:is([data-side="right"], [data-side="inline-end"]:dir(ltr), [data-side="inline-start"]:dir(rtl)) {
-    inset-inline-start: -0.5625rem;
+    inset-inline-start: calc(-1.5 * var(--arrow-h));
     rotate: -90deg;
+    filter: drop-shadow(calc(-1 * var(--arrow-edge)) 0 0 var(--kumiko-edge-neutral));
 
     &:dir(rtl) {
       inset-inline-start: auto;
-      inset-inline-end: -0.5625rem;
+      inset-inline-end: calc(-1.5 * var(--arrow-h));
     }
   }
 
@@ -146,8 +153,8 @@
     inset-block-end: 0;
     inset-inline: 0;
     margin-inline: auto;
-    inline-size: calc(0.375rem * sqrt(2));
-    block-size: calc(0.375rem * sqrt(2));
+    inline-size: calc(var(--arrow-h) * sqrt(2));
+    block-size: calc(var(--arrow-h) * sqrt(2));
     background-color: var(--popup-arrow-fill, var(--kumiko-surface));
     border-block-start: var(--popup-arrow-border, var(--kumiko-border)) solid var(--kumiko-line);
     border-inline-start: var(--popup-arrow-border, var(--kumiko-border)) solid var(--kumiko-line);
@@ -156,6 +163,13 @@
 
   &:dir(rtl)::before {
     transform: translateY(50%) rotate(-45deg);
+  }
+
+  /* Forced colours drop the popup's edge, so the tail drops its own; :dir() matches the side rules' specificity. */
+  @media (forced-colors: active) {
+    &[data-side]:is(:dir(ltr), :dir(rtl)) {
+      filter: none;
+    }
   }
 }
 
@@ -202,4 +216,6 @@
 @utility tooltip-arrow {
   --popup-arrow-fill: var(--kumiko-strong);
   --popup-arrow-border: 0px;
+  --popup-arrow-h: 0.375rem;
+  --popup-arrow-edge: 0px;
 }

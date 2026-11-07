@@ -57,7 +57,7 @@ export function PopoverPopup({
   arrow = false,
   side,
   align,
-  sideOffset = 8,
+  sideOffset = arrow ? 16 : 8,
   ...props
 }: PopoverPopupProps) {
   return (
