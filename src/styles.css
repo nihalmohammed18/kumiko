@@ -2,6 +2,7 @@
 @import "./tokens.css";
 @import "./theme.css";
 @import "./press.css";
+@import "./card.css";
 @import "./popup.css";
 @source "./";
 @source not "./docs";

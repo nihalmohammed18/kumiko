@@ -70,7 +70,7 @@ if (import.meta.main) {
   }
   // styles.css imports the generated files and shared recipes; measure the complete stylesheet.
   sizes.css = measure(
-    ["styles.css", "tokens.css", "theme.css", "press.css", "popup.css"]
+    ["styles.css", "tokens.css", "theme.css", "press.css", "card.css", "popup.css"]
       .map((file) => readFileSync(join(root, "dist", file), "utf8"))
       .join("\n"),
   );

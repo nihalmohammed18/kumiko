@@ -1,0 +1,87 @@
+@utility card-press {
+  &:has([data-slot="card-link"]) {
+    --press-round: var(--kumiko-radius-card);
+    --press-drop: var(--kumiko-edge-h);
+    --press-edge: var(--kumiko-edge-neutral);
+    --press-fill: var(--kumiko-surface);
+    --press-text: var(--kumiko-ink);
+    --press-hover: color-mix(in oklab, var(--press-fill) 90%, var(--press-text));
+
+    isolation: isolate;
+    cursor: pointer;
+    box-shadow: 0 var(--press-drop) 0 var(--press-edge);
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--kumiko-duration-hover) var(--kumiko-ease-enter),
+      border-color var(--kumiko-duration-hover) var(--kumiko-ease-enter),
+      translate var(--kumiko-duration-press-out) var(--kumiko-ease-enter),
+      box-shadow var(--kumiko-duration-press-out) var(--kumiko-ease-enter);
+
+    & [data-slot="card-link"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: var(--press-round);
+      z-index: var(--kumiko-layer-base);
+    }
+
+    /* Other controls in a linked card sit above the link's overlay, so they stay clickable: no extra classes needed.
+       The card isolates its stacking, so this order is local to it. */
+    & :is(a, button, input, select, textarea, label, [tabindex]):not([data-slot="card-link"]) {
+      position: relative;
+      z-index: calc(var(--kumiko-layer-base) + 1);
+    }
+
+    /* The card's ring replaces the anchor's text-sized outline, including in forced colours. */
+    & [data-slot="card-link"]:focus-visible {
+      outline: 0 solid transparent;
+    }
+
+    @media (hover: hover) {
+      &:has([data-slot="card-link"]:hover) {
+        border-color: var(--kumiko-control-line);
+      }
+    }
+
+    &:has([data-slot="card-link"]:active) {
+      background-color: var(--press-hover);
+      transition-duration:
+        var(--kumiko-duration-hover), var(--kumiko-duration-hover), var(--kumiko-duration-press-in),
+        var(--kumiko-duration-press-in);
+    }
+
+    &:has([data-slot="card-link"]:focus-visible)::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      inset: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width)));
+      inset-block-end: calc(
+        -1 *
+        (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width) + var(--press-drop))
+      );
+      border: var(--kumiko-ring-width) solid var(--kumiko-focus);
+      border-radius: calc(var(--press-round) + var(--kumiko-ring-gap) + var(--kumiko-ring-width));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      &:has([data-slot="card-link"]:active) {
+        translate: 0 var(--press-drop);
+        box-shadow: 0 0 0 var(--press-edge);
+      }
+
+      &:has([data-slot="card-link"]:active:focus-visible)::after {
+        inset-block-end: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width)));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-property: background-color, border-color;
+    }
+
+    @media (forced-colors: active) {
+      &:has([data-slot="card-link"]:focus-visible)::after {
+        border-color: var(--kumiko-forced-ink);
+      }
+    }
+  }
+}

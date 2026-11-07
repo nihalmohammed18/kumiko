@@ -15,6 +15,7 @@ const en = {
   increment: "Increase",
   clear: "Clear",
   noMatches: "No matches",
+  moreCount: { one: "{count} more", other: "{count} more" },
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -29,6 +30,13 @@ export const labels = {
     increment: "زيادة",
     clear: "مسح",
     noMatches: "لا توجد نتائج",
+    moreCount: {
+      one: "واحد آخر",
+      two: "اثنان آخران",
+      few: "{count} آخرون",
+      many: "{count} آخرون",
+      other: "{count} آخرون",
+    },
   },
   ur: {
     close: "بند کریں",
@@ -37,6 +45,7 @@ export const labels = {
     increment: "بڑھائیں",
     clear: "صاف کریں",
     noMatches: "کوئی نتیجہ نہیں",
+    moreCount: { one: "{count} اور", other: "{count} اور" },
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof en, Label>>;
 
