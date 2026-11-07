@@ -10,7 +10,7 @@ The owner's bar: the small details must be right everywhere. A disabled button n
 |---|---|
 | `pnpm dev` | Storybook on port 6006. |
 | `pnpm check` | Biome, types, the `scripts/check.ts` guards and unit tests. Run it before every push. |
-| `pnpm test` | Every story in six real-Chromium projects (light, dark, rtl, touch, forced colours, full motion): play tests, axe, the UX rules and screenshot comparisons. |
+| `pnpm test` | Every story in six real-Chromium projects (light, dark, rtl, touch, forced colours, full motion): play tests, the UX rules and screenshot comparisons, plus axe in light, dark, rtl and forced colours. In forced colours axe reads authored colours, so a story never nests a `data-theme` section (the dark project covers dark). |
 | `pnpm build && pnpm validate` | Builds the package, then checks its exports with publint and attw. |
 | `pnpm size` | Gzipped size of each entry; fails when one grows more than 10% over `size-baseline.json`. |
 | `pnpm tokens` | Regenerates `src/tokens.css` and `src/theme.css` after editing `src/tokens.ts`. |
