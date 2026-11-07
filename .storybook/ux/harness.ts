@@ -593,6 +593,16 @@ async function realPointer(mode: Mode, add: Add) {
   }
 }
 
+/** Whether an element paints an outline of its own: Chrome's "auto" ring ignores a transparent colour, and a
+ * visually hidden input (clipped to a pixel, like a slider's range input) paints nothing. */
+function ownRing(element: Element): boolean {
+  const style = getComputedStyle(element);
+  const box = element.getBoundingClientRect();
+  if (box.width <= 1 || box.height <= 1 || style.clipPath !== "none" || style.clip !== "auto") return false;
+  if (style.outlineStyle === "none" || Number.parseFloat(style.outlineWidth) === 0) return false;
+  return style.outlineStyle === "auto" || (parseColor(style.outlineColor)?.a ?? 0) > 0;
+}
+
 /** Real Tab stops: a visible, unclipped, uncovered ring with no layout shift. (No ring after a mouse press is a
  * static check: rings use focus-visible:, never focus:, see scripts/check.ts.) */
 async function realFocus(mode: Mode, add: Add) {
@@ -622,6 +632,9 @@ async function realFocus(mode: Mode, add: Add) {
     }
     for (const index of shifted(restBoxes, scope.map(layoutBox)))
       add("no-layout-shift", scope[index]!, `moves or resizes when ${describe(element)} gets keyboard focus`);
+    // An input inside a field-styled group leaves the ring to its group: a second ring inside it is clutter.
+    if (controlSurface(element) !== element && ownRing(element))
+      add("focus-ring", element, "draws its own ring inside the ring its group draws");
     const found = ring(rest, snap(element));
     const problems = ringProblems(found, backdrop(element));
     for (const problem of problems) add("focus-ring", element, problem);

@@ -53,7 +53,7 @@ export function ComboboxInput({ size, className, ...props }: ComboboxInputProps)
           <BaseCombobox.Input
             {...props}
             data-slot="combobox-input"
-            className="min-w-0 flex-1 bg-transparent py-1.5 focus-visible:outline-transparent cursor-text data-disabled:cursor-not-allowed placeholder:text-ink-muted data-disabled:placeholder:text-disabled-text"
+            className="min-w-0 flex-1 bg-transparent py-1.5 focus-visible:outline-solid focus-visible:outline-0 cursor-text data-disabled:cursor-not-allowed placeholder:text-ink-muted data-disabled:placeholder:text-disabled-text"
           />
           {/* Clearing can't happen in a disabled or read-only field, so the button isn't offered there. */}
           {!state.disabled && !state.readOnly && (

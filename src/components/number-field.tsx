@@ -76,7 +76,7 @@ export function NumberField({
           {...inputProps}
           data-slot="number-field-input"
           className={cn(
-            "min-w-0 flex-1 bg-transparent text-center tabular-nums cursor-text data-disabled:cursor-not-allowed focus-visible:outline-transparent",
+            "min-w-0 flex-1 bg-transparent text-center tabular-nums cursor-text data-disabled:cursor-not-allowed focus-visible:outline-solid focus-visible:outline-0",
             inputProps?.className,
           )}
         />
