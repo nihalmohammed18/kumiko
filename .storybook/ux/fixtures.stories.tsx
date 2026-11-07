@@ -81,6 +81,19 @@ export const FocusRingMissing = fixture(["focus-ring"], () => (
   </>
 ));
 
+// The group draws the ring for its inner input, but the input also keeps the browser's own ring.
+export const FocusRingDoubled = fixture(["focus-ring"], () => (
+  <>
+    <style>
+      {`.ux-group { display: inline-flex; padding: 4px; } .ux-group input { font: 16px sans-serif; }
+        .ux-group:has(:focus-visible) { outline: 3px solid rgb(20, 20, 25); outline-offset: 2px; }`}
+    </style>
+    <div data-slot="number-field-group" className="ux-face ux-group">
+      <input data-slot="number-field-input" aria-label="Quantity" defaultValue="4" />
+    </div>
+  </>
+));
+
 export const FocusRingCovered = fixture(["focus-ring"], () => (
   <>
     <style>{".ux-ring:focus-visible { outline: 3px solid rgb(20, 20, 25); outline-offset: 2px; }"}</style>

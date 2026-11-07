@@ -524,6 +524,8 @@ function demoStates(mode: Mode, add: Add) {
   }
 }
 
+const expandedCount = () => document.querySelectorAll('[aria-expanded="true"]').length;
+
 /** Real mouse hover and press on one enabled and one disabled (or loading) button. */
 async function realPointer(mode: Mode, add: Add) {
   const buttons = actionables().filter(
@@ -541,6 +543,8 @@ async function realPointer(mode: Mode, add: Add) {
     const behind = backdrop(element);
     const rest = snap(element);
     const restBoxes = boxes();
+    // An item already highlighted at rest (a story can pin one) has nothing left for a hover to show.
+    const highlighted = element.hasAttribute("data-highlighted");
     element.setAttribute("data-ux-probe", "");
     try {
       await commands.uxMouse("move", "[data-ux-probe]");
@@ -550,13 +554,20 @@ async function realPointer(mode: Mode, add: Add) {
       const rect = element.getBoundingClientRect();
       const under = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
       const cursor = under ? getComputedStyle(under).cursor : "none";
-      const expanded = element.getAttribute("aria-expanded") === "true";
+      const expanded = expandedCount();
       await commands.uxMouse("down");
       await frame();
       const press = snap(element);
-      const opened = !expanded && element.getAttribute("aria-expanded") === "true";
+      const opened = expandedCount() > expanded;
       const pressBoxes = boxes();
       await commands.uxMouse("park");
+      // A probe leaves the story as it found it: close what the press opened, so later checks don't measure a popup
+      // that is still placing itself.
+      if (opened) {
+        await userEvent.keyboard("{Escape}");
+        for (let i = 0; i < 60 && (expandedCount() > expanded || document.querySelector("[data-ending-style]")); i++)
+          await frame();
+      }
       const allowed = expectedCursor("action", state);
       if (allowed && !allowed.includes(cursor))
         add("cursor", element, `the pointer shows ${cursor} over it, expected ${allowed.join(" or ")}`);
@@ -570,7 +581,8 @@ async function realPointer(mode: Mode, add: Add) {
         const changed = [...differences(rest, hover), ...differences(rest, press)];
         if (changed.length) add("disabled-inert", element, `a real hover or press changes ${[...new Set(changed)]}`);
       } else {
-        if (!changes(rest, hover, behind).length) add("hover-visible", element, "a real hover doesn't change it");
+        if (!highlighted && !changes(rest, hover, behind).length)
+          add("hover-visible", element, "a real hover doesn't change it");
         // A press that opens a popup is visible feedback in itself, even if the trigger's own style doesn't change.
         if (!opened && !changes(mode === "touch" ? rest : hover, press, behind).length)
           add("press-visible", element, "a real press doesn't change it");
@@ -579,6 +591,16 @@ async function realPointer(mode: Mode, add: Add) {
       element.removeAttribute("data-ux-probe");
     }
   }
+}
+
+/** Whether an element paints an outline of its own: Chrome's "auto" ring ignores a transparent colour, and a
+ * visually hidden input (clipped to a pixel, like a slider's range input) paints nothing. */
+function ownRing(element: Element): boolean {
+  const style = getComputedStyle(element);
+  const box = element.getBoundingClientRect();
+  if (box.width <= 1 || box.height <= 1 || style.clipPath !== "none" || style.clip !== "auto") return false;
+  if (style.outlineStyle === "none" || Number.parseFloat(style.outlineWidth) === 0) return false;
+  return style.outlineStyle === "auto" || (parseColor(style.outlineColor)?.a ?? 0) > 0;
 }
 
 /** Real Tab stops: a visible, unclipped, uncovered ring with no layout shift. (No ring after a mouse press is a
@@ -610,6 +632,9 @@ async function realFocus(mode: Mode, add: Add) {
     }
     for (const index of shifted(restBoxes, scope.map(layoutBox)))
       add("no-layout-shift", scope[index]!, `moves or resizes when ${describe(element)} gets keyboard focus`);
+    // An input inside a field-styled group leaves the ring to its group: a second ring inside it is clutter.
+    if (controlSurface(element) !== element && ownRing(element))
+      add("focus-ring", element, "draws its own ring inside the ring its group draws");
     const found = ring(rest, snap(element));
     const problems = ringProblems(found, backdrop(element));
     for (const problem of problems) add("focus-ring", element, problem);

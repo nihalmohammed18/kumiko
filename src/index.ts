@@ -2,6 +2,20 @@ export { Button, type ButtonProps, IconButton, type IconButtonProps } from "./co
 export { type ButtonStyleProps, type ButtonTone, buttonStyles } from "./components/button-styles.ts";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
+export {
+  Combobox,
+  ComboboxGroup,
+  ComboboxGroupLabel,
+  type ComboboxGroupLabelProps,
+  type ComboboxGroupProps,
+  ComboboxInput,
+  type ComboboxInputProps,
+  ComboboxItem,
+  type ComboboxItemProps,
+  ComboboxPopup,
+  type ComboboxPopupProps,
+  type ComboboxProps,
+} from "./components/combobox.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
 export {
   Field,
@@ -48,7 +62,7 @@ export { Switch, type SwitchProps } from "./components/switch.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export { Toggle, type ToggleProps } from "./components/toggle.tsx";
 export { ToggleGroup, type ToggleGroupProps } from "./components/toggle-group.tsx";
-export { CheckIcon, ChevronDownIcon, MinusIcon, PlusIcon, SearchIcon } from "./icons.tsx";
+export { CheckIcon, ChevronDownIcon, MinusIcon, PlusIcon, SearchIcon, XIcon } from "./icons.tsx";
 export { formatLabel, type Label, type LabelKey, labels, type Plural } from "./labels.ts";
 export { cn } from "./lib/tv.ts";
 export {
