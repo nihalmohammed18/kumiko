@@ -438,14 +438,16 @@ function scan(mode: Mode, add: Add) {
 
   const stateful = Array.from(document.body.querySelectorAll(STATE_ATTRIBUTES.map((name) => `[${name}]`).join(",")));
   const key = (element: Element) => STATE_ATTRIBUTES.map((name) => element.getAttribute(name) ?? "").join("|");
-  const compared = new Set<string>();
+  // Compare each pair of states once per group: one group passing says nothing about the next.
+  const compared = new Map<Element | null, Set<string>>();
   for (const a of stateful.filter(exposed)) {
     for (const b of stateful.filter(exposed)) {
       if (a === b || a.parentElement !== b.parentElement || a.localName !== b.localName) continue;
       if (a.getAttribute("data-slot") !== b.getAttribute("data-slot") || key(a) === key(b)) continue;
       const pair = [key(a), key(b)].sort().join(" vs ");
-      if (compared.has(pair)) continue;
-      compared.add(pair);
+      const seen = compared.get(a.parentElement) ?? new Set<string>();
+      if (seen.has(pair)) continue;
+      compared.set(a.parentElement, seen.add(pair));
       const problem = stateProblem(snap(a), snap(b), backdrop(a));
       if (problem) add("state-not-color", a, problem);
     }
