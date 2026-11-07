@@ -49,3 +49,13 @@ it("uses the slider's painted thumb as its hit target while keeping the number i
   expect(controlSurface(input)).toBe(group);
   expect(controlHitTarget(input)).toBe(input);
 });
+
+it("measures the file input's dropzone label as both its painted surface and hit target", () => {
+  const dropzone = node("LABEL", { "data-slot": "file-upload-dropzone" });
+  const input = node("INPUT", { "data-slot": "file-upload-input" }, node("DIV", {}, dropzone));
+  expect(controlSurface(input)).toBe(dropzone);
+  expect(controlHitTarget(input)).toBe(dropzone);
+  const unownedInput = node("INPUT", { "data-slot": "file-upload-input" });
+  expect(controlSurface(unownedInput)).toBe(unownedInput);
+  expect(controlHitTarget(unownedInput)).toBe(unownedInput);
+});

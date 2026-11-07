@@ -1,5 +1,21 @@
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { sizeProblems } from "./size.ts";
+import { readStylesheet, sizeProblems } from "./size.ts";
+
+it("includes new stylesheets imported by the entry without a separate file list", () => {
+  const directory = mkdtempSync(join(tmpdir(), "kumiko-size-"));
+  try {
+    const styles = '@import "./new.css";\n.entry { display: grid; }';
+    const imported = ".new { display: flex; }";
+    writeFileSync(join(directory, "styles.css"), styles);
+    writeFileSync(join(directory, "new.css"), imported);
+    expect(readStylesheet(join(directory, "styles.css"))).toBe(`${styles}\n${imported}`);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
 
 describe("gzip size budget", () => {
   it("allows reductions and exactly 10% growth", () => {

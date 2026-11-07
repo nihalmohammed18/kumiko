@@ -29,8 +29,9 @@
     }
   }
 
-  &:active:not([data-disabled]),
-  &[data-dragging]:not([data-disabled]) {
+  /* A press inside a pressed label drops with it: pressing a label presses its control (FileUpload's dropzone). */
+  &:is(:active, [data-dragging]):not([data-disabled]),
+  label:active &:not([data-disabled]) {
     translate: 0 var(--press-drop);
     box-shadow: 0 0 0 var(--press-edge);
     background-color: var(--press-down, var(--press-hover));
@@ -39,14 +40,12 @@
       var(--kumiko-duration-press-in), var(--kumiko-duration-press-in);
   }
 
-  &:focus-visible,
-  &:has(:focus-visible) {
+  &:is(:focus-visible, :has(:focus-visible)) {
     outline: var(--kumiko-ring-width) solid transparent;
     outline-offset: var(--kumiko-ring-gap);
   }
 
-  &:focus-visible::after,
-  &:has(:focus-visible)::after {
+  &:is(:focus-visible, :has(:focus-visible))::after {
     content: "";
     position: absolute;
     pointer-events: none;
@@ -114,8 +113,7 @@
       outline-color: CanvasText;
     }
 
-    &:focus-visible::after,
-    &:has(:focus-visible)::after {
+    &:is(:focus-visible, :has(:focus-visible))::after {
       display: none;
     }
   }

@@ -1,0 +1,3 @@
+@utility progress-stripe {
+  background-color: color-mix(in oklab, var(--kumiko-brand) 66%, white);
+}

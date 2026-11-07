@@ -4,6 +4,7 @@
 @import "./press.css";
 @import "./card.css";
 @import "./popup.css";
+@import "./progress.css";
 @source "./";
 @source not "./docs";
 

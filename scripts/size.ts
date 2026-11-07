@@ -1,6 +1,6 @@
 // Run after `pnpm build`; `node scripts/size.ts --update` records new gzip baselines in bytes.
 import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { build } from "vite";
@@ -10,6 +10,17 @@ const measure = (source: string | Uint8Array): Size => ({
   raw: Buffer.byteLength(source),
   gzip: gzipSync(source, { level: 9 }).length,
 });
+
+/** Reads an entry stylesheet and the local CSS files it imports.
+ * Use when: measuring the shipped CSS. Avoid when: resolving nested or remote stylesheets.
+ */
+export function readStylesheet(path: string): string {
+  const source = readFileSync(path, "utf8");
+  const imported = Array.from(source.matchAll(/^\s*@import\s+["'](\.\/[^"']+\.css)["']/gm), (match) =>
+    readFileSync(join(dirname(path), match[1]!), "utf8"),
+  );
+  return [source, ...imported].join("\n");
+}
 
 export function sizeProblems(sizes: Record<string, number>, baseline: Record<string, number>): string[] {
   return Object.entries(sizes).flatMap(([name, gzip]) => {
@@ -69,11 +80,7 @@ if (import.meta.main) {
       .reduce((total, size) => ({ raw: total.raw + size.raw, gzip: total.gzip + size.gzip }), { raw: 0, gzip: 0 });
   }
   // styles.css imports the generated files and shared recipes; measure the complete stylesheet.
-  sizes.css = measure(
-    ["styles.css", "tokens.css", "theme.css", "press.css", "card.css", "popup.css"]
-      .map((file) => readFileSync(join(root, "dist", file), "utf8"))
-      .join("\n"),
-  );
+  sizes.css = measure(readStylesheet(join(root, "dist/styles.css")));
   console.table(Object.entries(sizes).map(([entry, size]) => ({ entry, "raw (B)": size.raw, "gzip (B)": size.gzip })));
 
   const gzipSizes = Object.fromEntries(Object.entries(sizes).map(([name, size]) => [name, size.gzip]));

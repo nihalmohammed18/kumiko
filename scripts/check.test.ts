@@ -138,6 +138,17 @@ describe.each(classCases)("$rule", ({ rule, bad, good }) => {
   });
 });
 
+it("rejects Base UI internals and allows documented entry points", () => {
+  expect(
+    lintComponent(
+      'import { useFieldRootContext } from "@base-ui/react/internals/field-root-context";',
+      component,
+      palette,
+    ),
+  ).toEqual([expect.objectContaining({ rule: "base-ui-internals" })]);
+  expect(lintComponent('import { Field } from "@base-ui/react/field";', component, palette)).toEqual([]);
+});
+
 describe("AST literal scanning", () => {
   it.each([String.raw`const c = "\t\u0061 outline-none";`, String.raw`const c = "\u{1f600} outline-none";`])(
     "maps escaped prefixes back to source columns: %s",

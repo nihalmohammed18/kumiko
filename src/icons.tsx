@@ -1,4 +1,4 @@
-import { Check, ChevronDown, type LucideProps, Minus, Plus, Search, X } from "lucide-react";
+import { Check, ChevronDown, File, type LucideProps, Minus, Plus, Search, Upload, X } from "lucide-react";
 
 /** A decorative check mark with Kumiko's stroke weight.
  * Use when: marking a checked choice. Avoid when: an icon must provide its own accessible name.
@@ -40,4 +40,18 @@ export function ChevronDownIcon(props: LucideProps) {
  */
 export function XIcon(props: LucideProps) {
   return <X {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative upload icon with Kumiko's stroke weight.
+ * Use when: identifying a file picker or dropzone. Avoid when: an icon must provide its own accessible name.
+ */
+export function UploadIcon(props: LucideProps) {
+  return <Upload {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative file outline with Kumiko's stroke weight.
+ * Use when: identifying a selected file. Avoid when: an icon must provide its own accessible name.
+ */
+export function FileIcon(props: LucideProps) {
+  return <File {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
 }
