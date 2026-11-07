@@ -4,6 +4,7 @@
   --color-surface: var(--kumiko-surface);
   --color-field: var(--kumiko-field);
   --color-line: var(--kumiko-line);
+  --color-skeleton-highlight: var(--kumiko-skeleton-highlight);
   --color-control-line: var(--kumiko-control-line);
   --color-ink: var(--kumiko-ink);
   --color-ink-muted: var(--kumiko-ink-muted);
@@ -128,6 +129,9 @@
 }
 @utility duration-sheet {
   transition-duration: var(--kumiko-duration-sheet);
+}
+@utility duration-skeleton {
+  transition-duration: var(--kumiko-duration-skeleton);
 }
 
 @utility z-base {
