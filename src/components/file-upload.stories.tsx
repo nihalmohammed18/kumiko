@@ -261,8 +261,8 @@ export const Controlled: Story = {
 
 export const States: Story = {
   render: (args) => (
-    <div className="@container w-full max-w-3xl">
-      <div className="grid gap-6 @lg:grid-cols-2">
+    <div className="@container w-full max-w-6xl">
+      <div className="grid items-start gap-6 @lg:grid-cols-2 @5xl:grid-cols-4">
         {["Rest", "Hover", "Press", "Focus", "Selected", "Dragging", "Disabled", "Invalid"].map((state) => (
           <Field
             key={state}
