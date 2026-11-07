@@ -88,23 +88,32 @@
   }
 
   @media (forced-colors: active) {
-    &[data-pressed] {
+    &[data-pressed],
+    &[data-checked] {
       forced-color-adjust: none;
-      background-color: Highlight;
       color: HighlightText;
       border-color: Highlight;
       box-shadow: none;
+
+      /* The hover and press tints are more specific than this block; a selected part stays Highlight. */
+      &,
+      &:hover,
+      &:active {
+        background-color: Highlight;
+      }
     }
 
-    &[data-pressed][data-disabled] {
+    &[data-pressed][data-disabled],
+    &[data-checked][data-disabled] {
       background-color: GrayText;
       color: Canvas;
       border-color: GrayText;
     }
 
     /* Opting out of forced colours also stops the browser from showing the transparent outline, so give it a
-       system colour: otherwise a focused, pressed toggle shows no focus at all. */
-    &[data-pressed]:focus-visible {
+       system colour: otherwise a focused, selected press part shows no focus at all. */
+    &[data-pressed]:focus-visible,
+    &[data-checked]:focus-visible {
       outline-color: CanvasText;
     }
 
@@ -127,6 +136,48 @@
   --press-text: var(--kumiko-ink);
   --press-line: var(--kumiko-control-line);
   --press-edge: var(--kumiko-edge-neutral);
+}
+
+@utility press-selected {
+  --press-fill: color-mix(in oklab, var(--kumiko-brand) 15%, var(--kumiko-surface));
+  --press-text: var(--kumiko-brand-text);
+  --press-line: var(--kumiko-brand-text);
+  --press-edge: var(--kumiko-brand-text);
+}
+
+@utility press-brand-tint {
+  --press-fill: var(--kumiko-brand-tint);
+  --press-text: var(--kumiko-brand-text);
+  --press-line: var(--kumiko-brand-text);
+  --press-edge: var(--kumiko-brand-text);
+}
+
+@utility press-sun {
+  --press-fill: var(--kumiko-sun-tint);
+  --press-text: var(--kumiko-sun-text);
+  --press-line: var(--kumiko-sun-text);
+  --press-edge: var(--kumiko-sun-text);
+}
+
+@utility press-leaf {
+  --press-fill: var(--kumiko-leaf-tint);
+  --press-text: var(--kumiko-leaf-text);
+  --press-line: var(--kumiko-leaf-text);
+  --press-edge: var(--kumiko-leaf-text);
+}
+
+@utility press-coral {
+  --press-fill: var(--kumiko-coral-tint);
+  --press-text: var(--kumiko-coral-text);
+  --press-line: var(--kumiko-coral-text);
+  --press-edge: var(--kumiko-coral-text);
+}
+
+@utility press-tide {
+  --press-fill: var(--kumiko-tide-tint);
+  --press-text: var(--kumiko-tide-text);
+  --press-line: var(--kumiko-tide-text);
+  --press-edge: var(--kumiko-tide-text);
 }
 
 @utility press-strong {
