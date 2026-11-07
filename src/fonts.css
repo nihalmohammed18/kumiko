@@ -1,3 +1,7 @@
-/* Self-hosted fonts for Kumiko's default theme. Import from JavaScript (root layout or main.tsx) so the bundler
-   rewrites the font URLs: import "kumiko-ui/fonts.css". Apps using next/font can skip this file. Filled in once the
-   design direction is chosen. */
+/* Kumiko's fonts, self-hosted from Fontsource: Fredoka for display, Nunito for text, and Baloo Bhaijaan 2 for Arabic
+   and Urdu. Every font stack ends in Baloo Bhaijaan 2, so Arabic script falls back to it glyph by glyph. Import this
+   from JavaScript (root layout or main.tsx) so the bundler resolves the packages and rewrites the font URLs:
+   import "kumiko-ui/fonts.css". Apps that load these fonts another way can skip it. */
+@import "@fontsource-variable/fredoka";
+@import "@fontsource-variable/nunito";
+@import "@fontsource-variable/baloo-bhaijaan-2";
