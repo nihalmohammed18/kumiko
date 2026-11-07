@@ -1,5 +1,6 @@
 import { KumikoProvider } from "kumiko-ui";
 import type { ReactNode } from "react";
+import "kumiko-ui/fonts.css";
 import "./globals.css";
 
 export const metadata = { title: "Kumiko example" };

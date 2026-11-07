@@ -37,7 +37,19 @@ function canary(): string[] {
   return problems;
 }
 
-beforeAll(() => {
+// Every face screenshots use, with Arabic and Urdu samples for Baloo Bhaijaan 2. Loaded up front so a screenshot never
+// catches a fallback font, and checked so a missing font package fails loudly instead of drifting the baselines.
+const FACES: Array<[string, string]> = [
+  ['700 16px "Fredoka Variable"', "Aa"],
+  ['500 16px "Nunito Variable"', "Aa"],
+  ['800 16px "Nunito Variable"', "Aa"],
+  ['600 16px "Baloo Bhaijaan 2 Variable"', "بت ےںٹڈ"],
+];
+
+beforeAll(async () => {
+  await Promise.all(FACES.map(([font, text]) => document.fonts.load(font, text)));
+  const missing = FACES.filter(([font, text]) => !document.fonts.check(font, text)).map(([font]) => font);
+  if (missing.length) throw new Error(`Fonts didn't load: ${missing.join(", ")}`);
   const problems = canary();
   if (problems.length) throw new Error(`The ${mode} project's conditions are not in effect:\n${problems.join("\n")}`);
 });

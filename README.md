@@ -28,9 +28,10 @@ In your global stylesheet:
 }
 ```
 
-Wrap the app once:
+Load the fonts and wrap the app once, in the root layout:
 
 ```tsx
+import "kumiko-ui/fonts.css";
 import { KumikoProvider } from "kumiko-ui";
 
 <KumikoProvider direction="ltr" locale="en">{children}</KumikoProvider>;

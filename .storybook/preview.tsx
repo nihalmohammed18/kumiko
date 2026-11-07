@@ -2,6 +2,7 @@ import type { Decorator, Preview } from "@storybook/react-vite";
 import { KumikoProvider } from "../src/provider.tsx";
 import { mirrorDemoStates } from "./demo-states.ts";
 import type { UxParameters } from "./ux/harness.ts";
+import "../src/fonts.css";
 import "./preview.css";
 
 const arabicLabels = { close: "إغلاق", loading: "جارٍ التحميل" };
