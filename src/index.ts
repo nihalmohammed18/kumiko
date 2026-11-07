@@ -1,5 +1,7 @@
 export { Button, type ButtonProps, IconButton, type IconButtonProps } from "./components/button.tsx";
 export { type ButtonStyleProps, type ButtonTone, buttonStyles } from "./components/button-styles.ts";
+export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
+export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
 export {
   Field,
@@ -18,12 +20,15 @@ export { Input, type InputProps } from "./components/input.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
+export { Radio, type RadioProps } from "./components/radio.tsx";
+export { RadioGroup, type RadioGroupProps } from "./components/radio-group.tsx";
 export { SearchField, type SearchFieldProps } from "./components/search-field.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
+export { Switch, type SwitchProps } from "./components/switch.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export { Toggle, type ToggleProps } from "./components/toggle.tsx";
 export { ToggleGroup, type ToggleGroupProps } from "./components/toggle-group.tsx";
-export { ChevronDownIcon, SearchIcon } from "./icons.tsx";
+export { CheckIcon, ChevronDownIcon, MinusIcon, SearchIcon } from "./icons.tsx";
 export { formatLabel, type Label, type LabelKey, labels, type Plural } from "./labels.ts";
 export { cn } from "./lib/tv.ts";
 export {

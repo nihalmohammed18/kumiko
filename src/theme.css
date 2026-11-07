@@ -51,6 +51,12 @@
   --color-info-fg: var(--kumiko-info-fg);
   --color-info-tint: var(--kumiko-info-tint);
   --color-info-text: var(--kumiko-info-text);
+  --color-forced-fill: var(--kumiko-forced-fill);
+  --color-forced-fg: var(--kumiko-forced-fg);
+  --color-forced-ink: var(--kumiko-forced-ink);
+  --color-forced-surface: var(--kumiko-forced-surface);
+  --color-forced-disabled: var(--kumiko-forced-disabled);
+  --radius-choice: var(--kumiko-radius-choice);
   --radius-control: var(--kumiko-radius-control);
   --radius-card: var(--kumiko-radius-card);
   --radius-overlay: var(--kumiko-radius-overlay);
