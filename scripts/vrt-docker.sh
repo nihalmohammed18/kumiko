@@ -15,4 +15,4 @@ docker run --rm -t --platform linux/amd64 \
   -w /work \
   -e KUMIKO_VRT=1 \
   mcr.microsoft.com/playwright:v1.64.1-noble \
-  sh -c "npm i -g pnpm@11.28.5 >/dev/null && pnpm install --frozen-lockfile && pnpm exec vitest run --project light --project dark --project rtl $*"
+  sh -c "npm i -g pnpm@11.28.5 >/dev/null && pnpm install --frozen-lockfile && pnpm exec vitest run --project light --project dark --project rtl --project forced $*"

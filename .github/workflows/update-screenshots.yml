@@ -24,7 +24,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: |
           find src -path '*/__screenshots__/*' -name '*.png' -delete
-          pnpm exec vitest run --project light --project dark --project rtl --update
+          pnpm exec vitest run --project light --project dark --project rtl --project forced --update
         env:
           KUMIKO_VRT: "1"
       - name: Commit changed baselines

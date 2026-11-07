@@ -204,6 +204,11 @@ const CLASS_RULES: Array<[string, string, (token: ClassToken, context: ClassCont
       ),
   ],
   ["outline-none", "use outline-hidden or the focus recipe", ({ utility }) => utility === "outline-none"],
+  [
+    "focus-variant",
+    "draw focus rings on focus-visible:, so a mouse press shows none",
+    ({ utility, variants }) => variants.includes("focus") && /^(?:outline|ring)(?:-|$)/.test(utility),
+  ],
   ["dark-variant", "let theme tokens switch in dark mode", ({ variants }) => variants.includes("dark")],
   ["raw-z", "use a named layer token", ({ utility }) => /^-?z-(?:\d+|\[.*\])$/.test(utility)],
   ["viewport-size", "use container sizes; dynamic viewport units require an overlay allowlist entry", viewportSize],

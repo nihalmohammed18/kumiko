@@ -79,7 +79,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: [light, dark, rtl]
+        mode: [light, dark, rtl, touch, forced, motion]
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
