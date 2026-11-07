@@ -30,6 +30,7 @@ import {
   type Snapshot,
   STYLE_PROPS,
   type Style,
+  selectorClasses,
   shifted,
   stateProblem,
   transitionProblems,
@@ -56,6 +57,7 @@ describe("shared contract", () => {
     reflow: "000100",
     "no-sticky-hover": "000100",
     boundary: "000010",
+    "dead-class": "100000",
     transitions: "111111",
     settle: "111111",
     "stale-exception": "111111",
@@ -838,4 +840,13 @@ describe("exceptions and reporting", () => {
     expect(violations).toEqual(original);
     expect(format([])).toBe("");
   });
+});
+
+it("reads class names out of selectors, resolving both kinds of CSS escape", () => {
+  expect(selectorClasses(".hover\\:bg-brand:hover, :where(.group\\/chip)[data-pressed] .x")).toEqual([
+    "hover:bg-brand",
+    "group/chip",
+    "x",
+  ]);
+  expect(selectorClasses(".\\31 0 .w-\\[min\\(44\\%\\,120px\\)\\]")).toEqual(["10", "w-[min(44%,120px)]"]);
 });
