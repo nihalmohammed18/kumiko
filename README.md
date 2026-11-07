@@ -1,6 +1,6 @@
 # Kumiko
 
-Accessible React components built on [Base UI](https://base-ui.com) and Tailwind CSS v4. Dark mode and right-to-left layouts are built in. Each app gives Kumiko its own brand with five settings.
+Accessible React components built on [Base UI](https://base-ui.com) and Tailwind CSS v4. Dark mode and right-to-left layouts are built in. Each app gives Kumiko its own brand by overriding theme variables.
 
 **Status: in development.** The first release will be 1.0.0. Browse the components in [Storybook](https://nihalmohammed18.github.io/kumiko/).
 
@@ -20,7 +20,7 @@ In your global stylesheet:
 :root {
   --kumiko-brand: #0f766e;
   --kumiko-brand-fg: #ffffff;
-  --kumiko-radius: 8px;
+  --kumiko-radius-control: 8px;
 }
 .dark {
   --kumiko-brand: #2dd4bf;

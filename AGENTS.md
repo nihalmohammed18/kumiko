@@ -13,7 +13,7 @@ The owner's bar: the small details must be right everywhere. A disabled button n
 | `pnpm test` | Every story in six real-Chromium projects (light, dark, rtl, touch, forced colours, full motion): play tests, axe, the UX rules and screenshot comparisons. |
 | `pnpm build && pnpm validate` | Builds the package, then checks its exports with publint and attw. |
 | `pnpm size` | Gzipped size of each entry; fails when one grows more than 10% over `size-baseline.json`. |
-| `pnpm tokens` | Regenerates `src/tokens.css` after editing `src/tokens.ts`. |
+| `pnpm tokens` | Regenerates `src/tokens.css` and `src/theme.css` after editing `src/tokens.ts`. |
 | `pnpm vrt:docker --update` | Makes screenshot baselines locally in CI's Linux image. Run `colima start` first. |
 
 ## Who does what
@@ -22,7 +22,7 @@ Implementation agents (Codex) work without a browser or network. They:
 - **cannot** run the browser tests, Storybook or screenshot comparisons, and cannot install packages. List anything you couldn't verify at the end of your report.
 - **must never:**
   - update, add or delete screenshot baselines;
-  - edit `src/tokens.css` by hand (run `pnpm tokens`);
+  - edit `src/tokens.css` or `src/theme.css` by hand (run `pnpm tokens`);
   - weaken, skip or delete a guard, test or assertion to get to green;
   - add a UX or accessibility exception without a stated reason;
   - push to `main`, merge pull requests or touch `design/`.
@@ -31,7 +31,7 @@ Implementation agents (Codex) work without a browser or network. They:
 
 1. **Read Base UI's docs before building a part:** `node_modules/@base-ui/react/docs/react/components/<name>.md`, plus the handbook pages in `node_modules/@base-ui/react/docs/react/handbook/`. They match the installed version and override training data.
 2. **Colours, radii, shadows, type, motion and layers come only from tokens.**
-   - Use the theme classes generated from `src/tokens.ts` (see `src/styles.css`).
+   - Use the theme classes in `src/theme.css`, generated from `src/tokens.ts` and imported by `src/styles.css`.
    - Never palette classes, hex values, arbitrary colours, raw `duration-*`/`ease-*` or raw `z-*`.
    - If something is missing, add it to `src/tokens.ts`.
 3. **Use logical properties only.** `ms-`, `pe-`, `start-`, `border-s`, `rounded-s`, `text-start`, and `margin-inline-start` in CSS. Icons that point a direction flip in right-to-left.

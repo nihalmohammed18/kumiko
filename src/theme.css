@@ -1,0 +1,141 @@
+/* Generated from src/tokens.ts by `pnpm tokens`. Don't edit by hand. */
+@theme inline {
+  --color-canvas: var(--kumiko-canvas);
+  --color-surface: var(--kumiko-surface);
+  --color-field: var(--kumiko-field);
+  --color-line: var(--kumiko-line);
+  --color-control-line: var(--kumiko-control-line);
+  --color-ink: var(--kumiko-ink);
+  --color-ink-muted: var(--kumiko-ink-muted);
+  --color-strong: var(--kumiko-strong);
+  --color-strong-fg: var(--kumiko-strong-fg);
+  --color-edge-neutral: var(--kumiko-edge-neutral);
+  --color-focus: var(--kumiko-focus);
+  --color-scrim: var(--kumiko-scrim);
+  --color-disabled-fill: var(--kumiko-disabled-fill);
+  --color-disabled-text: var(--kumiko-disabled-text);
+  --color-disabled-line: var(--kumiko-disabled-line);
+  --color-brand: var(--kumiko-brand);
+  --color-brand-fg: var(--kumiko-brand-fg);
+  --color-brand-tint: var(--kumiko-brand-tint);
+  --color-brand-text: var(--kumiko-brand-text);
+  --color-sun: var(--kumiko-sun);
+  --color-sun-fg: var(--kumiko-sun-fg);
+  --color-sun-tint: var(--kumiko-sun-tint);
+  --color-sun-text: var(--kumiko-sun-text);
+  --color-leaf: var(--kumiko-leaf);
+  --color-leaf-fg: var(--kumiko-leaf-fg);
+  --color-leaf-tint: var(--kumiko-leaf-tint);
+  --color-leaf-text: var(--kumiko-leaf-text);
+  --color-coral: var(--kumiko-coral);
+  --color-coral-fg: var(--kumiko-coral-fg);
+  --color-coral-tint: var(--kumiko-coral-tint);
+  --color-coral-text: var(--kumiko-coral-text);
+  --color-tide: var(--kumiko-tide);
+  --color-tide-fg: var(--kumiko-tide-fg);
+  --color-tide-tint: var(--kumiko-tide-tint);
+  --color-tide-text: var(--kumiko-tide-text);
+  --color-success: var(--kumiko-success);
+  --color-success-fg: var(--kumiko-success-fg);
+  --color-success-tint: var(--kumiko-success-tint);
+  --color-success-text: var(--kumiko-success-text);
+  --color-warning: var(--kumiko-warning);
+  --color-warning-fg: var(--kumiko-warning-fg);
+  --color-warning-tint: var(--kumiko-warning-tint);
+  --color-warning-text: var(--kumiko-warning-text);
+  --color-danger: var(--kumiko-danger);
+  --color-danger-fg: var(--kumiko-danger-fg);
+  --color-danger-tint: var(--kumiko-danger-tint);
+  --color-danger-text: var(--kumiko-danger-text);
+  --color-info: var(--kumiko-info);
+  --color-info-fg: var(--kumiko-info-fg);
+  --color-info-tint: var(--kumiko-info-tint);
+  --color-info-text: var(--kumiko-info-text);
+  --radius-control: var(--kumiko-radius-control);
+  --radius-card: var(--kumiko-radius-card);
+  --radius-overlay: var(--kumiko-radius-overlay);
+  --radius-pill: var(--kumiko-radius-pill);
+  --spacing-control-sm: var(--kumiko-control-sm);
+  --spacing-control: var(--kumiko-control-md);
+  --spacing-control-lg: var(--kumiko-control-lg);
+  --font-display: var(--kumiko-font-display);
+  --font-body: var(--kumiko-font-body);
+  --font-code: var(--kumiko-font-code);
+  --text-caption: var(--kumiko-text-caption);
+  --text-caption--line-height: var(--kumiko-text-caption-leading);
+  --text-label: var(--kumiko-text-label);
+  --text-label--line-height: var(--kumiko-text-label-leading);
+  --text-body-sm: var(--kumiko-text-body-sm);
+  --text-body-sm--line-height: var(--kumiko-text-body-sm-leading);
+  --text-body: var(--kumiko-text-body);
+  --text-body--line-height: var(--kumiko-text-body-leading);
+  --text-title-sm: var(--kumiko-text-title-sm);
+  --text-title-sm--line-height: var(--kumiko-text-title-sm-leading);
+  --text-title: var(--kumiko-text-title);
+  --text-title--line-height: var(--kumiko-text-title-leading);
+  --text-headline: var(--kumiko-text-headline);
+  --text-headline--line-height: var(--kumiko-text-headline-leading);
+  --text-display: var(--kumiko-text-display);
+  --text-display--line-height: var(--kumiko-text-display-leading);
+  --text-hero: var(--kumiko-text-hero);
+  --text-hero--line-height: var(--kumiko-text-hero-leading);
+  --ease-enter: var(--kumiko-ease-enter);
+  --ease-move: var(--kumiko-ease-move);
+  --ease-sheet: var(--kumiko-ease-sheet);
+  --ease-pop: var(--kumiko-ease-pop);
+  --ease-rise: var(--kumiko-ease-rise);
+  --ease-fall: var(--kumiko-ease-fall);
+}
+
+@utility duration-press-in {
+  transition-duration: var(--kumiko-duration-press-in);
+}
+@utility duration-press-out {
+  transition-duration: var(--kumiko-duration-press-out);
+}
+@utility duration-hover {
+  transition-duration: var(--kumiko-duration-hover);
+}
+@utility duration-popup-in {
+  transition-duration: var(--kumiko-duration-popup-in);
+}
+@utility duration-popup-out {
+  transition-duration: var(--kumiko-duration-popup-out);
+}
+@utility duration-dialog-in {
+  transition-duration: var(--kumiko-duration-dialog-in);
+}
+@utility duration-dialog-out {
+  transition-duration: var(--kumiko-duration-dialog-out);
+}
+@utility duration-toast-in {
+  transition-duration: var(--kumiko-duration-toast-in);
+}
+@utility duration-toast-out {
+  transition-duration: var(--kumiko-duration-toast-out);
+}
+@utility duration-move {
+  transition-duration: var(--kumiko-duration-move);
+}
+@utility duration-sheet {
+  transition-duration: var(--kumiko-duration-sheet);
+}
+
+@utility z-base {
+  z-index: var(--kumiko-layer-base);
+}
+@utility z-sticky {
+  z-index: var(--kumiko-layer-sticky);
+}
+@utility z-overlay {
+  z-index: var(--kumiko-layer-overlay);
+}
+@utility z-popup {
+  z-index: var(--kumiko-layer-popup);
+}
+@utility z-toast {
+  z-index: var(--kumiko-layer-toast);
+}
+@utility z-tooltip {
+  z-index: var(--kumiko-layer-tooltip);
+}

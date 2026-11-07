@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
-import { tokensCss } from "./build-tokens.ts";
+import { themeCss, tokensCss } from "./build-tokens.ts";
 import { CLOSED_DEBTS, validateUxExcept } from "./ux-rules.ts";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -520,7 +520,7 @@ function cssDeclarations(text: string) {
 }
 
 /** Checks CSS declarations while ignoring comments and quoted content.
- * Use when: enforcing logical CSS and explicit transitions. Avoid when: checking generated tokens.css.
+ * Use when: enforcing logical CSS and explicit transitions. Avoid when: checking generated tokens.css or theme.css.
  */
 export function lintCss(text: string, file: string): Problem[] {
   const source = parseSource(text, file);
@@ -543,12 +543,12 @@ export function lintCss(text: string, file: string): Problem[] {
 }
 
 /** Checks that generated CSS still matches its token source byte for byte.
- * Use when: validating src/tokens.css. Avoid when: accepting hand-edited generated CSS.
+ * Use when: validating src/tokens.css or src/theme.css. Avoid when: accepting hand-edited generated CSS.
  */
-export function lintTokens(actual: string, expected: string): Problem[] {
+export function lintTokens(actual: string, expected: string, file = "src/tokens.css"): Problem[] {
   return actual === expected
     ? []
-    : [fileProblem("src/tokens.css", "tokens-stale", "run `pnpm tokens`", "generated CSS differs from tokensCss()")];
+    : [fileProblem(file, "tokens-stale", "run `pnpm tokens`", "generated CSS differs from its generator")];
 }
 
 /** Checks that compilation preserved a leading client directive.
@@ -728,7 +728,7 @@ export function sourceKind(file: string): "component" | "story" | "css" | undefi
   if (!file.startsWith("src/") || file.split("/").at(-1)?.startsWith(".env") || /\.test\.tsx?$/.test(file))
     return undefined;
   if (file.endsWith(".stories.tsx")) return "story";
-  if (file === "src/tokens.ts" || file === "src/tokens.css") return undefined;
+  if (["src/tokens.ts", "src/tokens.css", "src/theme.css"].includes(file)) return undefined;
   if (/\.tsx?$/.test(file)) return "component";
   if (file.endsWith(".css")) return "css";
   return undefined;
@@ -745,7 +745,10 @@ function checkSource(): Problem[] {
   const palette = readPaletteNames(
     readFileSync(createRequire(import.meta.url).resolve("tailwindcss/theme.css"), "utf8"),
   );
-  const problems = lintTokens(readFileSync(join(root, "src/tokens.css"), "utf8"), tokensCss());
+  const problems = [
+    ...lintTokens(readFileSync(join(root, "src/tokens.css"), "utf8"), tokensCss()),
+    ...lintTokens(readFileSync(join(root, "src/theme.css"), "utf8"), themeCss(), "src/theme.css"),
+  ];
   for (const path of walk(join(root, "src"))) {
     const file = relative(root, path);
     const kind = sourceKind(file);
