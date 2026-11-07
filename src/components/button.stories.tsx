@@ -11,6 +11,45 @@ const meta = {
     variant: { control: "inline-radio", options: ["primary", "secondary", "outline", "ghost", "danger", "link"] },
     size: { control: "inline-radio", options: ["sm", "md", "lg"] },
   },
+  parameters: {
+    ux: {
+      // M1 bugs the UX rules found. M2b's press recipe and Button rework fix them; closing M2b fails these entries.
+      except: [
+        {
+          rule: "hover-visible",
+          selector: "[data-slot=button].bg-brand",
+          reason: "M1's primary hover mixes the brand with fg, which are the same colour in M1.",
+          debt: "M2b",
+        },
+        {
+          rule: "cursor",
+          selector: "[aria-busy=true]",
+          reason: "M1 styles a loading button as disabled, so it shows not-allowed instead of progress.",
+          debt: "M2b",
+        },
+        {
+          rule: "reduce-no-move",
+          selector: "[data-slot=spinner]",
+          reason: "M1's spinner keeps rotating under reduced motion; M2b makes it an opacity pulse.",
+          debt: "M2b",
+        },
+        {
+          rule: "target-size",
+          selector: "[data-slot=button], [data-slot=icon-button]",
+          reason: "M1's sm and md controls are 32 and 36px tall; M2b moves sizes to 40, 48 and 56px.",
+          debt: "M2b",
+          projects: ["touch"],
+        },
+        {
+          rule: "focus-ring",
+          selector: "[aria-busy=true]",
+          reason: "M1 fades a loading button to 45% opacity, ring included, so forced colours lose the ring.",
+          debt: "M2b",
+          projects: ["forced"],
+        },
+      ],
+    },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;

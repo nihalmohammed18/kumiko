@@ -50,7 +50,7 @@
     "typecheck": "tsc --noEmit",
     "guard": "node scripts/check.ts",
     "check": "biome ci . && tsc --noEmit && node scripts/check.ts && vitest run --project unit",
-    "test": "vitest run --project light --project dark --project rtl",
+    "test": "vitest run --project light --project dark --project rtl --project touch --project forced --project motion",
     "test:unit": "vitest run --project unit",
     "test:coverage": "vitest run --project light --coverage",
     "vrt:docker": "sh scripts/vrt-docker.sh",

@@ -10,7 +10,7 @@ The owner's bar: the small details must be right everywhere. A disabled button n
 |---|---|
 | `pnpm dev` | Storybook on port 6006. |
 | `pnpm check` | Biome, types, the `scripts/check.ts` guards and unit tests. Run it before every push. |
-| `pnpm test` | Every story in real Chromium: interaction tests, axe, the UX rules and screenshot comparisons. |
+| `pnpm test` | Every story in six real-Chromium projects (light, dark, rtl, touch, forced colours, full motion): play tests, axe, the UX rules and screenshot comparisons. |
 | `pnpm build && pnpm validate` | Builds the package, then checks its exports with publint and attw. |
 | `pnpm size` | Gzipped size of each entry; fails when one grows more than 10% over `size-baseline.json`. |
 | `pnpm tokens` | Regenerates `src/tokens.css` after editing `src/tokens.ts`. |
@@ -52,6 +52,7 @@ Implementation agents (Codex) work without a browser or network. They:
     - Work on a branch and open a PR with a conventional title (`feat:`, `fix:`, `docs:`, `test:`, `chore:`).
     - Keep each PR to about 800 changed lines, not counting screenshots.
     - Merge with `gh pr merge --squash --auto`. The title decides the next version once releases are on.
+13. **Keep tests lean.** Write one test per behaviour, branch or past bug: a rule or guard needs one case that fails and one that passes, not every spelling of the input. No exhaustive tables of near-identical cases, and no test that only restates the implementation.
 
 ## The UX rules
 

@@ -1,6 +1,7 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
 import { KumikoProvider } from "../src/provider.tsx";
 import { mirrorDemoStates } from "./demo-states.ts";
+import type { UxParameters } from "./ux/harness.ts";
 import "./preview.css";
 
 const arabicLabels = { close: "إغلاق", loading: "جارٍ التحميل" };
@@ -9,6 +10,7 @@ declare global {
   interface Window {
     __kumikoSkipVrt?: boolean;
     __kumikoVrtPage?: boolean;
+    __kumikoUx?: UxParameters;
   }
 }
 
@@ -22,6 +24,7 @@ const withKumiko: Decorator = (Story, { globals, parameters }) => {
   root.lang = dir === "rtl" ? "ar" : "en";
   window.__kumikoSkipVrt = parameters.vrt === false;
   window.__kumikoVrtPage = parameters.vrt === "page";
+  window.__kumikoUx = parameters.ux;
   return (
     <KumikoProvider direction={dir} labels={dir === "rtl" ? arabicLabels : undefined}>
       {/* The screenshot target; the padding keeps focus rings inside the picture. */}

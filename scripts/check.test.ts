@@ -118,6 +118,11 @@ const classCases = [
   },
   { rule: "uppercase", bad: ["uppercase", "hover:uppercase"], good: ["normal-case", "lowercase"] },
   {
+    rule: "focus-variant",
+    bad: ["focus:ring-2", "focus:outline-2"],
+    good: ["focus-visible:outline-2", "focus:bg-surface"],
+  },
+  {
     rule: "viewport-breakpoint",
     bad: ["md:flex", "sm:grid", "max-2xl:hidden", "min-[700px]:flex", "max-[40rem]:grid"],
     good: ["@md:flex", "@max-md:flex", "@[40rem]:grid", "@sm/card:flex", "max-w-sm"],
