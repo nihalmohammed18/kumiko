@@ -6,6 +6,7 @@
 @import "./popup.css";
 @import "./progress.css";
 @import "./skeleton.css";
+@import "./toast.css";
 @source "./";
 @source not "./docs";
 

@@ -96,6 +96,14 @@ export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
+export {
+  Toaster,
+  type ToasterProps,
+  type ToastOptions,
+  type ToastPromiseOptions,
+  type ToastUpdateOptions,
+  toast,
+} from "./components/toast.tsx";
 export { Toggle, type ToggleProps } from "./components/toggle.tsx";
 export { ToggleGroup, type ToggleGroupProps } from "./components/toggle-group.tsx";
 export {
