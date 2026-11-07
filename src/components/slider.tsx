@@ -76,11 +76,11 @@ export function Slider<Value extends number | readonly number[]>({
       >
         <BaseSlider.Track
           data-slot="slider-track"
-          className="h-4 w-full rounded-full border-2 border-control-line bg-line"
+          className="h-4 w-full rounded-full border-2 border-control-line bg-line data-disabled:border-disabled-line data-disabled:bg-disabled-fill forced-colors:data-disabled:border-forced-disabled"
         >
           <BaseSlider.Indicator
             data-slot="slider-indicator"
-            className="rounded-full bg-brand outline-2 -outline-offset-2 outline-brand-text forced-colors:forced-color-adjust-none forced-colors:bg-forced-brand forced-colors:outline-forced-brand"
+            className="rounded-full bg-brand outline-2 -outline-offset-2 outline-brand-text data-disabled:bg-disabled-text data-disabled:outline-disabled-text forced-colors:forced-color-adjust-none forced-colors:bg-forced-fill forced-colors:outline-forced-fill forced-colors:data-disabled:bg-forced-disabled forced-colors:data-disabled:outline-forced-disabled"
             style={{ blockSize: "100%" }}
           />
           {indexes.map((index) => (
@@ -119,7 +119,10 @@ export function SliderValue({ className, ...props }: SliderValueProps) {
     <BaseSlider.Value
       {...props}
       data-slot="slider-value"
-      className={cn("min-w-0 wrap-anywhere font-display font-bold tabular-nums text-ink", className)}
+      className={cn(
+        "min-w-0 wrap-anywhere font-display font-bold tabular-nums text-ink in-data-disabled:text-disabled-text",
+        className,
+      )}
     />
   );
 }
