@@ -88,8 +88,7 @@
   }
 
   @media (forced-colors: active) {
-    &[data-pressed],
-    &[data-checked] {
+    &[data-pressed] {
       forced-color-adjust: none;
       color: HighlightText;
       border-color: Highlight;
@@ -103,8 +102,7 @@
       }
     }
 
-    &[data-pressed][data-disabled],
-    &[data-checked][data-disabled] {
+    &[data-pressed][data-disabled] {
       background-color: GrayText;
       color: Canvas;
       border-color: GrayText;
@@ -112,8 +110,7 @@
 
     /* Opting out of forced colours also stops the browser from showing the transparent outline, so give it a
        system colour: otherwise a focused, selected press part shows no focus at all. */
-    &[data-pressed]:focus-visible,
-    &[data-checked]:focus-visible {
+    &[data-pressed]:focus-visible {
       outline-color: CanvasText;
     }
 
@@ -143,6 +140,31 @@
   --press-text: var(--kumiko-brand-text);
   --press-line: var(--kumiko-brand-text);
   --press-edge: var(--kumiko-brand-text);
+
+  /* A selected part (a checked tile) looks like a pressed toggle in forced colours. This lives on the tone, not on
+     every press with data-checked: a switch's thumb is a press too, and it must stay Canvas on its Highlight track. */
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    color: HighlightText;
+    border-color: Highlight;
+    box-shadow: none;
+
+    &,
+    &:hover,
+    &:active {
+      background-color: Highlight;
+    }
+
+    &[data-disabled] {
+      background-color: GrayText;
+      color: Canvas;
+      border-color: GrayText;
+    }
+
+    &:focus-visible {
+      outline-color: CanvasText;
+    }
+  }
 }
 
 @utility press-brand-tint {
