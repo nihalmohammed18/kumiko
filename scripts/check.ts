@@ -433,12 +433,31 @@ function lintClient(source: ts.SourceFile): Problem[] {
   return problems;
 }
 
-/** Checks component literals and inline styles using the TypeScript AST.
+function lintBaseUiInternals(source: ts.SourceFile): Problem[] {
+  const problems: Problem[] = [];
+  visit(source, (node) => {
+    if (!isLiteral(node) || !/^@base-ui\/react\/internals(?:\/|$)/.test(node.text)) return;
+    const parent = node.parent;
+    const imported =
+      ts.isImportDeclaration(parent) ||
+      ts.isExportDeclaration(parent) ||
+      ts.isExternalModuleReference(parent) ||
+      (ts.isLiteralTypeNode(parent) && ts.isImportTypeNode(parent.parent)) ||
+      (ts.isCallExpression(parent) &&
+        parent.arguments[0] === node &&
+        (parent.expression.kind === ts.SyntaxKind.ImportKeyword ||
+          (ts.isIdentifier(parent.expression) && parent.expression.text === "require")));
+    if (imported) problems.push(nodeProblem(node, "base-ui-internals", "use documented Base UI entry points"));
+  });
+  return problems;
+}
+
+/** Checks component imports, literals and inline styles using the TypeScript AST.
  * Use when: enforcing static component rules. Avoid when: checking stories or runtime styles.
  */
 export function lintComponent(text: string, file: string, palette: ReadonlySet<string>): Problem[] {
   const source = parseSource(text, file);
-  const problems: Problem[] = lintClient(source);
+  const problems: Problem[] = [...lintClient(source), ...lintBaseUiInternals(source)];
   visit(source, (node) => {
     if (isLiteral(node)) problems.push(...lintLiteral(node, source, palette));
     if (ts.isJsxAttribute(node)) problems.push(...lintStyle(node, source));
@@ -652,7 +671,7 @@ function hasA11yReason(property: ts.PropertyAssignment, root: ts.PropertyAssignm
  */
 export function lintStory(text: string, file: string): Problem[] {
   const source = parseSource(text, file);
-  const problems: Problem[] = [];
+  const problems: Problem[] = lintBaseUiInternals(source);
   visit(source, (node) => {
     if (!ts.isPropertyAssignment(node) || !["parameters", "globals"].includes(propertyName(node.name) ?? "")) return;
     for (const property of a11yOptOuts(node)) {
@@ -751,10 +770,12 @@ function checkSource(): Problem[] {
   ];
   for (const path of walk(join(root, "src"))) {
     const file = relative(root, path);
+    if (file.split("/").some((part) => part.startsWith(".env"))) continue;
     const kind = sourceKind(file);
-    if (!kind) continue;
+    if (!kind && !/\.tsx?$/.test(file)) continue;
     const text = readFileSync(path, "utf8");
-    if (kind === "story") problems.push(...lintStory(text, file));
+    if (!kind) problems.push(...lintBaseUiInternals(parseSource(text, file)));
+    else if (kind === "story") problems.push(...lintStory(text, file));
     else if (kind === "css") problems.push(...lintCss(text, file));
     else problems.push(...lintComponent(text, file, palette));
   }

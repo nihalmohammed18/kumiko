@@ -3,7 +3,7 @@
 import { CSPProvider } from "@base-ui/react/csp-provider";
 import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { createContext, type ReactNode, use, useCallback, useEffect, useMemo, useRef } from "react";
-import { labels as builtInLabels, type Label, type LabelKey } from "./labels.ts";
+import { labels as builtInLabels, englishLabels, type Label, type LabelKey } from "./labels.ts";
 
 /**
  * Labels available to Kumiko components in the provider's locale.
@@ -26,7 +26,7 @@ interface KumikoSettings {
 const Settings = createContext<KumikoSettings>({
   direction: "ltr",
   locale: "en",
-  labels: builtInLabels.en,
+  labels: englishLabels,
   announce: () => undefined,
 });
 

@@ -52,6 +52,13 @@ export {
 } from "./components/field.tsx";
 export { type FieldStyleProps, fieldStyles } from "./components/field-styles.ts";
 export { Fieldset, FieldsetLegend, type FieldsetLegendProps, type FieldsetProps } from "./components/fieldset.tsx";
+export {
+  FileUpload,
+  type FileUploadProps,
+  type FileUploadRejection,
+  fileMatchesAccept,
+  validateFiles,
+} from "./components/file-upload.tsx";
 export { Form, type FormProps } from "./components/form.tsx";
 export { Input, type InputProps } from "./components/input.tsx";
 export { Kbd, type KbdProps } from "./components/kbd.tsx";
@@ -59,6 +66,7 @@ export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
 export { NumberField, type NumberFieldProps } from "./components/number-field.tsx";
+export { Progress, type ProgressProps } from "./components/progress.tsx";
 export { ProgressRing, type ProgressRingProps } from "./components/progress-ring.tsx";
 export { ProgressSteps, type ProgressStepsProps } from "./components/progress-steps.tsx";
 export { Radio, type RadioProps } from "./components/radio.tsx";
@@ -95,11 +103,13 @@ export {
   ChevronDownIcon,
   CircleAlertIcon,
   CircleCheckIcon,
+  FileIcon,
   InfoIcon,
   MinusIcon,
   PlusIcon,
   SearchIcon,
   TriangleAlertIcon,
+  UploadIcon,
   XIcon,
 } from "./icons.tsx";
 export { formatLabel, type Label, type LabelKey, labels, type Plural } from "./labels.ts";

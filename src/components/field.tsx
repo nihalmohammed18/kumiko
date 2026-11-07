@@ -1,6 +1,7 @@
 "use client";
 
 import { Field as BaseField } from "@base-ui/react/field";
+import { createContext, useContext } from "react";
 import { cn } from "../lib/tv.ts";
 
 /** Props for a labeled, validated form field.
@@ -10,22 +11,40 @@ export interface FieldProps extends Omit<BaseField.Root.Props, "className"> {
   className?: string;
 }
 
+const KumikoFieldContext = createContext<Pick<FieldProps, "disabled" | "invalid">>({
+  disabled: false,
+  invalid: undefined,
+});
+
+/** Reads the containing Kumiko Field's disabled and invalid props.
+ * Use when: styling a custom Field control. Avoid when: accessing Base UI's internal validation state.
+ */
+export function useKumikoField() {
+  return useContext(KumikoFieldContext);
+}
+
 /** Groups a control with its label, description and validation errors.
  * Use when: collecting one value. Avoid when: grouping several fields; use Fieldset.
  */
-export function Field({ className, ...props }: FieldProps) {
+export function Field({ disabled = false, invalid, className, ...props }: FieldProps) {
   return (
-    <BaseField.Root
-      {...props}
-      data-slot="field"
-      className={cn(
-        "grid grid-cols-1 min-w-0 gap-1.5 [&:has(select)_[data-slot=field-label]:not([data-disabled])]:cursor-pointer",
-        "[&:has([data-slot=select-trigger]:not([data-disabled]))_[data-slot=field-label]:not([data-disabled])]:cursor-pointer",
-        "[&:has([data-slot=select-trigger][data-disabled])_[data-slot=field-label]]:cursor-not-allowed",
-        "[&:has([data-slot=number-field][data-disabled])_[data-slot=field-label]]:cursor-not-allowed",
-        className,
-      )}
-    />
+    <KumikoFieldContext value={{ disabled, invalid }}>
+      <BaseField.Root
+        {...props}
+        disabled={disabled}
+        invalid={invalid}
+        data-slot="field"
+        className={cn(
+          "grid grid-cols-1 min-w-0 gap-1.5 [&:has(select)_[data-slot=field-label]:not([data-disabled])]:cursor-pointer",
+          "[&:has([data-slot=select-trigger]:not([data-disabled]))_[data-slot=field-label]:not([data-disabled])]:cursor-pointer",
+          "[&:has([data-slot=select-trigger][data-disabled])_[data-slot=field-label]]:cursor-not-allowed",
+          "[&:has([data-slot=number-field][data-disabled])_[data-slot=field-label]]:cursor-not-allowed",
+          "[&:has([data-slot=file-upload]:not([data-disabled]))_[data-slot=field-label]:not([data-disabled])]:cursor-pointer",
+          "[&:has([data-slot=file-upload][data-disabled])_[data-slot=field-label]]:cursor-not-allowed",
+          className,
+        )}
+      />
+    </KumikoFieldContext>
   );
 }
 
