@@ -28,7 +28,8 @@
     }
   }
 
-  &:active:not([data-disabled]) {
+  &:active:not([data-disabled]),
+  &[data-dragging]:not([data-disabled]) {
     translate: 0 var(--press-drop);
     box-shadow: 0 0 0 var(--press-edge);
     background-color: var(--press-down, var(--press-hover));
@@ -37,12 +38,14 @@
       var(--kumiko-duration-press-in), var(--kumiko-duration-press-in);
   }
 
-  &:focus-visible {
+  &:focus-visible,
+  &:has(:focus-visible) {
     outline: var(--kumiko-ring-width) solid transparent;
     outline-offset: var(--kumiko-ring-gap);
   }
 
-  &:focus-visible::after {
+  &:focus-visible::after,
+  &:has(:focus-visible)::after {
     content: "";
     position: absolute;
     pointer-events: none;
@@ -55,7 +58,7 @@
     border-radius: calc(var(--press-round) + var(--kumiko-ring-gap) + var(--kumiko-ring-width));
   }
 
-  &:active:focus-visible::after {
+  &:is(:active, [data-dragging]):is(:focus-visible, :has(:focus-visible))::after {
     inset-block-end: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width)));
   }
 
@@ -100,11 +103,12 @@
 
     /* Opting out of forced colours also stops the browser from showing the transparent outline, so give it a
        system colour: otherwise a focused, pressed toggle shows no focus at all. */
-    &[data-pressed]:focus-visible {
+    &:is(:focus-visible, :has(:focus-visible)) {
       outline-color: CanvasText;
     }
 
-    &:focus-visible::after {
+    &:focus-visible::after,
+    &:has(:focus-visible)::after {
       display: none;
     }
   }
@@ -136,6 +140,14 @@
   --press-text: var(--kumiko-danger-fg);
   --press-line: var(--kumiko-danger-text);
   --press-edge: color-mix(in oklab, var(--kumiko-danger) 72%, black);
+}
+
+/* For a press that sits on a fill in its own focus colour, like a slider thumb on its range: a moat in the surface
+   colour between the control and its ring keeps the ring visible against that fill. */
+@utility press-moat {
+  &::after {
+    box-shadow: inset 0 0 0 var(--kumiko-ring-gap) var(--kumiko-surface);
+  }
 }
 
 @utility press-ghost {

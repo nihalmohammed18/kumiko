@@ -39,12 +39,8 @@ export function SelectTrigger({ size, className, children, ...props }: SelectTri
       data-slot="select-trigger"
       className={fieldStyles({
         size,
-        className: cn(
-          "inline-flex items-center justify-between gap-2 py-1.5 text-start cursor-pointer",
-          // Same selector chain as fieldStyles' hover, so a press outranks it.
-          "active:not-data-disabled:not-disabled:[&:not([readonly])]:border-focus",
-          className,
-        ),
+        pressable: true,
+        className: cn("inline-flex items-center justify-between gap-2 py-1.5 text-start cursor-pointer", className),
       })}
     >
       {children}

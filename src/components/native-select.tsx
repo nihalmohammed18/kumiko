@@ -37,9 +37,9 @@ export function NativeSelect({
         render={<select {...props} data-slot="native-select" />}
         className={fieldStyles({
           size,
+          pressable: true,
           className: cn(
             "appearance-none pe-11 cursor-pointer disabled:bg-disabled-fill disabled:text-disabled-text disabled:border-disabled-line disabled:cursor-not-allowed",
-            "active:not-data-disabled:not-disabled:[&:not([readonly])]:border-focus",
             className,
           ),
         })}

@@ -5,6 +5,7 @@ import { commands, page, userEvent } from "vitest/browser";
 import { validateUxExcept } from "../../scripts/ux-rules.ts";
 import { contrast, flatten, parseColor, type Rgba, WHITE } from "../../src/lib/color.ts";
 import { mirrorDemoStates } from "../demo-states.ts";
+import { controlHitTarget, controlSurface } from "./control-surface.ts";
 import { outset, plusPoints, type Rect, undersized } from "./geometry.ts";
 import {
   applyExceptions,
@@ -24,6 +25,7 @@ import {
   missingExpected,
   movingKeyframeProps,
   movingTransitions,
+  type Ring,
   type RuleId,
   ring,
   ringProblems,
@@ -123,6 +125,7 @@ function pseudo(element: Element, which: "::before" | "::after"): Style | undefi
 }
 
 function snap(element: Element): Snapshot {
+  element = controlSurface(element);
   const marks = Array.from(element.querySelectorAll("*"), (child) => (visible(child) ? child.localName : ""));
   return {
     self: read(getComputedStyle(element)),
@@ -134,6 +137,7 @@ function snap(element: Element): Snapshot {
 
 /** The opaque colour behind an element: its ancestors' backgrounds, composited. */
 function backdrop(element: Element): Rgba {
+  element = controlSurface(element);
   const layers: Rgba[] = [];
   for (let node = element.parentElement; node; node = node.parentElement) {
     const color = parseColor(getComputedStyle(node).backgroundColor);
@@ -211,6 +215,7 @@ function inSentence(element: Element): boolean {
 
 /** True when every point lands on the target, inside it, or on a label that activates it. */
 function hits(target: Element, points: Array<{ x: number; y: number }>): boolean {
+  target = controlHitTarget(target);
   return points.every(({ x, y }) => {
     const hit = document.elementFromPoint(x, y);
     if (!hit) return false;
@@ -246,28 +251,35 @@ function pixel(shot: Shot, x: number, y: number): Rgba | null {
 }
 
 /** Sides of a ring whose pixels don't change enough between two screenshots: clipped, covered or too faint.
- * Samples the middle fifth of each side, so rounded corners and pill ends don't count. */
-function hiddenSides(before: Shot, after: Shot, rect: Rect, width: number): string[] {
-  const mid = width / 2;
+ * Samples the middle fifth of each side, so rounded corners and pill ends don't count. Like WCAG's focus
+ * appearance, which counts every pixel that changes, a painted gap between the ring and the control (a moat)
+ * counts as well; a transparent gap never changes, so it can't hide a faint ring. */
+function hiddenSides(before: Shot, after: Shot, rect: Rect, ring: Ring): string[] {
   const right = rect.left + rect.width;
   const bottom = rect.top + rect.height;
   const along = (start: number, length: number, t: number) => start + length * (0.4 + t * 0.2);
-  const sides: Array<[string, (t: number) => [number, number]]> = [
-    ["top", (t) => [along(rect.left, rect.width, t), rect.top + mid]],
-    ["bottom", (t) => [along(rect.left, rect.width, t), bottom - mid]],
-    ["left", (t) => [rect.left + mid, along(rect.top, rect.height, t)]],
-    ["right", (t) => [right - mid, along(rect.top, rect.height, t)]],
+  const sides: Array<["top" | "bottom" | "left" | "right", (depth: number, t: number) => [number, number]]> = [
+    ["top", (depth, t) => [along(rect.left, rect.width, t), rect.top + depth]],
+    ["bottom", (depth, t) => [along(rect.left, rect.width, t), bottom - depth]],
+    ["left", (depth, t) => [rect.left + depth, along(rect.top, rect.height, t)]],
+    ["right", (depth, t) => [right - depth, along(rect.top, rect.height, t)]],
   ];
+  const shows = (at: (t: number) => [number, number]) => {
+    let changed = 0;
+    for (let i = 0; i < 5; i++) {
+      const [x, y] = at(i / 4);
+      const a = pixel(before, x, y);
+      const b = pixel(after, x, y);
+      if (a && b && contrast(a, b) >= LIMITS.ringContrast) changed++;
+    }
+    return changed >= 4;
+  };
   return sides
-    .filter(([, at]) => {
-      let changed = 0;
-      for (let i = 0; i < 5; i++) {
-        const [x, y] = at(i / 4);
-        const a = pixel(before, x, y);
-        const b = pixel(after, x, y);
-        if (a && b && contrast(a, b) >= LIMITS.ringContrast) changed++;
-      }
-      return changed < 4;
+    .filter(([side, at]) => {
+      // Depths in from the ring's outer edge: the middle of the ring band, then the middle of any gap inside it.
+      const gap = ring.outset[side] - ring.width;
+      const depths = gap >= 1 ? [ring.width / 2, ring.width + gap / 2] : [ring.width / 2];
+      return !depths.some((depth) => shows((t) => at(depth, t)));
     })
     .map(([side]) => side);
 }
@@ -415,7 +427,10 @@ function scan(mode: Mode, add: Add) {
     const listItem = /^(?:option|menuitem|menuitemcheckbox|menuitemradio|treeitem)$/.test(
       element.getAttribute("role") ?? "",
     );
-    const problem = runs("boundary", mode) && !nativeCheck && !link && !listItem ? boundaryProblem(read(style)) : null;
+    const problem =
+      runs("boundary", mode) && !nativeCheck && !link && !listItem
+        ? boundaryProblem(read(getComputedStyle(controlSurface(element))))
+        : null;
     if (problem) add("boundary", element, problem);
     if (!inSentence(element)) targets.push(element);
   }
@@ -427,10 +442,12 @@ function scan(mode: Mode, add: Add) {
   }
 
   if (runs("target-size", mode)) {
-    const spaced = new Set(undersized(targets.map((target) => asRect(target.getBoundingClientRect()))));
+    const spaced = new Set(
+      undersized(targets.map((target) => asRect(controlHitTarget(target).getBoundingClientRect()))),
+    );
     targets.forEach((target, index) => {
       target.scrollIntoView({ block: "center", inline: "center" });
-      const rect = target.getBoundingClientRect();
+      const rect = controlHitTarget(target).getBoundingClientRect();
       const touch = mode === "touch" && kindOf(target) === "action";
       const min = touch ? LIMITS.touchTarget : LIMITS.target;
       if (hits(target, plusPoints(asRect(rect), min)) || (!touch && !spaced.has(index))) return;
@@ -462,9 +479,10 @@ function scan(mode: Mode, add: Add) {
 function demoStates(mode: Mode, add: Add) {
   const scope = boxScope();
   const boxes = () => scope.map(layoutBox);
-  for (const element of actionables().slice(0, MAX_DEMO)) {
-    if (element.hasAttribute("data-demo") || kindOf(element) === "text-entry") continue;
-    const { disabled, loading } = stateOf(element);
+  for (const control of actionables().slice(0, MAX_DEMO)) {
+    const element = controlSurface(control);
+    if (element.hasAttribute("data-demo") || kindOf(control) === "text-entry") continue;
+    const { disabled, loading } = stateOf(control);
     const behind = backdrop(element);
     const rest = snap(element);
     const restBoxes = boxes();
@@ -472,7 +490,7 @@ function demoStates(mode: Mode, add: Add) {
       ["hover", "hover"],
       ["press", "hover active"],
     ];
-    if (!element.matches(":disabled")) states.push(["focus", "focus"]);
+    if (!control.matches(":disabled")) states.push(["focus", "focus"]);
     const seen = new Map<string, Snapshot>();
     for (const [name, value] of states) {
       element.setAttribute("data-demo", value);
@@ -514,9 +532,12 @@ async function realPointer(mode: Mode, add: Add) {
   const inert = (element: Element) => stateOf(element).disabled || stateOf(element).loading;
   const scope = boxScope();
   const boxes = () => scope.map(layoutBox);
-  for (const element of [buttons.find((button) => !inert(button)), buttons.find(inert)]) {
-    if (!element) continue;
-    const state = stateOf(element);
+  // Each control is judged by its state when its probe starts: pressing the live one can change the other (a
+  // stepper leaving its bound enables its twin).
+  for (const control of [buttons.find((button) => !inert(button)), buttons.find(inert)]) {
+    if (!control) continue;
+    const element = controlSurface(control);
+    const state = stateOf(control);
     const behind = backdrop(element);
     const rest = snap(element);
     const restBoxes = boxes();
@@ -545,7 +566,7 @@ async function realPointer(mode: Mode, add: Add) {
       ] as const)
         for (const index of shifted(restBoxes, measured))
           add("no-layout-shift", scope[index]!, `moves or resizes when ${describe(element)} is ${name}`);
-      if (inert(element)) {
+      if (state.disabled || state.loading) {
         const changed = [...differences(rest, hover), ...differences(rest, press)];
         if (changed.length) add("disabled-inert", element, `a real hover or press changes ${[...new Set(changed)]}`);
       } else {
@@ -569,7 +590,8 @@ async function realFocus(mode: Mode, add: Add) {
     (element): element is HTMLElement => element instanceof HTMLElement && element.tabIndex >= 0 && exposed(element),
   );
   // A story that pins an element's look with data-demo shows its ring at rest, so real focus changes nothing.
-  const pinned = (element: Element) => element.hasAttribute("data-demo");
+  const pinned = (element: Element) =>
+    element.hasAttribute("data-demo") || controlSurface(element).hasAttribute("data-demo");
   const rests = new Map(focusable.map((element) => [element as Element, snap(element)]));
   const scope = boxScope();
   const restBoxes = scope.map(layoutBox);
@@ -592,8 +614,8 @@ async function realFocus(mode: Mode, add: Add) {
     const problems = ringProblems(found, backdrop(element));
     for (const problem of problems) add("focus-ring", element, problem);
     if (!found || problems.length) continue;
-    const area = outset(asRect(element.getBoundingClientRect()), found.outset);
-    const hidden = hiddenSides(before, await shoot(), area, found.width);
+    const area = outset(asRect(controlSurface(element).getBoundingClientRect()), found.outset);
+    const hidden = hiddenSides(before, await shoot(), area, found);
     if (hidden.length) add("focus-ring", element, `the ring is clipped, covered or faint on the ${hidden.join(", ")}`);
   }
 }
