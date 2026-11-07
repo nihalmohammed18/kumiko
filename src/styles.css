@@ -3,3 +3,12 @@
 @import "./theme.css";
 @source "./";
 @source not "./docs";
+
+/* Base UI's scrollbar rule lives here so CSPProvider can disable inline style elements. */
+.base-ui-disable-scrollbar {
+  scrollbar-width: none;
+}
+
+.base-ui-disable-scrollbar::-webkit-scrollbar {
+  display: none;
+}

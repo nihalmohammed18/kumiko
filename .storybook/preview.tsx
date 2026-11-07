@@ -5,8 +5,6 @@ import type { UxParameters } from "./ux/harness.ts";
 import "../src/fonts.css";
 import "./preview.css";
 
-const arabicLabels = { close: "إغلاق", loading: "جارٍ التحميل" };
-
 declare global {
   interface Window {
     __kumikoSkipVrt?: boolean;
@@ -27,7 +25,7 @@ const withKumiko: Decorator = (Story, { globals, parameters }) => {
   window.__kumikoVrtPage = parameters.vrt === "page";
   window.__kumikoUx = parameters.ux;
   return (
-    <KumikoProvider direction={dir} labels={dir === "rtl" ? arabicLabels : undefined}>
+    <KumikoProvider direction={dir} locale={dir === "rtl" ? "ar-u-nu-arab" : "en"}>
       {/* The screenshot target; the padding keeps focus rings inside the picture. */}
       <div data-kumiko-story className="p-3">
         <Story />

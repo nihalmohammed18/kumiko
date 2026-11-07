@@ -1,53 +1,13 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { expect, it } from "vitest";
-import { contrast } from "../.storybook/ux/color.ts";
-import { themeCss, tokensCss } from "../scripts/build-tokens.ts";
+import { themeCss as tailwindThemeCss, tokensCss } from "../scripts/build-tokens.ts";
 import { readPaletteNames } from "../scripts/check.ts";
 import { cn } from "./lib/tv.ts";
-import { colors } from "./tokens.ts";
-
-const rgb = (hex: string) => ({
-  r: Number.parseInt(hex.slice(1, 3), 16),
-  g: Number.parseInt(hex.slice(3, 5), 16),
-  b: Number.parseInt(hex.slice(5, 7), 16),
-  a: 1,
-});
+import { checkTheme, colors } from "./tokens.ts";
 
 it("meets text and control contrast thresholds in both themes", () => {
-  const families = ["brand", "sun", "leaf", "coral", "tide", "success", "warning", "danger", "info"];
-  const textPairs: Array<[string, string]> = [
-    ...families.flatMap(
-      (name): Array<[string, string]> => [
-        [`${name}-fg`, name],
-        [`${name}-text`, `${name}-tint`],
-        [`${name}-text`, "surface"],
-      ],
-    ),
-    ...["ink", "ink-muted"].flatMap(
-      (name): Array<[string, string]> => ["canvas", "surface", "field"].map((background) => [name, background]),
-    ),
-    ["strong-fg", "strong"],
-  ];
-  const controlPairs: Array<[string, string]> = [
-    ["focus", "canvas"],
-    ["focus", "surface"],
-    ...["canvas", "surface", "field"].map((background): [string, string] => ["control-line", background]),
-  ];
-  for (const [theme, values] of Object.entries(colors)) {
-    const palette: Record<string, string> = values;
-    for (const [pairs, minimum] of [
-      [textPairs, 4.5],
-      [controlPairs, 3],
-    ] as const) {
-      for (const [foreground, background] of pairs) {
-        expect(
-          contrast(rgb(palette[foreground]!), rgb(palette[background]!)),
-          `${theme}: ${foreground} on ${background}`,
-        ).toBeGreaterThanOrEqual(minimum);
-      }
-    }
-  }
+  expect(checkTheme({})).toEqual([]);
 });
 
 it("avoids Tailwind palette and shadcn colour names", () => {
@@ -119,7 +79,7 @@ it("generates colour scopes, isolated globals and a theme backed only by Kumiko 
   );
   for (const name of globalNames) expect(css.match(new RegExp(name, "g")), name).toHaveLength(1);
 
-  const theme = themeCss();
+  const theme = tailwindThemeCss();
   expect(theme).toContain("@theme inline");
   const values = Array.from(theme.matchAll(/:\s*([^;{}]+);/g), (match) => match[1]!);
   expect(values.length).toBeGreaterThan(0);

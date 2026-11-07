@@ -1,11 +1,7 @@
 // Writes src/tokens.css and src/theme.css. `node scripts/build-tokens.ts --check` fails if either is stale.
 import { readFileSync, writeFileSync } from "node:fs";
+import { cssScope, cssVars } from "../src/lib/theme-css.ts";
 import { border, colors, controls, durations, easings, edge, fonts, layers, radii, ring, text } from "../src/tokens.ts";
-
-const vars = (obj: Record<string, string | number>, prefix = "", indent = "  ") =>
-  Object.entries(obj)
-    .map(([k, v]) => `${indent}--kumiko-${prefix}${k}: ${v};`)
-    .join("\n");
 
 const themeVars = (names: string[], prefix: string, tokenPrefix = prefix) =>
   names.map((name) => `  --${prefix}${name}: var(--kumiko-${tokenPrefix}${name});`).join("\n");
@@ -14,41 +10,34 @@ const themeVars = (names: string[], prefix: string, tokenPrefix = prefix) =>
  * Use when: regenerating src/tokens.css. Avoid when: adding handwritten component styles.
  */
 export function tokensCss(): string {
-  return `/* Generated from src/tokens.ts by \`pnpm tokens\`. Don't edit by hand. */
-:root,
-.light,
-[data-theme="light"] {
-  color-scheme: light;
-${vars(colors.light)}
-}
-
-.dark,
-[data-theme="dark"] {
-  color-scheme: dark;
-${vars(colors.dark)}
-}
-
-:root {
-${vars(fonts, "font-")}
-${vars(
-  Object.fromEntries(
-    Object.entries(text).flatMap(([name, [size, leading]]) => [
-      [name, size],
-      [`${name}-leading`, leading],
-    ]),
-  ),
-  "text-",
-)}
-${vars(radii, "radius-")}
-  --kumiko-border: ${border};
-  --kumiko-edge-h: ${edge};
-${vars(ring, "ring-")}
-${vars(controls, "control-")}
-${vars(layers, "layer-")}
-${vars(durations, "duration-")}
-${vars(easings, "ease-")}
-}
-`;
+  const globals = [
+    cssVars(fonts, "font-"),
+    cssVars(
+      Object.fromEntries(
+        Object.entries(text).flatMap(([name, [size, leading]]) => [
+          [name, size],
+          [`${name}-leading`, leading],
+        ]),
+      ),
+      "text-",
+    ),
+    cssVars(radii, "radius-"),
+    `  --kumiko-border: ${border};`,
+    `  --kumiko-edge-h: ${edge};`,
+    cssVars(ring, "ring-"),
+    cssVars(controls, "control-"),
+    cssVars(layers, "layer-"),
+    cssVars(durations, "duration-"),
+    cssVars(easings, "ease-"),
+  ].join("\n");
+  return (
+    "/* Generated from src/tokens.ts by `pnpm tokens`. Don't edit by hand. */\n" +
+    [
+      cssScope("light", `  color-scheme: light;\n${cssVars(colors.light)}`),
+      cssScope("dark", `  color-scheme: dark;\n${cssVars(colors.dark)}`),
+      cssScope("globals", globals),
+    ].join("\n")
+  );
 }
 
 /** Generates Tailwind v4 theme mappings and named duration and layer utilities.

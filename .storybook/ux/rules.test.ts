@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { MODES, RULE_IDS } from "../../scripts/ux-rules.ts";
-import { BLACK, WHITE } from "./color.ts";
+import { BLACK, WHITE } from "../../src/lib/color.ts";
 import type { Rect } from "./geometry.ts";
 import {
   applyExceptions,

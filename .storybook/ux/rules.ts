@@ -1,5 +1,5 @@
 import { MODES, type RULE_IDS } from "../../scripts/ux-rules.ts";
-import { BLACK, contrast, deltaE, flatten, parseColor, type Rgba } from "./color.ts";
+import { BLACK, contrast, deltaE, flatten, parseColor, type Rgba } from "../../src/lib/color.ts";
 import { type Rect, type Sides, sameBox } from "./geometry.ts";
 
 /** A shared UX rule id.
