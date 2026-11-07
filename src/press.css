@@ -1,8 +1,9 @@
 @custom-variant arabic (&:is(:lang(ar), :lang(ur)));
 
 @utility press {
-  /* Tones may set --press-radius, --press-edge-h and --press-down. They're read through fallbacks here, never
-     given defaults on this utility, so the result doesn't depend on the order Tailwind emits utilities in. */
+  /* Tones may set --press-radius, --press-edge-h, --press-down, --press-disabled-fill and --press-disabled-line.
+     They're read through fallbacks here, never given defaults on this utility, so the result doesn't depend on the
+     order Tailwind emits utilities in. */
   --press-round: var(--press-radius, var(--kumiko-radius-control));
   --press-drop: var(--press-edge-h, var(--kumiko-edge-h));
   --press-hover: color-mix(in oklab, var(--press-fill) 90%, var(--press-text));
@@ -28,7 +29,8 @@
     }
   }
 
-  &:active:not([data-disabled]) {
+  &:active:not([data-disabled]),
+  &[data-dragging]:not([data-disabled]) {
     translate: 0 var(--press-drop);
     box-shadow: 0 0 0 var(--press-edge);
     background-color: var(--press-down, var(--press-hover));
@@ -37,12 +39,14 @@
       var(--kumiko-duration-press-in), var(--kumiko-duration-press-in);
   }
 
-  &:focus-visible {
+  &:focus-visible,
+  &:has(:focus-visible) {
     outline: var(--kumiko-ring-width) solid transparent;
     outline-offset: var(--kumiko-ring-gap);
   }
 
-  &:focus-visible::after {
+  &:focus-visible::after,
+  &:has(:focus-visible)::after {
     content: "";
     position: absolute;
     pointer-events: none;
@@ -55,15 +59,15 @@
     border-radius: calc(var(--press-round) + var(--kumiko-ring-gap) + var(--kumiko-ring-width));
   }
 
-  &:active:focus-visible::after {
+  &:is(:active, [data-dragging]):is(:focus-visible, :has(:focus-visible))::after {
     inset-block-end: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width)));
   }
 
   &[data-disabled]:not([data-loading]) {
-    --press-fill: var(--kumiko-disabled-fill);
+    --press-fill: var(--press-disabled-fill, var(--kumiko-disabled-fill));
     --press-text: var(--kumiko-disabled-text);
-    --press-line: var(--kumiko-disabled-line);
-    --press-edge: var(--kumiko-disabled-line);
+    --press-line: var(--press-disabled-line, var(--kumiko-disabled-line));
+    --press-edge: var(--press-disabled-line, var(--kumiko-disabled-line));
     cursor: not-allowed;
   }
 
@@ -104,7 +108,8 @@
       outline-color: CanvasText;
     }
 
-    &:focus-visible::after {
+    &:focus-visible::after,
+    &:has(:focus-visible)::after {
       display: none;
     }
   }
@@ -138,6 +143,25 @@
   --press-edge: color-mix(in oklab, var(--kumiko-danger) 72%, black);
 }
 
+/* For a press that sits on a fill in its own focus colour, like a slider thumb on its range: a moat in the surface
+   colour between the control and its ring keeps the ring visible against that fill. */
+@utility press-moat {
+  &::after {
+    box-shadow: inset 0 0 0 var(--kumiko-ring-gap) var(--kumiko-surface);
+  }
+
+  /* In forced colours a press hides its ring and the browser's outline takes over, which can vanish against a
+     Highlight fill; a moat press keeps its ring and moat there, in system colours. (.press outranks that rule.) */
+  @media (forced-colors: active) {
+    &.press:is(:focus-visible, :has(:focus-visible))::after {
+      display: block;
+      forced-color-adjust: none;
+      border-color: CanvasText;
+      box-shadow: inset 0 0 0 var(--kumiko-ring-gap) Canvas;
+    }
+  }
+}
+
 @utility press-ghost {
   --press-fill: transparent;
   --press-text: var(--kumiko-ink);
@@ -145,6 +169,9 @@
   --press-edge: transparent;
   --press-edge-h: 0px;
   --press-down: color-mix(in oklab, var(--kumiko-ink) 16%, transparent);
+  /* Disabled, a ghost stays a ghost: only its text dims, so it's never louder than an enabled one. */
+  --press-disabled-fill: transparent;
+  --press-disabled-line: transparent;
 }
 
 @keyframes kumiko-spin {

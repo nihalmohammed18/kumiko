@@ -20,6 +20,7 @@ export { Input, type InputProps } from "./components/input.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
+export { NumberField, type NumberFieldProps } from "./components/number-field.tsx";
 export { Radio, type RadioProps } from "./components/radio.tsx";
 export { RadioGroup, type RadioGroupProps } from "./components/radio-group.tsx";
 export { SearchField, type SearchFieldProps } from "./components/search-field.tsx";
@@ -41,12 +42,13 @@ export {
   SelectValue,
   type SelectValueProps,
 } from "./components/select.tsx";
+export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./components/slider.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export { Toggle, type ToggleProps } from "./components/toggle.tsx";
 export { ToggleGroup, type ToggleGroupProps } from "./components/toggle-group.tsx";
-export { CheckIcon, ChevronDownIcon, MinusIcon, SearchIcon } from "./icons.tsx";
+export { CheckIcon, ChevronDownIcon, MinusIcon, PlusIcon, SearchIcon } from "./icons.tsx";
 export { formatLabel, type Label, type LabelKey, labels, type Plural } from "./labels.ts";
 export { cn } from "./lib/tv.ts";
 export {

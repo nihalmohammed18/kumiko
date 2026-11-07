@@ -159,7 +159,14 @@ export const text = {
 /** Corner radii for controls, cards, overlays and pills.
  * Use when: choosing a shape by role. Avoid when: deriving unrelated radii from a control.
  */
-export const radii = { choice: "7px", control: "14px", card: "20px", overlay: "24px", pill: "9999px" } as const;
+export const radii = {
+  choice: "7px",
+  thumb: "12px",
+  control: "14px",
+  card: "20px",
+  overlay: "24px",
+  pill: "9999px",
+} as const;
 
 /** Control border width.
  * Use when: drawing a control boundary. Avoid when: sizing the press edge or focus ring.

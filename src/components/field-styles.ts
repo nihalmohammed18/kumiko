@@ -7,7 +7,10 @@ export const fieldStyles = tv({
   base: [
     "w-full min-w-0 rounded-control border-2 border-control-line bg-field px-4 font-body text-body text-ink placeholder:text-ink-muted cursor-text",
     "transition-[border-color,background-color] duration-hover ease-enter motion-reduce:transition-none",
-    "hover:not-data-disabled:not-disabled:[&:not([readonly])]:border-ink-muted",
+    // A field is read-only when it, or the input inside it, has readonly; a read-only select still opens, so it
+    // keeps hover and press. Hover here and press in the pressable variant share one selector chain, so Tailwind
+    // emits press after hover and a press always shows: change them together.
+    "hover:not-data-disabled:not-disabled:[&:not([readonly],:has([readonly]))]:border-ink-muted",
     "focus-visible:outline-solid focus-visible:outline-(length:--kumiko-ring-width) focus-visible:outline-offset-2 focus-visible:outline-focus",
     "data-invalid:not-data-disabled:border-danger",
     "data-disabled:bg-disabled-fill data-disabled:text-disabled-text data-disabled:border-disabled-line data-disabled:cursor-not-allowed data-disabled:placeholder:text-disabled-text",
@@ -20,6 +23,8 @@ export const fieldStyles = tv({
       md: "min-h-control",
       lg: "min-h-control-lg",
     },
+    /** Fields that open something when pressed, like a select, show the press. */
+    pressable: { true: "active:not-data-disabled:not-disabled:[&:not([readonly],:has([readonly]))]:border-focus" },
   },
   defaultVariants: { size: "md" },
 });

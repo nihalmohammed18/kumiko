@@ -57,6 +57,7 @@
   --color-forced-surface: var(--kumiko-forced-surface);
   --color-forced-disabled: var(--kumiko-forced-disabled);
   --radius-choice: var(--kumiko-radius-choice);
+  --radius-thumb: var(--kumiko-radius-thumb);
   --radius-control: var(--kumiko-radius-control);
   --radius-card: var(--kumiko-radius-card);
   --radius-overlay: var(--kumiko-radius-overlay);
