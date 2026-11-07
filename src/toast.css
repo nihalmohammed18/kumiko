@@ -1,0 +1,157 @@
+@utility toast-viewport {
+  position: fixed;
+  inset-inline: 1rem;
+  inset-block-end: calc(1rem + var(--kumiko-edge-h));
+  inline-size: min(22.5rem, calc(100% - 2rem));
+  block-size: var(--toast-frontmost-height, 0px);
+  margin-inline: auto;
+
+  @media (min-width: 640px) {
+    inset-inline-start: auto;
+    margin-inline: 0;
+  }
+
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: var(--kumiko-ring-gap);
+  }
+}
+
+@utility toast {
+  --kumiko-toast-gap: 1rem;
+  --kumiko-toast-peek: 0.75rem;
+  --kumiko-toast-scale: max(0, calc(1 - var(--toast-index) * 0.05));
+  --kumiko-toast-height: var(--toast-frontmost-height, var(--toast-height, 0px));
+  --kumiko-toast-y: calc(
+    var(--toast-swipe-movement-y) +
+    var(--toast-height, 0px) *
+    var(--kumiko-toast-scale) -
+    var(--kumiko-toast-height) -
+    var(--toast-index) *
+    var(--kumiko-toast-peek)
+  );
+
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  inline-size: 100%;
+  block-size: var(--toast-height, auto);
+  border: var(--kumiko-border) solid var(--kumiko-line);
+  box-shadow: 0 var(--kumiko-edge-h) 0 var(--kumiko-edge-neutral);
+  z-index: calc(var(--kumiko-layer-toast) - var(--toast-index));
+  transform-origin: center bottom;
+  transform: translateX(var(--toast-swipe-movement-x)) translateY(var(--kumiko-toast-y))
+    scale(var(--kumiko-toast-scale));
+  transition:
+    transform var(--kumiko-duration-toast-in) var(--kumiko-ease-pop),
+    opacity var(--kumiko-duration-toast-in) var(--kumiko-ease-pop),
+    block-size var(--kumiko-duration-move) var(--kumiko-ease-move);
+
+  &[data-expanded] {
+    --kumiko-toast-y: calc(
+      var(--toast-offset-y) *
+      -1 -
+      var(--toast-index) *
+      var(--kumiko-toast-gap) +
+      var(--toast-swipe-movement-y)
+    );
+    --kumiko-toast-scale: 1;
+    transition-timing-function: var(--kumiko-ease-move);
+    transition-duration: var(--kumiko-duration-move);
+  }
+
+  &[data-starting-style] {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.96);
+  }
+
+  &[data-ending-style] {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.96);
+    transition-duration: var(--kumiko-duration-toast-out);
+
+    &[data-swipe-direction="down"] {
+      transform: translateY(calc(var(--toast-swipe-movement-y) + 150%));
+    }
+
+    &[data-swipe-direction="left"] {
+      transform: translateX(calc(var(--toast-swipe-movement-x) - 150%)) translateY(var(--kumiko-toast-y));
+    }
+
+    &[data-swipe-direction="right"] {
+      transform: translateX(calc(var(--toast-swipe-movement-x) + 150%)) translateY(var(--kumiko-toast-y));
+    }
+  }
+
+  &[data-limited] {
+    opacity: 0;
+  }
+
+  /* Crop only the hidden card's paint; its natural layout height stays the same on hover and focus. */
+  &:has([data-slot="toast-content"][data-behind]:not([data-expanded])) {
+    clip-path: inset(0 0 max(0px, calc(var(--toast-height, 0px) - var(--kumiko-toast-height))) 0);
+
+    @media (prefers-reduced-motion: reduce) {
+      clip-path: none;
+    }
+  }
+
+  /* Bridge the expanded gap so moving between toasts keeps the viewport hovered. */
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
+    block-size: calc(var(--kumiko-toast-gap) + var(--kumiko-edge-h));
+  }
+
+  /* The press ring: it wraps the edge below the card, so it never sits on the grey edge. The transparent outline is what
+     forced colours show. */
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid transparent;
+    outline-offset: var(--kumiko-ring-gap);
+  }
+
+  &:focus-visible::before {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    inset: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width)));
+    inset-block-end: calc(
+      -1 *
+      (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width) + var(--kumiko-edge-h))
+    );
+    border: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    border-radius: calc(var(--kumiko-radius-card) + var(--kumiko-ring-gap) + var(--kumiko-ring-width));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Keep the list spread out, and don't animate the stack. A swipe still follows the finger: Base UI moves the toast
+       with an inline transform while it's dragged, and dragging is direct manipulation, not animation. */
+    inset-block-end: calc(var(--toast-offset-y) + var(--toast-index) * var(--kumiko-toast-gap));
+    transform: none;
+    transition-property: opacity;
+  }
+
+  @media (forced-colors: active) {
+    border-color: var(--kumiko-forced-ink);
+
+    &:focus-visible::before {
+      display: none;
+    }
+  }
+}
+
+[data-slot="toast-content"] {
+  transition: opacity var(--kumiko-duration-move) var(--kumiko-ease-move);
+
+  &[data-behind]:not([data-expanded]) {
+    opacity: 0;
+    pointer-events: none;
+
+    @media (prefers-reduced-motion: reduce) {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
