@@ -1,5 +1,18 @@
+export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from "./components/avatar.tsx";
+export { Badge, type BadgeProps } from "./components/badge.tsx";
+export { type BadgeTone, badgeStyles } from "./components/badge-styles.ts";
 export { Button, type ButtonProps, IconButton, type IconButtonProps } from "./components/button.tsx";
 export { type ButtonStyleProps, type ButtonTone, buttonStyles } from "./components/button-styles.ts";
+export {
+  Card,
+  CardDescription,
+  type CardDescriptionProps,
+  CardLink,
+  type CardLinkProps,
+  type CardProps,
+  CardTitle,
+  type CardTitleProps,
+} from "./components/card.tsx";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
 export { Chip, ChipGroup, type ChipGroupProps, type ChipProps } from "./components/chip.tsx";
@@ -38,6 +51,7 @@ export { type FieldStyleProps, fieldStyles } from "./components/field-styles.ts"
 export { Fieldset, FieldsetLegend, type FieldsetLegendProps, type FieldsetProps } from "./components/fieldset.tsx";
 export { Form, type FormProps } from "./components/form.tsx";
 export { Input, type InputProps } from "./components/input.tsx";
+export { Kbd, type KbdProps } from "./components/kbd.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
@@ -63,6 +77,7 @@ export {
   SelectValue,
   type SelectValueProps,
 } from "./components/select.tsx";
+export { Separator, type SeparatorProps } from "./components/separator.tsx";
 export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./components/slider.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";

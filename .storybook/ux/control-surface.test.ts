@@ -30,6 +30,17 @@ it("keeps ordinary controls and inputs without a matching surface as their own m
   expect(controlSurface(unownedRange)).toBe(unownedRange);
 });
 
+it("measures a stretched link on its card while keeping inner actions as separate controls", () => {
+  const card = node("DIV", { "data-slot": "card" });
+  const title = node("H3", {}, card);
+  const link = node("A", { "data-slot": "card-link" }, title);
+  expect(controlSurface(link)).toBe(card);
+  expect(controlHitTarget(link)).toBe(card);
+  const action = node("BUTTON", {}, card);
+  expect(controlSurface(action)).toBe(action);
+  expect(controlHitTarget(action)).toBe(action);
+});
+
 it("uses the slider's painted thumb as its hit target while keeping the number input separate from its steppers", () => {
   const thumb = node("DIV", { "data-slot": "slider-thumb" });
   expect(controlHitTarget(node("INPUT", { type: "range" }, thumb))).toBe(thumb);
