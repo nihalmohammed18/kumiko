@@ -71,11 +71,39 @@
     cursor: progress;
   }
 
+  /* A disabled control that is pressed still shows its selection, in disabled colours turned around. */
+  &[data-disabled][data-pressed]:not([data-loading]) {
+    --press-fill: var(--kumiko-disabled-text);
+    --press-text: var(--kumiko-disabled-fill);
+    --press-line: var(--kumiko-disabled-text);
+    --press-edge: var(--kumiko-disabled-line);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     transition-property: background-color, color, border-color;
   }
 
   @media (forced-colors: active) {
+    &[data-pressed] {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      color: HighlightText;
+      border-color: Highlight;
+      box-shadow: none;
+    }
+
+    &[data-pressed][data-disabled] {
+      background-color: GrayText;
+      color: Canvas;
+      border-color: GrayText;
+    }
+
+    /* Opting out of forced colours also stops the browser from showing the transparent outline, so give it a
+       system colour: otherwise a focused, pressed toggle shows no focus at all. */
+    &[data-pressed]:focus-visible {
+      outline-color: CanvasText;
+    }
+
     &:focus-visible::after {
       display: none;
     }
