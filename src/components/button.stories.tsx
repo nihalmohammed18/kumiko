@@ -43,9 +43,8 @@ const meta = {
         {
           rule: "focus-ring",
           selector: "[aria-busy=true]",
-          reason: "M1 fades a loading button to 45% opacity, ring included, so forced colours lose the ring.",
+          reason: "M1 fades a loading button to 45% opacity, ring included, so its ring is too faint to see.",
           debt: "M2b",
-          projects: ["forced"],
         },
       ],
     },

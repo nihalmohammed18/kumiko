@@ -1,11 +1,11 @@
 @import "tailwindcss";
 @import "kumiko-ui/styles.css";
 
-/* An app wearing its own brand: the five settings Kumiko exposes. */
+/* An app wearing its own brand by overriding Kumiko's theme variables. */
 :root {
   --kumiko-brand: #0f766e;
   --kumiko-brand-fg: #ffffff;
-  --kumiko-radius: 8px;
+  --kumiko-radius-control: 8px;
 }
 .dark {
   --kumiko-brand: #2dd4bf;
@@ -14,6 +14,6 @@
 
 body {
   background: var(--color-canvas);
-  color: var(--color-fg);
-  font-family: var(--kumiko-font-sans);
+  color: var(--color-ink);
+  font-family: var(--kumiko-font-body);
 }

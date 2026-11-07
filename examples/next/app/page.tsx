@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <main className="mx-auto grid max-w-2xl gap-6 p-8">
       <h1 className="font-display text-headline">Kumiko in Next.js</h1>
-      <p className="text-fg-muted">
+      <p className="text-ink-muted">
         Server-rendered text <Spinner label="Loading jobs" /> next to client components.
       </p>
       <div className="flex flex-wrap gap-3">
