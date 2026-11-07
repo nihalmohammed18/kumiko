@@ -1,4 +1,20 @@
 export { Alert, type AlertProps } from "./components/alert.tsx";
+export {
+  AlertDialog,
+  AlertDialogClose,
+  type AlertDialogCloseProps,
+  AlertDialogDescription,
+  type AlertDialogDescriptionProps,
+  AlertDialogFooter,
+  type AlertDialogFooterProps,
+  AlertDialogPopup,
+  type AlertDialogPopupProps,
+  type AlertDialogProps,
+  AlertDialogTitle,
+  type AlertDialogTitleProps,
+  AlertDialogTrigger,
+  type AlertDialogTriggerProps,
+} from "./components/alert-dialog.tsx";
 export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from "./components/avatar.tsx";
 export { Badge, type BadgeProps } from "./components/badge.tsx";
 export { type BadgeTone, badgeStyles } from "./components/badge-styles.ts";
@@ -38,6 +54,24 @@ export {
   type ComboboxProps,
 } from "./components/combobox.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
+export {
+  Dialog,
+  DialogBody,
+  type DialogBodyProps,
+  DialogClose,
+  type DialogCloseProps,
+  DialogDescription,
+  type DialogDescriptionProps,
+  DialogFooter,
+  type DialogFooterProps,
+  DialogPopup,
+  type DialogPopupProps,
+  type DialogProps,
+  DialogTitle,
+  type DialogTitleProps,
+  DialogTrigger,
+  type DialogTriggerProps,
+} from "./components/dialog.tsx";
 export { EmptyState, type EmptyStateProps } from "./components/empty-state.tsx";
 export { FeedbackBanner, type FeedbackBannerProps } from "./components/feedback-banner.tsx";
 export {
