@@ -1,4 +1,5 @@
-import { Button, buttonStyles, Spinner } from "kumiko-ui";
+import { Button, Link, LinkButton, Spinner } from "kumiko-ui";
+import NextLink from "next/link";
 import { Counter } from "./counter";
 
 // A server component: renders server-safe parts directly and client parts with serialisable props only.
@@ -11,10 +12,13 @@ export default function Page() {
       </p>
       <div className="flex flex-wrap gap-3">
         <Button tone="secondary">Rendered from a server component</Button>
-        <a href="/button-only" className={buttonStyles({ tone: "ghost" })}>
+        <LinkButton href="/button-only" tone="primary">
           Button-only page
-        </a>
+        </LinkButton>
       </div>
+      <p>
+        <Link render={<NextLink href="/button-only" />}>View the button-only page</Link>
+      </p>
       <Counter />
     </main>
   );

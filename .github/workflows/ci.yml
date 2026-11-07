@@ -119,10 +119,10 @@ jobs:
       matrix:
         include:
           - name: next 15.5, webpack
-            next: 15.5.27
+            next: 15.5.29
             typescript: 5.8.3
           - name: next 16.4, turbopack
-            next: 16.4.0
+            next: 16.4.5
             typescript: 6.0.3
     steps:
       - uses: actions/checkout@v7

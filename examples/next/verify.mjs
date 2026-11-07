@@ -50,9 +50,12 @@ const chunks = new Set(
 if (!chunks.size) fail("button-only has no script chunks to inspect");
 for (const chunk of chunks) {
   const source = readFileSync(chunk, "utf8");
+  // Match the compiled attribute, not the bare word: React and Next contain strings like "link" for <link>.
+  const shipped = new Set(
+    Array.from(source.matchAll(/["']data-slot["']\s*:\s*["']([^"']+)["']/g), (match) => match[1]),
+  );
   for (const slot of forbiddenSlots)
-    if (source.includes(`"${slot}"`) || source.includes(`'${slot}'`))
-      fail(`button-only ships unrelated Kumiko data-slot "${slot}" in ${chunk}`);
+    if (shipped.has(slot)) fail(`button-only ships unrelated Kumiko data-slot "${slot}" in ${chunk}`);
 }
 
 for (const entry of ["kumiko-ui", "kumiko-ui/tokens"]) {

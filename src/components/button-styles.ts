@@ -40,3 +40,8 @@ export const buttonStyles = tv({
  * Use when: sharing Button's appearance. Avoid when: typing Button's events or native props.
  */
 export type ButtonStyleProps = VariantProps<typeof buttonStyles>;
+
+/** The shared tones for Button and LinkButton.
+ * Use when: typing a button's tone. Avoid when: typing its native props; use ButtonProps or LinkButtonProps.
+ */
+export type ButtonTone = NonNullable<ButtonStyleProps["tone"]>;

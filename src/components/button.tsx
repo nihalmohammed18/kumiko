@@ -9,7 +9,7 @@ import { buttonStyles } from "./button-styles.ts";
 import { Spinner } from "./spinner.tsx";
 
 /** Props for Button's tone, size and loading state.
- * Use when: typing an action button. Avoid when: typing a navigation link; use buttonStyles for its appearance.
+ * Use when: typing an action button. Avoid when: typing a navigation link; use LinkButtonProps.
  */
 export interface ButtonProps extends Omit<BaseButton.Props, "className"> {
   tone?: "primary" | "secondary" | "strong" | "danger" | "ghost";
@@ -34,7 +34,7 @@ function useLoadingAnnouncement(loading: boolean) {
  *
  * Use when: something happens on this page. Pick one `primary` button per view; use `danger` only for
  * destructive actions, and `type="submit"` inside forms.
- * Avoid when: navigating; use LinkButton (coming next), or a link styled with `buttonStyles`.
+ * Avoid when: navigating; use LinkButton or Link.
  */
 export function Button({
   tone = "secondary",

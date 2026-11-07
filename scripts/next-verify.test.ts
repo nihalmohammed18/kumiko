@@ -49,7 +49,10 @@ function verify(chunk: string, scripts = '<script src="/_next/static/chunks/butt
 
 describe("Next button-only tree-shaking", () => {
   it("allows transitive dependencies and shared slots, and ignores other routes", () => {
-    const result = verify('({"data-slot":"button"}),({\'data-slot\':\'spinner\'}),({"data-slot":"shared"})');
+    // `case"unrelated"` is the bare word, as React's own code has "link" for <link>; only the attribute counts.
+    const result = verify(
+      '({"data-slot":"button"}),({\'data-slot\':\'spinner\'}),({"data-slot":"shared"});switch(t){case"unrelated":}',
+    );
     expect(result.status, result.stderr).toBe(0);
   });
 
