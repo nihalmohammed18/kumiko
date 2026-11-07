@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync } from "node:fs";
+import { STORYBOOK_TEST_PROVIDE_KEY } from "@storybook/addon-vitest/constants";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
@@ -51,15 +52,20 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
     plugins: [
       storybookTest({
         configDir: ".storybook",
-        // a11y.manual stops the a11y addon's automatic axe run; the three main projects already cover it.
-        initialGlobals: axe ? globals : { ...globals, a11y: { manual: true } },
+        initialGlobals: globals,
         tags: { exclude: mode === "light" ? [] : ["light-only"] },
       }),
     ],
     test: {
       name: mode,
       setupFiles: [".storybook/vitest.setup.ts"],
-      provide: { mode, vrt: process.env.KUMIKO_VRT === "1" ? vrt : "none" },
+      provide: {
+        mode,
+        vrt: process.env.KUMIKO_VRT === "1" ? vrt : "none",
+        // Whether axe runs. Storybook's Vitest plugin reads this run config (its UI's accessibility toggle supplies it
+        // there) and overwrites any a11y.manual global with it, so this is the only switch that works.
+        [STORYBOOK_TEST_PROVIDE_KEY]: { a11y: axe },
+      },
       browser: {
         enabled: true,
         headless: true,
@@ -107,7 +113,9 @@ export default defineConfig({
         vrt: "none",
         axe: false,
       }),
-      stories("forced", { context: { forcedColors: "active" }, vrt: "states", axe: false }),
+      // axe runs in forced colours on purpose: it catches text on parts that opt out with forced-color-adjust: none.
+      // It reads authored colours, so a story must not nest a data-theme section (the dark project covers dark).
+      stories("forced", { context: { forcedColors: "active" }, vrt: "states" }),
       stories("motion", { context: { reducedMotion: "no-preference" }, vrt: "none", axe: false }),
     ],
   },
