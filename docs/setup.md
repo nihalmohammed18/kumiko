@@ -89,6 +89,9 @@ without a dark theme never switches by surprise.
 Set the theme and direction on `<html>`, not on a wrapper. Popups are rendered at the end of `<body>`, outside any
 wrapper, and would miss them.
 
+For a themed island, pass its element or ref as `container` to `DialogPopup` or `AlertDialogPopup`. The portal then
+renders inside that panel and inherits its theme. Without `container`, both popups inherit the document theme.
+
 ## 5. Right-to-left, Arabic and Urdu
 
 Set `dir="rtl"` and `lang="ar"` or `lang="ur"` on `<html>`, and give the provider `direction="rtl"` and the same
@@ -111,4 +114,37 @@ client component. To use Next's router, pass its link through `render`:
 import NextLink from "next/link";
 
 <LinkButton tone="primary" render={<NextLink href="/jobs" />}>Browse jobs</LinkButton>
+```
+
+## 7. Dialogs and confirmations
+
+`DialogPopup` includes its backdrop and a permanent corner close button, named with the provider's `close` label.
+Its default width is 560px; `size="sm"` uses 400px and `size="lg"` uses 720px. Narrow viewports keep a 16px gutter
+on each side. Put long content in `DialogBody` and place `DialogTitle`, `DialogDescription` and `DialogFooter`
+outside that body so they stay put. Put Cancel before the primary action: footers wrap and stack at phone container
+widths while keeping the same DOM and visual order.
+
+Base UI locks page scrolling and preserves the existing scrollbar gutter, with width compensation where needed.
+Kumiko leaves that lock to Base UI so nested dialogs share it; it adds no global scrollbar-gutter rule. Keep the
+`body { position: relative }` Safari fix from the root-layout setup above.
+
+`AlertDialogPopup` always renders a footer with an enabled Cancel action. Its `cancel` label is required by the type;
+put the confirming action in `actions`, after Cancel. Outside presses do not dismiss the confirmation.
+
+```tsx
+import {
+  AlertDialog, AlertDialogTrigger, AlertDialogPopup,
+  AlertDialogTitle, AlertDialogDescription, AlertDialogClose,
+} from "kumiko-ui";
+
+<AlertDialog>
+  <AlertDialogTrigger tone="danger">Delete job alert</AlertDialogTrigger>
+  <AlertDialogPopup
+    cancel="Cancel"
+    actions={<AlertDialogClose tone="danger" onClick={deleteAlert}>Delete</AlertDialogClose>}
+  >
+    <AlertDialogTitle>Delete this job alert?</AlertDialogTitle>
+    <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+  </AlertDialogPopup>
+</AlertDialog>
 ```

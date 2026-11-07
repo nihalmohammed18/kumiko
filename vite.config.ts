@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig, type TestProjectInlineConfiguration } from "vitest/config";
-import { uxForcedColors, uxMouse } from "./.storybook/ux/commands.ts";
+import { uxForcedColors, uxMouse, uxWheel } from "./.storybook/ux/commands.ts";
 import type { MODES } from "./scripts/ux-rules.ts";
 
 type Mode = (typeof MODES)[number];
@@ -74,7 +74,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
         provider: playwright({ contextOptions: { reducedMotion: "reduce", ...context } }),
         instances: [{ browser: "chromium" }],
         viewport: phone ? { width: 320, height: 568 } : { width: 1200, height: 900 },
-        commands: { uxForcedColors, uxMouse },
+        commands: { uxForcedColors, uxMouse, uxWheel },
         expect: {
           toMatchScreenshot: {
             comparatorName: "pixelmatch",

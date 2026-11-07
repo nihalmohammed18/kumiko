@@ -1,0 +1,125 @@
+@utility dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  min-block-size: 100dvh;
+  background-color: var(--kumiko-scrim);
+  transition: opacity var(--kumiko-duration-dialog-in) var(--kumiko-ease-enter);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+  }
+
+  &[data-ending-style] {
+    transition-duration: var(--kumiko-duration-dialog-out);
+  }
+
+  /* iOS 26 Safari: see the body fix in docs/setup.md. */
+  @supports (-webkit-touch-callout: none) {
+    position: absolute;
+  }
+}
+
+@utility dialog-viewport {
+  block-size: 100dvh;
+}
+
+@utility dialog-popup {
+  inline-size: 35rem;
+  max-inline-size: 100%;
+  max-block-size: calc(100dvh - 2rem);
+  border: var(--kumiko-border) solid var(--kumiko-line);
+  box-shadow: 0 var(--kumiko-edge-h) 0 var(--kumiko-edge-neutral);
+  transform-origin: center;
+  transition:
+    opacity var(--kumiko-duration-dialog-in) var(--kumiko-ease-enter),
+    scale var(--kumiko-duration-dialog-in) var(--kumiko-ease-enter),
+    translate var(--kumiko-duration-dialog-in) var(--kumiko-ease-enter);
+
+  &[data-size="sm"] {
+    inline-size: 25rem;
+  }
+
+  &[data-size="lg"] {
+    inline-size: 45rem;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--kumiko-scrim);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--kumiko-duration-dialog-in) var(--kumiko-ease-enter);
+  }
+
+  &[data-nested-dialog-open] {
+    scale: calc(1 - 0.04 * var(--nested-dialogs, 0));
+    translate: 0 calc(0.5rem * var(--nested-dialogs, 0));
+
+    &::after {
+      opacity: 0.2;
+    }
+  }
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    scale: 0.96;
+  }
+
+  &[data-ending-style] {
+    transition-duration: var(--kumiko-duration-dialog-out);
+  }
+
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: calc(var(--kumiko-edge-h) + var(--kumiko-ring-gap));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: opacity;
+
+    &,
+    &[data-nested-dialog-open],
+    &[data-starting-style],
+    &[data-ending-style] {
+      scale: 1;
+      translate: none;
+    }
+  }
+}
+
+@utility dialog-corner-close {
+  &.press {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-end: 1rem;
+  }
+}
+
+@utility dialog-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: calc(-1 * var(--kumiko-ring-width));
+  }
+}
+
+@utility dialog-footer {
+  & > * {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  @container (max-width: 24rem) {
+    flex-direction: column;
+
+    & > * {
+      inline-size: 100%;
+    }
+  }
+}
