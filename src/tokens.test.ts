@@ -93,13 +93,12 @@ it("generates colour scopes, isolated globals and a theme backed only by Kumiko 
   const light = css.match(/:root,\s*\.light,\s*\[data-theme="light"\] \{([^}]+)\}/)?.[1] ?? "";
   const dark = css.match(/\.dark,\s*\[data-theme="dark"\] \{([^}]+)\}/)?.[1] ?? "";
   const globals = css.match(/^:root \{([^}]+)\}/m)?.[1] ?? "";
-  const forced = css.slice(css.indexOf("@media (forced-colors: active)"));
   expect(light).toContain("color-scheme: light;");
   expect(dark).toContain("color-scheme: dark;");
-  expect(forced).toMatch(/:root,\s*\.light,\s*\[data-theme="light"\],\s*\.dark,\s*\[data-theme="dark"\]/);
-  expect(forced).toContain("--kumiko-brand-fg: HighlightText;");
-  expect(forced).toContain("--kumiko-disabled-text: GrayText;");
   expect(css).not.toContain("prefers-reduced-motion");
+  // Forced colours are left to the browser: remapping text variables to system colours hid labels behind Chrome's
+  // text backplate. Parts that keep their fill (checkbox, switch) get their own forced-colour variables later.
+  expect(css).not.toContain("forced-colors");
 
   const globalNames = globals.match(/--kumiko-[\w-]+:/g) ?? [];
   expect(globalNames).toEqual(

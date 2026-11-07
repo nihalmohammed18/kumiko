@@ -48,37 +48,6 @@ ${vars(layers, "layer-")}
 ${vars(durations, "duration-")}
 ${vars(easings, "ease-")}
 }
-
-@media (forced-colors: active) {
-  :root,
-  .light,
-  [data-theme="light"],
-  .dark,
-  [data-theme="dark"] {
-${vars(
-  {
-    canvas: "Canvas",
-    surface: "Canvas",
-    field: "Field",
-    ink: "CanvasText",
-    "ink-muted": "CanvasText",
-    line: "CanvasText",
-    "control-line": "ButtonText",
-    strong: "CanvasText",
-    "strong-fg": "Canvas",
-    "edge-neutral": "CanvasText",
-    focus: "Highlight",
-    brand: "Highlight",
-    "brand-fg": "HighlightText",
-    "disabled-fill": "Canvas",
-    "disabled-text": "GrayText",
-    "disabled-line": "GrayText",
-  },
-  "",
-  "    ",
-)}
-  }
-}
 `;
 }
 
