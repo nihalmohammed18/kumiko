@@ -411,7 +411,11 @@ function scan(mode: Mode, add: Add) {
       add("input-font", element, `font size is ${style.fontSize}; phones zoom in below ${LIMITS.inputFontPx}px`);
     const nativeCheck = element instanceof HTMLInputElement && ["checkbox", "radio"].includes(element.type);
     const link = element instanceof HTMLAnchorElement || element.getAttribute("role") === "link";
-    const problem = runs("boundary", mode) && !nativeCheck && !link ? boundaryProblem(read(style)) : null;
+    // Options and menu items sit inside a bordered popup and show their state with system highlight colours.
+    const listItem = /^(?:option|menuitem|menuitemcheckbox|menuitemradio|treeitem)$/.test(
+      element.getAttribute("role") ?? "",
+    );
+    const problem = runs("boundary", mode) && !nativeCheck && !link && !listItem ? boundaryProblem(read(style)) : null;
     if (problem) add("boundary", element, problem);
     if (!inSentence(element)) targets.push(element);
   }
@@ -490,7 +494,9 @@ function demoStates(mode: Mode, add: Add) {
         if (changed.length) add("disabled-inert", element, `${name} changes ${changed.join(", ")} while ${why}`);
       }
     } else {
-      if (!changes(rest, hover, behind).length) add("hover-visible", element, "hover doesn't visibly change it");
+      // An item Base UI already highlights (by keyboard or as the selection) is showing its hover look at rest.
+      if (!element.hasAttribute("data-highlighted") && !changes(rest, hover, behind).length)
+        add("hover-visible", element, "hover doesn't visibly change it");
       if (!changes(mode === "touch" ? rest : hover, press, behind).length)
         add("press-visible", element, "pressing doesn't visibly change it");
     }
@@ -523,9 +529,11 @@ async function realPointer(mode: Mode, add: Add) {
       const rect = element.getBoundingClientRect();
       const under = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
       const cursor = under ? getComputedStyle(under).cursor : "none";
+      const expanded = element.getAttribute("aria-expanded") === "true";
       await commands.uxMouse("down");
       await frame();
       const press = snap(element);
+      const opened = !expanded && element.getAttribute("aria-expanded") === "true";
       const pressBoxes = boxes();
       await commands.uxMouse("park");
       const allowed = expectedCursor("action", state);
@@ -542,7 +550,8 @@ async function realPointer(mode: Mode, add: Add) {
         if (changed.length) add("disabled-inert", element, `a real hover or press changes ${[...new Set(changed)]}`);
       } else {
         if (!changes(rest, hover, behind).length) add("hover-visible", element, "a real hover doesn't change it");
-        if (!changes(mode === "touch" ? rest : hover, press, behind).length)
+        // A press that opens a popup is visible feedback in itself, even if the trigger's own style doesn't change.
+        if (!opened && !changes(mode === "touch" ? rest : hover, press, behind).length)
           add("press-visible", element, "a real press doesn't change it");
       }
     } finally {

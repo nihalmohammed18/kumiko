@@ -66,12 +66,13 @@ function centre(rect: Rect): Point {
   return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 }
 
-/** Five hit-test points: centre, then ±(size/2 − 0.5) along x and y.
+/** Five hit-test points: centre, then ±(size/2 − 1) along x and y. A whole pixel inside the edge, because hit
+ * testing rounds, and a point half a pixel from the edge can land on the next element.
  * Use when: measuring a centred hit target. Avoid when: approximating circular overlap.
  */
 export function plusPoints(rect: Rect, size: number): Point[] {
   const { x, y } = centre(rect);
-  const offset = size / 2 - 0.5;
+  const offset = size / 2 - 1;
   return [
     { x, y },
     { x: x + offset, y },

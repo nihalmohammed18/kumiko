@@ -68,6 +68,9 @@ const preview: Preview = {
     controls: { expanded: true },
     // Accessibility violations fail the story's test in every mode.
     a11y: {
+      // a11y-exception: Base UI brackets open popups with invisible focus guards (aria-hidden, tabindex=0) that send
+      // focus straight back; focus never rests on them, so axe's aria-hidden-focus rule misreads them.
+      context: { exclude: ["[data-base-ui-focus-guard]"] },
       test: "error",
       options: { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] } },
     },

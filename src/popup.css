@@ -1,0 +1,81 @@
+@utility popup {
+  background-color: var(--kumiko-surface);
+  color: var(--kumiko-ink);
+  border: var(--kumiko-border) solid var(--kumiko-line);
+  border-radius: var(--kumiko-radius-overlay);
+  box-shadow: 0 var(--kumiko-edge-h) 0 var(--kumiko-edge-neutral);
+  padding: 0.5rem;
+  max-block-size: var(--available-height);
+  overflow-y: auto;
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity var(--kumiko-duration-popup-in) var(--kumiko-ease-enter),
+    scale var(--kumiko-duration-popup-in) var(--kumiko-ease-enter);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    scale: 0.96;
+  }
+
+  &[data-ending-style] {
+    transition-duration: var(--kumiko-duration-popup-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: opacity;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      scale: 1;
+    }
+  }
+}
+
+@utility popup-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: var(--kumiko-control-sm);
+  padding-inline: 0.75rem;
+  border-radius: var(--kumiko-radius-control);
+  cursor: pointer;
+  user-select: none;
+
+  /* Base UI highlights items from script as the pointer or keyboard moves; :hover matches the same moment, so the
+     look doesn't wait for a pointer event. Pressing darkens the tint. */
+  &[data-highlighted]:not([data-disabled]) {
+    background-color: var(--kumiko-brand-tint);
+    color: var(--kumiko-brand-text);
+  }
+
+  @media (hover: hover) {
+    &:hover:not([data-disabled]) {
+      background-color: var(--kumiko-brand-tint);
+      color: var(--kumiko-brand-text);
+    }
+  }
+
+  &:active:not([data-disabled]) {
+    background-color: color-mix(in oklab, var(--kumiko-brand-tint) 80%, var(--kumiko-brand-text));
+    color: var(--kumiko-brand-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kumiko-focus);
+    outline-offset: -2px;
+  }
+
+  &[data-disabled] {
+    color: var(--kumiko-disabled-text);
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    &[data-highlighted]:not([data-disabled]) {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      color: HighlightText;
+    }
+  }
+}

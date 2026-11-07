@@ -68,9 +68,9 @@ if (import.meta.main) {
       .map((chunk) => measure(chunk.code))
       .reduce((total, size) => ({ raw: total.raw + size.raw, gzip: total.gzip + size.gzip }), { raw: 0, gzip: 0 });
   }
-  // styles.css imports the generated files and press recipe; measure the complete stylesheet.
+  // styles.css imports the generated files and shared recipes; measure the complete stylesheet.
   sizes.css = measure(
-    ["styles.css", "tokens.css", "theme.css", "press.css"]
+    ["styles.css", "tokens.css", "theme.css", "press.css", "popup.css"]
       .map((file) => readFileSync(join(root, "dist", file), "utf8"))
       .join("\n"),
   );

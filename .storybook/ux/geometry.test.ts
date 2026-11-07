@@ -35,12 +35,12 @@ describe("rectangles", () => {
   it("returns the centre followed by positive and negative x and y hit-test points", () => {
     expect(plusPoints(box, 24)).toEqual([
       { x: 22, y: 35 },
-      { x: 33.5, y: 35 },
-      { x: 10.5, y: 35 },
-      { x: 22, y: 46.5 },
-      { x: 22, y: 23.5 },
+      { x: 33, y: 35 },
+      { x: 11, y: 35 },
+      { x: 22, y: 46 },
+      { x: 22, y: 24 },
     ]);
-    expect(plusPoints(box, 40)[1]).toEqual({ x: 41.5, y: 35 });
+    expect(plusPoints(box, 40)[1]).toEqual({ x: 41, y: 35 });
   });
 });
 
