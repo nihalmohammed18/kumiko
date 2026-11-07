@@ -2,6 +2,13 @@ export { Button, type ButtonProps, IconButton, type IconButtonProps } from "./co
 export { type ButtonStyleProps, type ButtonTone, buttonStyles } from "./components/button-styles.ts";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
+export { Chip, ChipGroup, type ChipGroupProps, type ChipProps } from "./components/chip.tsx";
+export {
+  ChoiceTile,
+  ChoiceTileGroup,
+  type ChoiceTileGroupProps,
+  type ChoiceTileProps,
+} from "./components/choice-tile.tsx";
 export {
   Combobox,
   ComboboxGroup,

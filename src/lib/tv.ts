@@ -8,7 +8,23 @@ const twMergeConfig = {
       duration: [{ duration: Object.keys(durations) }],
       z: [{ z: Object.keys(layers) }],
       press: ["press"],
-      "press-tone": [{ press: ["primary", "secondary", "strong", "danger", "ghost"] }],
+      "press-tone": [
+        {
+          press: [
+            "primary",
+            "secondary",
+            "strong",
+            "danger",
+            "ghost",
+            "selected",
+            "brand-tint",
+            "sun",
+            "leaf",
+            "coral",
+            "tide",
+          ],
+        },
+      ],
     },
   },
 };
