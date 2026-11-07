@@ -76,6 +76,20 @@
   }
 
   @media (forced-colors: active) {
+    &[data-pressed] {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      color: HighlightText;
+      border-color: Highlight;
+      box-shadow: none;
+    }
+
+    /* Opting out of forced colours also stops the browser from showing the transparent outline, so give it a
+       system colour: otherwise a focused, pressed toggle shows no focus at all. */
+    &[data-pressed]:focus-visible {
+      outline-color: CanvasText;
+    }
+
     &:focus-visible::after {
       display: none;
     }
