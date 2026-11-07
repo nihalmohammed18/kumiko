@@ -33,6 +33,7 @@ import {
   type Snapshot,
   STYLE_PROPS,
   type Style,
+  selectorClasses,
   shifted,
   stateProblem,
   transitionProblems,
@@ -133,6 +134,29 @@ function snap(element: Element): Snapshot {
     after: pseudo(element, "::after"),
     marks: marks.filter(Boolean).join(","),
   };
+}
+
+// Classes third-party code adds as names, not styling hooks: lucide marks every icon "lucide lucide-<name>".
+const MARKER_CLASSES = /^lucide(?:-|$)/;
+
+/** Every class name the page's stylesheets mention, nested rules included. A class on an element that no rule
+ * mentions is a typo or a utility Tailwind couldn't generate (an unknown token, a misspelt variant). */
+function stylesheetClasses(): Set<string> {
+  const names = new Set<string>();
+  const walk = (rules: CSSRuleList) => {
+    for (const rule of Array.from(rules)) {
+      if (rule instanceof CSSStyleRule) for (const name of selectorClasses(rule.selectorText)) names.add(name);
+      if ("cssRules" in rule && rule.cssRules instanceof CSSRuleList) walk(rule.cssRules);
+    }
+  };
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      walk(sheet.cssRules);
+    } catch {
+      // A cross-origin stylesheet can't be read; Kumiko's styles are all same-origin.
+    }
+  }
+  return names;
 }
 
 /** The opaque colour behind an element: its ancestors' backgrounds, composited. */
@@ -367,6 +391,13 @@ function scan(mode: Mode, add: Add) {
   }
 
   const scope = Array.from(document.body.querySelectorAll("*")).filter(visible);
+  if (runs("dead-class", mode)) {
+    const known = stylesheetClasses();
+    for (const element of scope)
+      for (const name of Array.from(element.classList))
+        if (!known.has(name) && !MARKER_CLASSES.test(name))
+          add("dead-class", element, `class "${name}" matches no CSS rule, so it does nothing`);
+  }
   if (runs("reflow", mode) && html.scrollWidth > html.clientWidth + 0.5) {
     const wide = scope.filter((element) => {
       const rect = element.getBoundingClientRect();

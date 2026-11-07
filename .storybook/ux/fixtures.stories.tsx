@@ -213,6 +213,13 @@ export const Directional = fixture(["directional"], () => (
   </div>
 ));
 
+// cursor-inherit isn't a Tailwind utility, so the class generates nothing.
+export const DeadClass = fixture(["dead-class"], () => (
+  <button type="button" className="ux-face cursor-inherit">
+    Dead class
+  </button>
+));
+
 export const ColorScheme = fixture(["color-scheme"], () => (
   <div data-theme="dark" style={{ colorScheme: "light" }}>
     Dark theme, light colour scheme

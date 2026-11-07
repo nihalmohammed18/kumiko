@@ -109,10 +109,22 @@ const projects: Record<RuleId, readonly Mode[]> = {
   reflow: ["touch"],
   "no-sticky-hover": ["touch"],
   boundary: ["forced"],
+  "dead-class": ["light"],
   transitions: MODES,
   settle: MODES,
   "stale-exception": MODES,
 };
+
+/** Class names a selector mentions, with CSS escapes resolved (`.hover\:bg-x` gives `hover:bg-x`).
+ * Use when: collecting the classes a stylesheet can style. Avoid when: matching selectors against elements.
+ */
+export function selectorClasses(selector: string): string[] {
+  return Array.from(selector.matchAll(/\.((?:\\[\da-f]{1,6} ?|\\[^\da-f\n]|[\w-]|[^\p{ASCII}])+)/giu), (match) =>
+    match[1]!.replace(/\\([\da-f]{1,6}) ?|\\(.)/giu, (_, hex: string | undefined, char: string | undefined) =>
+      hex ? String.fromCodePoint(Number.parseInt(hex, 16)) : char!,
+    ),
+  );
+}
 
 /** Whether a rule runs in a test project.
  * Use when: filtering rule checks or exceptions. Avoid when: suppressing a violation without an exception.
