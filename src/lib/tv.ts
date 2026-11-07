@@ -7,6 +7,8 @@ const twMergeConfig = {
     classGroups: {
       duration: [{ duration: Object.keys(durations) }],
       z: [{ z: Object.keys(layers) }],
+      press: ["press"],
+      "press-tone": [{ press: ["primary", "secondary", "strong", "danger", "ghost"] }],
     },
   },
 };

@@ -8,10 +8,10 @@ export function Counter() {
   const [count, setCount] = useState(0);
   return (
     <div className="flex items-center gap-3">
-      <Button variant="primary" onClick={() => setCount((c) => c + 1)}>
+      <Button tone="primary" onClick={() => setCount((c) => c + 1)}>
         Clicked {count} times
       </Button>
-      <IconButton aria-label="Reset" variant="outline" onClick={() => setCount(0)}>
+      <IconButton aria-label="Reset" tone="secondary" onClick={() => setCount(0)}>
         ↺
       </IconButton>
     </div>

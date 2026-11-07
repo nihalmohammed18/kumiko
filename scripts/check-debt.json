@@ -1,16 +1,1 @@
-[
-  {
-    "file": "src/components/button-styles.ts",
-    "rule": "disabled-opacity",
-    "match": "data-disabled:opacity-45",
-    "debt": "M2b",
-    "reason": "M1 fades the disabled face; M2b will replace this with the shared disabled press states."
-  },
-  {
-    "file": "src/components/spinner.tsx",
-    "rule": "motion-raw",
-    "match": "animate-spin",
-    "debt": "M2b",
-    "reason": "M1 uses Tailwind's raw spinner loop; M2b will add and use a spinner motion token."
-  }
-]
+[]

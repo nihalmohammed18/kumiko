@@ -110,4 +110,4 @@ Implementation agents (Codex) work without a browser or network. They:
 **The Playground look**
 - No elevation shadows, blur or gradients.
 - Uppercase appears only in the button and badge recipes.
-- Pressable parts get their edge and press from the shared press recipe, never from one-off styles.
+- Pressable parts use the `press` utility with one `press-<tone>`; never one-off shadows, translations or hover colours.

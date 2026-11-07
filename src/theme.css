@@ -65,6 +65,8 @@
   --text-caption--line-height: var(--kumiko-text-caption-leading);
   --text-label: var(--kumiko-text-label);
   --text-label--line-height: var(--kumiko-text-label-leading);
+  --text-button: var(--kumiko-text-button);
+  --text-button--line-height: var(--kumiko-text-button-leading);
   --text-body-sm: var(--kumiko-text-body-sm);
   --text-body-sm--line-height: var(--kumiko-text-body-sm-leading);
   --text-body: var(--kumiko-text-body);

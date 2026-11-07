@@ -33,7 +33,7 @@ export const MODES = ["light", "dark", "rtl", "touch", "forced", "motion"] as co
 /** Debt packets whose exceptions must no longer suppress failures.
  * Use when: closing a completed debt packet. Avoid when: suppressing new violations.
  */
-export const CLOSED_DEBTS: string[] = [];
+export const CLOSED_DEBTS: string[] = ["M2b"];
 
 const ruleIds: ReadonlySet<string> = new Set(RULE_IDS);
 const modes: ReadonlySet<string> = new Set(MODES);

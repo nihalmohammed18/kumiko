@@ -4,7 +4,7 @@ import { Button } from "kumiko-ui";
 export default function ButtonOnly() {
   return (
     <main className="p-8">
-      <Button variant="primary">Only a button here</Button>
+      <Button tone="primary">Only a button here</Button>
     </main>
   );
 }

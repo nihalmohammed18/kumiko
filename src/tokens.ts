@@ -135,6 +135,7 @@ export const fonts = {
 export const text = {
   caption: ["0.75rem", "1rem"],
   label: ["0.875rem", "1.25rem"],
+  button: ["0.9375rem", "1.25rem"],
   "body-sm": ["0.875rem", "1.375rem"],
   body: ["1rem", "1.5rem"],
   "title-sm": ["1.125rem", "1.5rem"],

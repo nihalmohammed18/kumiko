@@ -1,6 +1,9 @@
 import type { ComponentProps } from "react";
 import { cn } from "../lib/tv.ts";
 
+/** Native span props and an optional announcement for Spinner.
+ * Use when: typing a loading indicator. Avoid when: reporting measurable progress; use Progress.
+ */
 export interface SpinnerProps extends ComponentProps<"span"> {
   /** Announced to screen readers. Leave it out when nearby text already says something is loading. */
   label?: string;
@@ -15,13 +18,13 @@ export interface SpinnerProps extends ComponentProps<"span"> {
 export function Spinner({ label, className, ...props }: SpinnerProps) {
   const ring = (
     <span
+      {...props}
       data-slot="spinner"
       aria-hidden
       className={cn(
-        "inline-block size-4 shrink-0 animate-spin rounded-full border-2 border-current border-e-transparent",
+        "spinner inline-block size-(--icon-size,1rem) shrink-0 rounded-full border-2 border-current border-e-transparent",
         className,
       )}
-      {...props}
     />
   );
   if (!label) return ring;

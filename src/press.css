@@ -1,0 +1,140 @@
+@custom-variant arabic (&:is(:lang(ar), :lang(ur)));
+
+@utility press {
+  /* Tones may set --press-radius, --press-edge-h and --press-down. They're read through fallbacks here, never
+     given defaults on this utility, so the result doesn't depend on the order Tailwind emits utilities in. */
+  --press-round: var(--press-radius, var(--kumiko-radius-control));
+  --press-drop: var(--press-edge-h, var(--kumiko-edge-h));
+  --press-hover: color-mix(in oklab, var(--press-fill) 90%, var(--press-text));
+
+  position: relative;
+  border: var(--kumiko-border) solid var(--press-line);
+  border-radius: var(--press-round);
+  background-color: var(--press-fill);
+  color: var(--press-text);
+  box-shadow: 0 var(--press-drop) 0 var(--press-edge);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--kumiko-duration-hover) var(--kumiko-ease-enter),
+    color var(--kumiko-duration-hover) var(--kumiko-ease-enter),
+    border-color var(--kumiko-duration-hover) var(--kumiko-ease-enter),
+    translate var(--kumiko-duration-press-out) var(--kumiko-ease-enter),
+    box-shadow var(--kumiko-duration-press-out) var(--kumiko-ease-enter);
+
+  @media (hover: hover) {
+    &:hover:not([data-disabled]) {
+      background-color: var(--press-hover);
+    }
+  }
+
+  &:active:not([data-disabled]) {
+    translate: 0 var(--press-drop);
+    box-shadow: 0 0 0 var(--press-edge);
+    background-color: var(--press-down, var(--press-hover));
+    transition-duration:
+      var(--kumiko-duration-hover), var(--kumiko-duration-hover), var(--kumiko-duration-hover),
+      var(--kumiko-duration-press-in), var(--kumiko-duration-press-in);
+  }
+
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid transparent;
+    outline-offset: var(--kumiko-ring-gap);
+  }
+
+  &:focus-visible::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    inset: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width)));
+    inset-block-end: calc(
+      -1 *
+      (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width) + var(--press-drop))
+    );
+    border: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    border-radius: calc(var(--press-round) + var(--kumiko-ring-gap) + var(--kumiko-ring-width));
+  }
+
+  &:active:focus-visible::after {
+    inset-block-end: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-gap) + var(--kumiko-ring-width)));
+  }
+
+  &[data-disabled]:not([data-loading]) {
+    --press-fill: var(--kumiko-disabled-fill);
+    --press-text: var(--kumiko-disabled-text);
+    --press-line: var(--kumiko-disabled-line);
+    --press-edge: var(--kumiko-disabled-line);
+    cursor: not-allowed;
+  }
+
+  &[data-loading] {
+    cursor: progress;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: background-color, color, border-color;
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible::after {
+      display: none;
+    }
+  }
+}
+
+@utility press-primary {
+  --press-fill: var(--kumiko-brand);
+  --press-text: var(--kumiko-brand-fg);
+  --press-line: var(--kumiko-brand-text);
+  --press-edge: color-mix(in oklab, var(--kumiko-brand) 72%, black);
+}
+
+@utility press-secondary {
+  --press-fill: var(--kumiko-surface);
+  --press-text: var(--kumiko-ink);
+  --press-line: var(--kumiko-control-line);
+  --press-edge: var(--kumiko-edge-neutral);
+}
+
+@utility press-strong {
+  --press-fill: var(--kumiko-strong);
+  --press-text: var(--kumiko-strong-fg);
+  --press-line: var(--kumiko-strong);
+  --press-edge: color-mix(in oklab, var(--kumiko-strong) 72%, black);
+}
+
+@utility press-danger {
+  --press-fill: var(--kumiko-danger);
+  --press-text: var(--kumiko-danger-fg);
+  --press-line: var(--kumiko-danger-text);
+  --press-edge: color-mix(in oklab, var(--kumiko-danger) 72%, black);
+}
+
+@utility press-ghost {
+  --press-fill: transparent;
+  --press-text: var(--kumiko-ink);
+  --press-line: transparent;
+  --press-edge: transparent;
+  --press-edge-h: 0px;
+  --press-down: color-mix(in oklab, var(--kumiko-ink) 16%, transparent);
+}
+
+@keyframes kumiko-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+@keyframes kumiko-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@utility spinner {
+  animation: kumiko-spin 700ms linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: kumiko-pulse 1200ms ease-in-out infinite;
+  }
+}

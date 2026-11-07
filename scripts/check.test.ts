@@ -480,7 +480,7 @@ describe("ux-exception", () => {
     ).toBe(true);
   });
   it.each(
-    [[], [uxException], [{ ...uxException, debt: "M2b" }], [{ ...uxException, reason: "123456789012345" }]].map(
+    [[], [uxException], [{ ...uxException, debt: "future" }], [{ ...uxException, reason: "123456789012345" }]].map(
       (value) => ({ value }),
     ),
   )("allows valid exceptions: $value", ({ value }) => {
@@ -525,20 +525,15 @@ describe("ux-exception", () => {
     );
   });
   it("rejects a closed debt in both the shared validator and story guard", () => {
-    CLOSED_DEBTS.push("M2b");
-    try {
-      const value = [{ ...uxException, debt: "M2b" }];
-      expect(validateUxExcept(value)).toEqual([expect.stringContaining("closed debt M2b")]);
-      expect(
-        lintStory(story(`parameters: { ux: { except: ${JSON.stringify(value)} } }`), "src/example.stories.tsx").map(
-          (problem) => problem.rule,
-        ),
-      ).toEqual(["ux-exception"]);
-    } finally {
-      CLOSED_DEBTS.pop();
-    }
+    const value = [{ ...uxException, debt: "M2b" }];
+    expect(validateUxExcept(value)).toEqual([expect.stringContaining("closed debt M2b")]);
+    expect(
+      lintStory(story(`parameters: { ux: { except: ${JSON.stringify(value)} } }`), "src/example.stories.tsx").map(
+        (problem) => problem.rule,
+      ),
+    ).toEqual(["ux-exception"]);
   });
-  it("keeps the shared ids exact and debts initially open", () => {
+  it("keeps the shared ids exact and M2b closed", () => {
     expect(RULE_IDS).toEqual([
       "cursor",
       "disabled-inert",
@@ -562,7 +557,7 @@ describe("ux-exception", () => {
       "color-scheme",
       "stale-exception",
     ]);
-    expect(CLOSED_DEBTS).toEqual([]);
+    expect(CLOSED_DEBTS).toEqual(["M2b"]);
   });
 });
 
@@ -572,7 +567,7 @@ describe("debt ledger", () => {
     file: component,
     rule: "motion-raw",
     match: "animate-spin",
-    debt: "M2b",
+    debt: "future",
     reason: "Replace the M1 spinner animation with its motion token",
   };
   it("silences only the exact matching problem", () => {
@@ -590,12 +585,12 @@ describe("debt ledger", () => {
     expect(applyDebt([], [entry]).map((problem) => problem.rule)).toEqual(["stale-debt"]);
   });
   it("fails closed debt and restores its original problem", () => {
-    const result = applyDebt(problems, [entry], ["M2b"]);
+    const result = applyDebt(problems, [entry], ["future"]);
     expect(result).toContainEqual(problems[0]);
     expect(result.some((problem) => problem.rule === "closed-debt")).toBe(true);
   });
   it("fails closed debt even when its violation disappeared", () => {
-    expect(applyDebt([], [entry], ["M2b"]).some((problem) => problem.rule === "closed-debt")).toBe(true);
+    expect(applyDebt([], [entry], ["future"]).some((problem) => problem.rule === "closed-debt")).toBe(true);
   });
   it.each(
     [null, [{ ...entry, reason: "" }], [{ ...entry, match: "" }], [{ ...entry, debt: 3 }]].map((value) => ({ value })),

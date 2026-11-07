@@ -594,6 +594,31 @@ describe("focus rings", () => {
     "outline-color": black,
     "outline-offset": "1px",
   };
+  it("ignores a transparent outline and measures a pseudo-element ring outside the element's border", () => {
+    const after: Style = {
+      content: '""',
+      position: "absolute",
+      top: "-7px",
+      right: "-7px",
+      bottom: "-11px",
+      left: "-7px",
+      ...Object.fromEntries(
+        ["top", "right", "bottom", "left"].flatMap((side) => [
+          [`border-${side}-style`, "solid"],
+          [`border-${side}-width`, "3px"],
+          [`border-${side}-color`, black],
+        ]),
+      ),
+    };
+    const border = Object.fromEntries(
+      ["top", "right", "bottom", "left"].map((side) => [`border-${side}-width`, "2px"]),
+    );
+    const focused = snapshot({ ...outlined, ...border, "outline-width": "3px", "outline-color": "rgba(0, 0, 0, 0)" });
+    expect(ring(snapshot(border), { ...focused, after })).toMatchObject({
+      source: "::after",
+      outset: { top: 5, right: 5, bottom: 9, left: 5 },
+    });
+  });
   it("detects a newly visible outline, including its offset", () => {
     expect(ring(snapshot(), snapshot(outlined))).toEqual({
       source: "outline",
@@ -771,7 +796,7 @@ describe("exceptions and reporting", () => {
     ]);
   });
   it("never reports a debt exception as stale, but still lets it suppress", () => {
-    const debt: Exception = { ...exception, debt: "M2b" };
+    const debt: Exception = { ...exception, debt: "future" };
     expect(applyExceptions([focus], [debt], "light", matches)).toEqual([focus]);
     expect(applyExceptions([cursor], [debt], "light", matches)).toEqual([]);
   });
