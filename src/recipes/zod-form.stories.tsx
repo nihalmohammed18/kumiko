@@ -135,6 +135,7 @@ function ZodJobAlertForm({ onSubmit }: { onSubmit: (values: JobAlert) => void })
 
 const meta = {
   title: "Recipes/zod with Form",
+  tags: ["no-forced"],
   component: ZodJobAlertForm,
   args: { onSubmit: fn() },
 } satisfies Meta<typeof ZodJobAlertForm>;
