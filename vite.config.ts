@@ -5,24 +5,26 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig, type TestProjectInlineConfiguration } from "vitest/config";
-import { uxMouse } from "./.storybook/ux/commands.ts";
+import { uxForcedColors, uxMouse } from "./.storybook/ux/commands.ts";
 import type { MODES } from "./scripts/ux-rules.ts";
 
 type Mode = (typeof MODES)[number];
 
-// Every Base UI module the components import, pre-bundled up front. Otherwise each of the six browser projects
-// discovers them mid-run, Vite re-optimises and reloads, and tests fail to load.
-const baseUiModules = [
+// Every package module the source imports, pre-bundled up front. Otherwise each of the six browser projects
+// discovers them mid-run, Vite re-optimises and reloads the page, and tests fail to load; the forced project even
+// loses its forced-colours emulation. Unit tests run in Node, so their imports don't count.
+const sourceModules = [
   ...new Set(
     readdirSync("src", { recursive: true, withFileTypes: true })
       // Screenshot folders are named after story files, so keep only real files.
-      .filter((entry) => entry.isFile() && /\.tsx?$/.test(entry.name))
+      .filter((entry) => entry.isFile() && /\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name))
       .flatMap((entry) =>
         Array.from(
-          readFileSync(`${entry.parentPath}/${entry.name}`, "utf8").matchAll(/from "(@base-ui\/react\/[\w-]+)"/g),
+          readFileSync(`${entry.parentPath}/${entry.name}`, "utf8").matchAll(/from "((?:@[\w-]+\/)?[\w-][\w./-]*)"/g),
           (match) => match[1]!,
         ),
-      ),
+      )
+      .filter((module) => !/^(?:storybook|@storybook\/|vitest)/.test(module)),
   ),
 ];
 
@@ -72,7 +74,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
         provider: playwright({ contextOptions: { reducedMotion: "reduce", ...context } }),
         instances: [{ browser: "chromium" }],
         viewport: phone ? { width: 320, height: 568 } : { width: 1200, height: 900 },
-        commands: { uxMouse },
+        commands: { uxForcedColors, uxMouse },
         expect: {
           toMatchScreenshot: {
             comparatorName: "pixelmatch",
@@ -86,7 +88,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  optimizeDeps: { include: baseUiModules },
+  optimizeDeps: { include: sourceModules },
   test: {
     coverage: {
       provider: "v8",

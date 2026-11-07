@@ -18,6 +18,10 @@ const en = {
   moreCount: { one: "{count} more", other: "{count} more" },
   stepCompleted: "completed",
   stepUpcoming: "not started",
+  statusSuccess: "Success",
+  statusInfo: "Note",
+  statusWarning: "Warning",
+  statusDanger: "Error",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -41,6 +45,10 @@ export const labels = {
     },
     stepCompleted: "مكتملة",
     stepUpcoming: "لم تبدأ",
+    statusSuccess: "تم بنجاح",
+    statusInfo: "ملاحظة",
+    statusWarning: "تحذير",
+    statusDanger: "خطأ",
   },
   ur: {
     close: "بند کریں",
@@ -52,6 +60,10 @@ export const labels = {
     moreCount: { one: "{count} اور", other: "{count} اور" },
     stepCompleted: "مکمل",
     stepUpcoming: "شروع نہیں ہوا",
+    statusSuccess: "کامیابی",
+    statusInfo: "نوٹ",
+    statusWarning: "انتباہ",
+    statusDanger: "خرابی",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof en, Label>>;
 

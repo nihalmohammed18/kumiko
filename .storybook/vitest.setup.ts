@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, expect, inject } from "vitest";
-import { page } from "vitest/browser";
+import { commands, page } from "vitest/browser";
 import type { MODES } from "../scripts/ux-rules.ts";
 import { checkUx } from "./ux/harness.ts";
 
@@ -15,7 +15,22 @@ declare module "vitest" {
 const mode = inject("mode");
 
 /** Each project's conditions really hold, so a misconfigured project can't pass vacuously. */
-function canary(): string[] {
+/** Emulated forced colours must actually repaint: an authored colour is replaced by a system colour. A test file's
+ * fresh frame can be probed a moment before the emulation reaches it, so this waits up to half a second. */
+async function forcedRepaint(): Promise<boolean> {
+  for (let frame = 0; frame < 30; frame++) {
+    const probe = document.createElement("div");
+    probe.style.color = "rgb(1, 2, 3)";
+    document.body.append(probe);
+    const repainted = getComputedStyle(probe).color !== "rgb(1, 2, 3)";
+    probe.remove();
+    if (repainted) return true;
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  return false;
+}
+
+async function canary(): Promise<string[]> {
   const media = (query: string) => matchMedia(query).matches;
   const expected: Array<[string, boolean]> = [
     ["(prefers-reduced-motion: reduce)", mode !== "motion"],
@@ -26,13 +41,11 @@ function canary(): string[] {
   const problems = expected
     .filter(([query, want]) => media(query) !== want)
     .map(([query, want]) => `${query} should be ${want}`);
-  if (mode === "forced") {
-    // Emulated forced colours must actually repaint: an authored colour is replaced by a system colour.
-    const probe = document.createElement("div");
-    probe.style.color = "rgb(1, 2, 3)";
-    document.body.append(probe);
-    if (getComputedStyle(probe).color === "rgb(1, 2, 3)") problems.push("forced colours are not applied");
-    probe.remove();
+  // A frame that came up with the media query but without forced colours is repainted once; if it still isn't
+  // forced, the project's conditions really aren't in effect.
+  if (mode === "forced" && !(await forcedRepaint())) {
+    await commands.uxForcedColors();
+    if (!(await forcedRepaint())) problems.push("forced colours are not applied");
   }
   return problems;
 }
@@ -50,7 +63,7 @@ beforeAll(async () => {
   await Promise.all(FACES.map(([font, text]) => document.fonts.load(font, text)));
   const missing = FACES.filter(([font, text]) => !document.fonts.check(font, text)).map(([font]) => font);
   if (missing.length) throw new Error(`Fonts didn't load: ${missing.join(", ")}`);
-  const problems = canary();
+  const problems = await canary();
   if (problems.length) throw new Error(`The ${mode} project's conditions are not in effect:\n${problems.join("\n")}`);
 });
 
