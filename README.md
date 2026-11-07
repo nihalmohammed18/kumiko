@@ -37,6 +37,14 @@ import { KumikoProvider } from "kumiko-ui";
 <KumikoProvider direction="ltr" locale="en">{children}</KumikoProvider>;
 ```
 
+Choose a tone for an action:
+
+```tsx
+import { Button } from "kumiko-ui";
+
+<Button tone="primary">Save changes</Button>;
+```
+
 Next.js apps should also add `experimental: { optimizePackageImports: ["kumiko-ui"] }` to `next.config.ts`.
 
 Requires React 19 and Tailwind CSS 4.3 or later, and supports Safari 16.4+, Chrome 111+ and Firefox 128+.

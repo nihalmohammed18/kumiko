@@ -632,7 +632,8 @@ export function ring(rest: Snapshot, focused: Snapshot): Ring | null {
     if (!appeared && !changed) continue;
     const outset: Sides = { top: 0, right: 0, bottom: 0, left: 0 };
     if (["absolute", "fixed"].includes(value(after, "position"))) {
-      for (const side of sides) outset[side] = -px(value(after, side)) || 0;
+      // Insets are measured from the element's padding box, inside its border, so the border width counts too.
+      for (const side of sides) outset[side] = -px(value(after, side)) - px(value(b, `border-${side}-width`)) || 0;
     }
     candidates.push({
       source: `::${pseudo}`,
@@ -641,10 +642,10 @@ export function ring(rest: Snapshot, focused: Snapshot): Ring | null {
       outset,
     });
   }
-  return candidates.reduce<Ring | null>(
-    (widest, candidate) => (!widest || candidate.width > widest.width ? candidate : widest),
-    null,
-  );
+  // A fully transparent outline isn't a ring: the press recipe keeps one so Windows high contrast can show focus.
+  return candidates
+    .filter((candidate) => candidate.color.a > 0)
+    .reduce<Ring | null>((widest, candidate) => (!widest || candidate.width > widest.width ? candidate : widest), null);
 }
 
 /** Problems with a focus ring's band width and contrast against its opaque backdrop.

@@ -68,9 +68,11 @@ if (import.meta.main) {
       .map((chunk) => measure(chunk.code))
       .reduce((total, size) => ({ raw: total.raw + size.raw, gzip: total.gzip + size.gzip }), { raw: 0, gzip: 0 });
   }
-  // styles.css imports both generated files; measure the complete stylesheet.
+  // styles.css imports the generated files and press recipe; measure the complete stylesheet.
   sizes.css = measure(
-    ["styles.css", "tokens.css", "theme.css"].map((file) => readFileSync(join(root, "dist", file), "utf8")).join("\n"),
+    ["styles.css", "tokens.css", "theme.css", "press.css"]
+      .map((file) => readFileSync(join(root, "dist", file), "utf8"))
+      .join("\n"),
   );
   console.table(Object.entries(sizes).map(([entry, size]) => ({ entry, "raw (B)": size.raw, "gzip (B)": size.gzip })));
 

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Copy, Plus, Trash2 } from "lucide-react";
-import { expect, fn } from "storybook/test";
+import { Copy, Plus } from "lucide-react";
+import { expect, fn, waitFor, within } from "storybook/test";
+import { labels } from "../labels.ts";
 import { Button, IconButton } from "./button.tsx";
 
 const meta = {
@@ -8,89 +9,30 @@ const meta = {
   component: Button,
   args: { children: "Save changes", onClick: fn() },
   argTypes: {
-    variant: { control: "inline-radio", options: ["primary", "secondary", "outline", "ghost", "danger", "link"] },
+    tone: { control: "inline-radio", options: ["primary", "secondary", "strong", "danger", "ghost"] },
     size: { control: "inline-radio", options: ["sm", "md", "lg"] },
-  },
-  parameters: {
-    ux: {
-      // M1 bugs the UX rules found. M2b's press recipe and Button rework fix them; closing M2b fails these entries.
-      except: [
-        {
-          rule: "hover-visible",
-          selector: "[data-slot=button].bg-brand",
-          reason: "M1's primary hover mixes the brand with fg, which are the same colour in M1.",
-          debt: "M2b",
-        },
-        {
-          rule: "cursor",
-          selector: "[aria-busy=true]",
-          reason: "M1 styles a loading button as disabled, so it shows not-allowed instead of progress.",
-          debt: "M2b",
-        },
-        {
-          rule: "reduce-no-move",
-          selector: "[data-slot=spinner]",
-          reason: "M1's spinner keeps rotating under reduced motion; M2b makes it an opacity pulse.",
-          debt: "M2b",
-        },
-        {
-          rule: "target-size",
-          selector: "[data-slot=button], [data-slot=icon-button]",
-          reason: "M1's sm and md controls are 32 and 36px tall; M2b moves sizes to 40, 48 and 56px.",
-          debt: "M2b",
-          projects: ["touch"],
-        },
-        {
-          rule: "focus-ring",
-          selector: "[aria-busy=true]",
-          reason: "M1 fades a loading button to 45% opacity, ring included, so its ring is too faint to see.",
-          debt: "M2b",
-        },
-      ],
-    },
   },
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = { args: { variant: "primary" } };
-
-export const Variants: Story = {
-  render: (args) => (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button {...args} variant="primary">
-        Publish job
-      </Button>
-      <Button {...args} variant="secondary">
-        Save draft
-      </Button>
-      <Button {...args} variant="outline">
-        Export
-      </Button>
-      <Button {...args} variant="ghost">
-        Cancel
-      </Button>
-      <Button {...args} variant="danger">
-        <Trash2 aria-hidden /> Delete
-      </Button>
-      <Button {...args} variant="link">
-        View all
-      </Button>
-    </div>
-  ),
-};
+export const Primary: Story = { args: { tone: "primary" } };
+export const Secondary: Story = { args: { tone: "secondary" } };
+export const Strong: Story = { args: { tone: "strong" } };
+export const Danger: Story = { args: { tone: "danger", children: "Delete job" } };
+export const Ghost: Story = { args: { tone: "ghost", children: "Cancel" } };
 
 export const Sizes: Story = {
   render: (args) => (
     <div className="flex flex-wrap items-center gap-3">
-      <Button {...args} variant="primary" size="sm">
+      <Button {...args} tone="primary" size="sm">
         Small
       </Button>
-      <Button {...args} variant="primary" size="md">
+      <Button {...args} tone="primary" size="md">
         Medium
       </Button>
-      <Button {...args} variant="primary" size="lg">
+      <Button {...args} tone="primary" size="lg">
         Large
       </Button>
     </div>
@@ -98,7 +40,7 @@ export const Sizes: Story = {
 };
 
 export const WithIcon: Story = {
-  args: { variant: "primary" },
+  args: { tone: "primary" },
   render: (args) => (
     <Button {...args}>
       <Plus aria-hidden /> New job
@@ -107,17 +49,26 @@ export const WithIcon: Story = {
 };
 
 export const IconOnly: Story = {
-  render: () => (
-    <div className="flex items-center gap-2">
-      <IconButton aria-label="Copy link" size="sm">
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-3">
+      <IconButton {...args} aria-label="Copy link" size="sm">
         <Copy aria-hidden />
       </IconButton>
-      <IconButton aria-label="Copy link" variant="outline">
+      <IconButton {...args} aria-label="Copy link" tone="primary">
         <Copy aria-hidden />
       </IconButton>
-      <IconButton aria-label="Copy link" variant="secondary" size="lg">
+      <IconButton {...args} aria-label="Copy link" tone="secondary" size="lg">
         <Copy aria-hidden />
       </IconButton>
+    </div>
+  ),
+};
+
+export const LongLabel: Story = {
+  args: { children: "Save all changes to this job listing and publish them to the team" },
+  render: (args) => (
+    <div className="w-48">
+      <Button {...args} className="w-full" />
     </div>
   ),
 };
@@ -125,18 +76,30 @@ export const IconOnly: Story = {
 /** Hover, keyboard focus and pressed, drawn statically so screenshots catch changes to them. */
 export const States: Story = {
   render: (args) => (
-    <div className="grid gap-3">
-      {(["primary", "secondary", "outline", "ghost", "danger", "link"] as const).map((variant) => (
-        <div key={variant} className="flex flex-wrap items-center gap-3">
-          <Button {...args} variant={variant} data-demo="hover">
-            Hover
-          </Button>
-          <Button {...args} variant={variant} data-demo="focus">
-            Focus
-          </Button>
-          <Button {...args} variant={variant} data-demo="active">
-            Pressed
-          </Button>
+    <div className="grid gap-4">
+      {(["primary", "secondary", "strong", "danger", "ghost"] as const).map((tone) => (
+        <div key={tone} className="grid gap-3">
+          <p className="text-label font-bold">{tone}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button {...args} tone={tone}>
+              Rest
+            </Button>
+            <Button {...args} tone={tone} data-demo="hover">
+              Hover
+            </Button>
+            <Button {...args} tone={tone} data-demo="focus">
+              Focus
+            </Button>
+            <Button {...args} tone={tone} data-demo="active">
+              Pressed
+            </Button>
+            <Button {...args} tone={tone} disabled>
+              Disabled
+            </Button>
+            <Button {...args} tone={tone} loading>
+              Loading
+            </Button>
+          </div>
         </div>
       ))}
     </div>
@@ -144,33 +107,38 @@ export const States: Story = {
 };
 
 export const Disabled: Story = {
-  args: { variant: "primary", disabled: true },
+  args: { tone: "primary", disabled: true },
   play: async ({ args, canvas, userEvent }) => {
     const button = canvas.getByRole("button", { name: "Save changes" });
-    await expect(button).toBeDisabled();
+    await waitFor(() => expect(button).toBeDisabled());
     await userEvent.click(button);
-    await expect(args.onClick).not.toHaveBeenCalled();
+    await waitFor(() => expect(args.onClick).not.toHaveBeenCalled());
   },
 };
 
 export const Loading: Story = {
-  args: { variant: "primary", loading: true },
-  play: async ({ args, canvas, userEvent }) => {
+  args: { tone: "primary", loading: true },
+  play: async ({ args, canvas, canvasElement, globals, userEvent }) => {
     const button = canvas.getByRole("button", { name: "Save changes" });
-    await expect(button).toHaveAttribute("aria-busy", "true");
+    await waitFor(() => expect(button).toHaveAttribute("aria-busy", "true"));
+    await waitFor(() => expect(button).toHaveAccessibleName("Save changes"));
     // Focus stays on a loading button so keyboard users don't lose their place.
     await userEvent.tab();
-    await expect(button).toHaveFocus();
+    await waitFor(() => expect(button).toHaveFocus());
     await userEvent.keyboard("{Enter}");
-    await expect(args.onClick).not.toHaveBeenCalled();
+    await waitFor(() => expect(args.onClick).not.toHaveBeenCalled());
+    const loadingLabel = labels[globals.dir === "rtl" ? "ar" : "en"].loading;
+    await waitFor(() =>
+      expect(within(canvasElement.ownerDocument.body).getByRole("status")).toHaveTextContent(loadingLabel),
+    );
   },
 };
 
 export const ClickRunsAction: Story = {
-  args: { variant: "primary" },
+  args: { tone: "primary" },
   play: async ({ args, canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("button", { name: "Save changes" }));
-    await expect(args.onClick).toHaveBeenCalledOnce();
+    await waitFor(() => expect(args.onClick).toHaveBeenCalledOnce());
   },
 };
 
@@ -178,11 +146,11 @@ export const KeyboardRunsAction: Story = {
   play: async ({ args, canvas, userEvent }) => {
     await userEvent.tab();
     const button = canvas.getByRole("button", { name: "Save changes" });
-    await expect(button).toHaveFocus();
+    await waitFor(() => expect(button).toHaveFocus());
     // Keyboard focus must draw a ring. (A base "outline-none" once hid it: Tailwind's outline-2 reuses its style.)
-    await expect(getComputedStyle(button).outlineStyle).toBe("solid");
+    await waitFor(() => expect(getComputedStyle(button).outlineStyle).toBe("solid"));
     await userEvent.keyboard("{Enter}");
     await userEvent.keyboard(" ");
-    await expect(args.onClick).toHaveBeenCalledTimes(2);
+    await waitFor(() => expect(args.onClick).toHaveBeenCalledTimes(2));
   },
 };

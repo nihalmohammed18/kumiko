@@ -1,6 +1,7 @@
 /* Kumiko's tokens and Tailwind v4 theme. Import after tailwindcss in an app's global stylesheet. */
 @import "./tokens.css";
 @import "./theme.css";
+@import "./press.css";
 @source "./";
 @source not "./docs";
 

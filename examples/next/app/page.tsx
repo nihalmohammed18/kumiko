@@ -10,8 +10,8 @@ export default function Page() {
         Server-rendered text <Spinner label="Loading jobs" /> next to client components.
       </p>
       <div className="flex flex-wrap gap-3">
-        <Button variant="secondary">Rendered from a server component</Button>
-        <a href="/button-only" className={buttonStyles({ variant: "link" })}>
+        <Button tone="secondary">Rendered from a server component</Button>
+        <a href="/button-only" className={buttonStyles({ tone: "ghost" })}>
           Button-only page
         </a>
       </div>

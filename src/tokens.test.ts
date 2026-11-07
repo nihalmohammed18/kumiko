@@ -43,9 +43,11 @@ it("merges conflicting theme classes without mixing colour and text size", () =>
     ["rounded-control", "rounded-pill"],
     ["duration-hover", "duration-move"],
     ["z-sticky", "z-tooltip"],
+    ["press-primary", "press-danger"],
   ])
     expect(cn(first, last)).toBe(last);
   expect(cn("text-ink", "text-body")).toBe("text-ink text-body");
+  expect(cn("press", "press-secondary")).toBe("press press-secondary");
 });
 
 it("generates colour scopes, isolated globals and a theme backed only by Kumiko variables", () => {
