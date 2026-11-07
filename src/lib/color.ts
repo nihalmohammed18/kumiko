@@ -78,13 +78,23 @@ function p3ToLinear([r, g, b]: Vector): Vector {
   ];
 }
 
-/** Parses Chrome's computed CSS colours; unsupported or malformed values return null.
- * Use when: reading colour strings from snapshots. Avoid when: parsing arbitrary CSS declarations.
+/** Parses hex tokens and Chrome's computed CSS colours; unsupported or malformed values return null.
+ * Use when: reading theme or snapshot colours. Avoid when: parsing arbitrary CSS declarations.
  */
 export function parseColor(value: string): Rgba | null {
   if (typeof value !== "string") return null;
   const text = value.trim().toLowerCase();
   if (text === "transparent") return { ...BLACK, a: 0 };
+  const hex = /^#([\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/.exec(text)?.[1];
+  if (hex) {
+    const channels = hex.length < 5 ? Array.from(hex, (channel) => channel + channel).join("") : hex;
+    return {
+      r: Number.parseInt(channels.slice(0, 2), 16),
+      g: Number.parseInt(channels.slice(2, 4), 16),
+      b: Number.parseInt(channels.slice(4, 6), 16),
+      a: channels.length === 8 ? Number.parseInt(channels.slice(6, 8), 16) / 255 : 1,
+    };
+  }
   const match = /^(rgb|rgba|color|oklab|oklch)\(([^()]*)\)$/.exec(text);
   if (!match) return null;
   const name = match[1]!;

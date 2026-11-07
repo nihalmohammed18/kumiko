@@ -6,6 +6,8 @@
  * Apps wear their own brand by overriding the --kumiko-* colour, font and radius variables.
  */
 
+export { type ColorKey, checkTheme, type Theme, themeCss } from "./theme.ts";
+
 /** Colour roles for light and dark mode.
  * Use when: reading plain colour values for email or images. Avoid when: styling components; use theme classes.
  */

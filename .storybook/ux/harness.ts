@@ -3,8 +3,8 @@
 // which is unit-tested in Node; this file only collects facts and must stay boring.
 import { commands, page, userEvent } from "vitest/browser";
 import { validateUxExcept } from "../../scripts/ux-rules.ts";
+import { contrast, flatten, parseColor, type Rgba, WHITE } from "../../src/lib/color.ts";
 import { mirrorDemoStates } from "../demo-states.ts";
-import { contrast, flatten, parseColor, type Rgba, WHITE } from "./color.ts";
 import { outset, plusPoints, type Rect, undersized } from "./geometry.ts";
 import {
   applyExceptions,
