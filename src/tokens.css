@@ -7,6 +7,7 @@
   --kumiko-surface: #FFFFFF;
   --kumiko-field: #F0EDFA;
   --kumiko-line: #D5CFEA;
+  --kumiko-skeleton-highlight: #FFFFFF;
   --kumiko-control-line: #6E6094;
   --kumiko-ink: #26203C;
   --kumiko-ink-muted: #665B79;
@@ -63,6 +64,7 @@
   --kumiko-surface: #202539;
   --kumiko-field: #292E45;
   --kumiko-line: #48516E;
+  --kumiko-skeleton-highlight: #F3EFFF;
   --kumiko-control-line: #8E95B3;
   --kumiko-ink: #F3EFFF;
   --kumiko-ink-muted: #C3BCD9;
@@ -171,6 +173,7 @@
   --kumiko-duration-toast-out: 160ms;
   --kumiko-duration-move: 200ms;
   --kumiko-duration-sheet: 300ms;
+  --kumiko-duration-skeleton: 1400ms;
   --kumiko-ease-enter: cubic-bezier(0.23, 1, 0.32, 1);
   --kumiko-ease-move: cubic-bezier(0.65, 0, 0.35, 1);
   --kumiko-ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);

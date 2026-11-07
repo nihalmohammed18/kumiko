@@ -1,0 +1,37 @@
+@keyframes kumiko-skeleton {
+  from {
+    translate: calc(var(--skeleton-direction) * -100%) 0;
+  }
+  to {
+    translate: calc(var(--skeleton-direction) * 200%) 0;
+  }
+}
+
+@utility skeleton {
+  --skeleton-direction: 1;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 50%;
+    border-radius: var(--kumiko-radius-pill);
+    background-color: var(--kumiko-skeleton-highlight);
+    opacity: 0.4;
+    animation: kumiko-skeleton var(--kumiko-duration-skeleton) var(--kumiko-ease-move) infinite;
+  }
+
+  &:dir(rtl) {
+    --skeleton-direction: -1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+      display: none;
+    }
+  }
+}

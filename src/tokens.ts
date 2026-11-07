@@ -17,6 +17,7 @@ export const colors = {
     surface: "#FFFFFF",
     field: "#F0EDFA",
     line: "#D5CFEA",
+    "skeleton-highlight": "#FFFFFF",
     "control-line": "#6E6094",
     ink: "#26203C",
     "ink-muted": "#665B79",
@@ -70,6 +71,7 @@ export const colors = {
     surface: "#202539",
     field: "#292E45",
     line: "#48516E",
+    "skeleton-highlight": "#F3EFFF",
     "control-line": "#8E95B3",
     ink: "#F3EFFF",
     "ink-muted": "#C3BCD9",
@@ -193,7 +195,7 @@ export const controls = { sm: "2.5rem", md: "3rem", lg: "3.5rem" } as const;
  */
 export const layers = { base: 0, sticky: 100, overlay: 200, popup: 300, toast: 400, tooltip: 500 } as const;
 
-/** Transition budgets by interaction.
+/** Transition budgets by interaction and the Skeleton loading loop.
  * Use when: timing interface feedback. Avoid when: relying on durations to suppress reduced-motion movement.
  */
 export const durations = {
@@ -208,6 +210,7 @@ export const durations = {
   "toast-out": "160ms",
   move: "200ms",
   sheet: "300ms",
+  skeleton: "1400ms",
 } as const;
 
 /** Easing curves by motion purpose.
