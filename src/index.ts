@@ -66,6 +66,20 @@ export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
 export { NumberField, type NumberFieldProps } from "./components/number-field.tsx";
+export {
+  Popover,
+  PopoverClose,
+  type PopoverCloseProps,
+  PopoverDescription,
+  type PopoverDescriptionProps,
+  PopoverPopup,
+  type PopoverPopupProps,
+  type PopoverProps,
+  PopoverTitle,
+  type PopoverTitleProps,
+  PopoverTrigger,
+  type PopoverTriggerProps,
+} from "./components/popover.tsx";
 export { Progress, type ProgressProps } from "./components/progress.tsx";
 export { ProgressRing, type ProgressRingProps } from "./components/progress-ring.tsx";
 export { ProgressSteps, type ProgressStepsProps } from "./components/progress-steps.tsx";
@@ -98,6 +112,16 @@ export { Switch, type SwitchProps } from "./components/switch.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export { Toggle, type ToggleProps } from "./components/toggle.tsx";
 export { ToggleGroup, type ToggleGroupProps } from "./components/toggle-group.tsx";
+export {
+  Tooltip,
+  TooltipPopup,
+  type TooltipPopupProps,
+  type TooltipProps,
+  TooltipProvider,
+  type TooltipProviderProps,
+  TooltipTrigger,
+  type TooltipTriggerProps,
+} from "./components/tooltip.tsx";
 export {
   CheckIcon,
   ChevronDownIcon,

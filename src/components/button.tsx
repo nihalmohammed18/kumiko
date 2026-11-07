@@ -34,6 +34,7 @@ function useLoadingAnnouncement(loading: boolean) {
  *
  * Use when: something happens on this page. Pick one `primary` button per view; use `danger` only for
  * destructive actions, and `type="submit"` inside forms.
+ * For a disabled reason, show text linked with aria-describedby and use focusableWhenDisabled; Tooltip's Disabled reason story shows this pattern.
  * Avoid when: navigating; use LinkButton or Link.
  */
 export function Button({
