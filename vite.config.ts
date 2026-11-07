@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig, type TestProjectInlineConfiguration } from "vitest/config";
-import { uxMouse } from "./.storybook/ux/commands.ts";
+import { uxForcedColors, uxMouse } from "./.storybook/ux/commands.ts";
 import type { MODES } from "./scripts/ux-rules.ts";
 
 type Mode = (typeof MODES)[number];
@@ -55,9 +55,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
       storybookTest({
         configDir: ".storybook",
         initialGlobals: globals,
-        // "no-forced" stories compose components that have their own forced-colours stories. The heavy recipe forms
-        // made the forced project's emulation miss other files' frames now and then, so they skip that project.
-        tags: { exclude: [...(mode === "light" ? [] : ["light-only"]), ...(mode === "forced" ? ["no-forced"] : [])] },
+        tags: { exclude: mode === "light" ? [] : ["light-only"] },
       }),
     ],
     test: {
@@ -76,7 +74,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
         provider: playwright({ contextOptions: { reducedMotion: "reduce", ...context } }),
         instances: [{ browser: "chromium" }],
         viewport: phone ? { width: 320, height: 568 } : { width: 1200, height: 900 },
-        commands: { uxMouse },
+        commands: { uxForcedColors, uxMouse },
         expect: {
           toMatchScreenshot: {
             comparatorName: "pixelmatch",
