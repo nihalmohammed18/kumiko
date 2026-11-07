@@ -20,6 +20,8 @@ export function Field({ className, ...props }: FieldProps) {
       data-slot="field"
       className={cn(
         "grid grid-cols-1 min-w-0 gap-1.5 [&:has(select)_[data-slot=field-label]:not([data-disabled])]:cursor-pointer",
+        "[&:has([data-slot=select-trigger]:not([data-disabled]))_[data-slot=field-label]:not([data-disabled])]:cursor-pointer",
+        "[&:has([data-slot=select-trigger][data-disabled])_[data-slot=field-label]]:cursor-not-allowed",
         className,
       )}
     />

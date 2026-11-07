@@ -23,6 +23,24 @@ export { NativeSelect, type NativeSelectProps } from "./components/native-select
 export { Radio, type RadioProps } from "./components/radio.tsx";
 export { RadioGroup, type RadioGroupProps } from "./components/radio-group.tsx";
 export { SearchField, type SearchFieldProps } from "./components/search-field.tsx";
+export {
+  Select,
+  SelectGroup,
+  SelectGroupLabel,
+  type SelectGroupLabelProps,
+  type SelectGroupProps,
+  SelectItem,
+  type SelectItemProps,
+  SelectPopup,
+  type SelectPopupProps,
+  type SelectProps,
+  SelectSeparator,
+  type SelectSeparatorProps,
+  SelectTrigger,
+  type SelectTriggerProps,
+  SelectValue,
+  type SelectValueProps,
+} from "./components/select.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
