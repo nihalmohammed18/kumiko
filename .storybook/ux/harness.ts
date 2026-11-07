@@ -512,7 +512,9 @@ function demoStates(mode: Mode, add: Add) {
   const boxes = () => scope.map(layoutBox);
   for (const control of actionables().slice(0, MAX_DEMO)) {
     const element = controlSurface(control);
-    if (element.hasAttribute("data-demo") || kindOf(control) === "text-entry") continue;
+    if (element.hasAttribute("data-demo") || control.hasAttribute("data-demo") || kindOf(control) === "text-entry")
+      continue;
+    const demoTarget = control.getAttribute("data-slot") === "card-link" ? control : element;
     const { disabled, loading } = stateOf(control);
     const behind = backdrop(element);
     const rest = snap(element);
@@ -524,12 +526,12 @@ function demoStates(mode: Mode, add: Add) {
     if (!control.matches(":disabled")) states.push(["focus", "focus"]);
     const seen = new Map<string, Snapshot>();
     for (const [name, value] of states) {
-      element.setAttribute("data-demo", value);
+      demoTarget.setAttribute("data-demo", value);
       seen.set(name, snap(element));
       for (const index of shifted(restBoxes, boxes()))
         add("no-layout-shift", scope[index]!, `moves or resizes when ${describe(element)} shows ${name}`);
     }
-    element.removeAttribute("data-demo");
+    demoTarget.removeAttribute("data-demo");
     const hover = seen.get("hover")!;
     const press = seen.get("press")!;
     const focus = seen.get("focus");
