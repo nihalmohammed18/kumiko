@@ -103,7 +103,7 @@
 
     /* Opting out of forced colours also stops the browser from showing the transparent outline, so give it a
        system colour: otherwise a focused, pressed toggle shows no focus at all. */
-    &:is(:focus-visible, :has(:focus-visible)) {
+    &[data-pressed]:focus-visible {
       outline-color: CanvasText;
     }
 
