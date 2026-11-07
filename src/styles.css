@@ -5,6 +5,7 @@
 @import "./card.css";
 @import "./popup.css";
 @import "./progress.css";
+@import "./skeleton.css";
 @source "./";
 @source not "./docs";
 
