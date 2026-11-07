@@ -1,3 +1,4 @@
+export { Alert, type AlertProps } from "./components/alert.tsx";
 export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from "./components/avatar.tsx";
 export { Badge, type BadgeProps } from "./components/badge.tsx";
 export { type BadgeTone, badgeStyles } from "./components/badge-styles.ts";
@@ -37,6 +38,7 @@ export {
   type ComboboxProps,
 } from "./components/combobox.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
+export { FeedbackBanner, type FeedbackBannerProps } from "./components/feedback-banner.tsx";
 export {
   Field,
   FieldDescription,
@@ -84,7 +86,18 @@ export { Switch, type SwitchProps } from "./components/switch.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export { Toggle, type ToggleProps } from "./components/toggle.tsx";
 export { ToggleGroup, type ToggleGroupProps } from "./components/toggle-group.tsx";
-export { CheckIcon, ChevronDownIcon, MinusIcon, PlusIcon, SearchIcon, XIcon } from "./icons.tsx";
+export {
+  CheckIcon,
+  ChevronDownIcon,
+  CircleAlertIcon,
+  CircleCheckIcon,
+  InfoIcon,
+  MinusIcon,
+  PlusIcon,
+  SearchIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from "./icons.tsx";
 export { formatLabel, type Label, type LabelKey, labels, type Plural } from "./labels.ts";
 export { cn } from "./lib/tv.ts";
 export {

@@ -1,4 +1,16 @@
-import { Check, ChevronDown, type LucideProps, Minus, Plus, Search, X } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  CircleAlert,
+  CircleCheck,
+  Info,
+  type LucideProps,
+  Minus,
+  Plus,
+  Search,
+  TriangleAlert,
+  X,
+} from "lucide-react";
 
 /** A decorative check mark with Kumiko's stroke weight.
  * Use when: marking a checked choice. Avoid when: an icon must provide its own accessible name.
@@ -40,4 +52,32 @@ export function ChevronDownIcon(props: LucideProps) {
  */
 export function XIcon(props: LucideProps) {
   return <X {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative information symbol with Kumiko's stroke weight.
+ * Use when: drawing a note's icon inside a labelled image. Avoid when: an icon must provide its own accessible name.
+ */
+export function InfoIcon(props: LucideProps) {
+  return <Info {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative circled check with Kumiko's stroke weight.
+ * Use when: drawing a success icon inside a labelled image. Avoid when: marking a checked choice; use CheckIcon.
+ */
+export function CircleCheckIcon(props: LucideProps) {
+  return <CircleCheck {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative warning triangle with Kumiko's stroke weight.
+ * Use when: drawing a warning icon inside a labelled image. Avoid when: identifying an error; use CircleAlertIcon.
+ */
+export function TriangleAlertIcon(props: LucideProps) {
+  return <TriangleAlert {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative circled exclamation mark with Kumiko's stroke weight.
+ * Use when: drawing an error icon inside a labelled image. Avoid when: identifying a warning; use TriangleAlertIcon.
+ */
+export function CircleAlertIcon(props: LucideProps) {
+  return <CircleAlert {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
 }
