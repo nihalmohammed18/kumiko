@@ -10,19 +10,21 @@ import type { MODES } from "./scripts/ux-rules.ts";
 
 type Mode = (typeof MODES)[number];
 
-// Every Base UI module the components import, pre-bundled up front. Otherwise each of the six browser projects
-// discovers them mid-run, Vite re-optimises and reloads, and tests fail to load.
-const baseUiModules = [
+// Every package module the source imports, pre-bundled up front. Otherwise each of the six browser projects
+// discovers them mid-run, Vite re-optimises and reloads the page, and tests fail to load; the forced project even
+// loses its forced-colours emulation. Unit tests run in Node, so their imports don't count.
+const sourceModules = [
   ...new Set(
     readdirSync("src", { recursive: true, withFileTypes: true })
       // Screenshot folders are named after story files, so keep only real files.
-      .filter((entry) => entry.isFile() && /\.tsx?$/.test(entry.name))
+      .filter((entry) => entry.isFile() && /\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name))
       .flatMap((entry) =>
         Array.from(
-          readFileSync(`${entry.parentPath}/${entry.name}`, "utf8").matchAll(/from "(@base-ui\/react\/[\w-]+)"/g),
+          readFileSync(`${entry.parentPath}/${entry.name}`, "utf8").matchAll(/from "((?:@[\w-]+\/)?[\w-][\w./-]*)"/g),
           (match) => match[1]!,
         ),
-      ),
+      )
+      .filter((module) => !/^(?:storybook|@storybook\/|vitest)/.test(module)),
   ),
 ];
 
@@ -53,7 +55,9 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
       storybookTest({
         configDir: ".storybook",
         initialGlobals: globals,
-        tags: { exclude: mode === "light" ? [] : ["light-only"] },
+        // "no-forced" stories compose components that have their own forced-colours stories. The heavy recipe forms
+        // made the forced project's emulation miss other files' frames now and then, so they skip that project.
+        tags: { exclude: [...(mode === "light" ? [] : ["light-only"]), ...(mode === "forced" ? ["no-forced"] : [])] },
       }),
     ],
     test: {
@@ -86,7 +90,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  optimizeDeps: { include: baseUiModules },
+  optimizeDeps: { include: sourceModules },
   test: {
     coverage: {
       provider: "v8",
