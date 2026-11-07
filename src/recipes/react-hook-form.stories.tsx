@@ -215,7 +215,6 @@ function ReactHookFormJobAlert({ onSubmit }: { onSubmit: (values: JobAlert) => v
 
 const meta = {
   title: "Recipes/React Hook Form",
-  tags: ["no-forced"],
   component: ReactHookFormJobAlert,
   args: { onSubmit: fn() },
 } satisfies Meta<typeof ReactHookFormJobAlert>;

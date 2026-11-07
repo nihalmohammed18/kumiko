@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, expect, inject } from "vitest";
-import { page } from "vitest/browser";
+import { commands, page } from "vitest/browser";
 import type { MODES } from "../scripts/ux-rules.ts";
 import { checkUx } from "./ux/harness.ts";
 
@@ -41,7 +41,12 @@ async function canary(): Promise<string[]> {
   const problems = expected
     .filter(([query, want]) => media(query) !== want)
     .map(([query, want]) => `${query} should be ${want}`);
-  if (mode === "forced" && !(await forcedRepaint())) problems.push("forced colours are not applied");
+  // A frame that came up with the media query but without forced colours is repainted once; if it still isn't
+  // forced, the project's conditions really aren't in effect.
+  if (mode === "forced" && !(await forcedRepaint())) {
+    await commands.uxForcedColors();
+    if (!(await forcedRepaint())) problems.push("forced colours are not applied");
+  }
   return problems;
 }
 

@@ -8,8 +8,18 @@ declare module "vitest/browser" {
     /** move: put the mouse over the element matching `selector`; down/up: press or release the left button where
      * the mouse is; park: move the mouse to the page's top-left corner, then release the button. */
     uxMouse: (action: Action, selector?: string) => Promise<void>;
+    /** Applies forced colours again: see the forced canary in vitest.setup.ts. */
+    uxForcedColors: () => Promise<void>;
   }
 }
+
+// Chromium sometimes creates a test frame with the forced-colors media query on but forced colours not applied to its
+// document (author colours stay), and that state lasts. Turning the emulation off and on again repaints the frame.
+export const uxForcedColors: BrowserCommand<[]> = async (context) => {
+  if (!("page" in context)) throw new Error("uxForcedColors needs the Playwright provider");
+  await context.page.emulateMedia({ forcedColors: "none" });
+  await context.page.emulateMedia({ forcedColors: "active" });
+};
 
 export const uxMouse: BrowserCommand<[action: Action, selector?: string]> = async (context, action, selector) => {
   if (!("page" in context)) throw new Error("uxMouse needs the Playwright provider");
