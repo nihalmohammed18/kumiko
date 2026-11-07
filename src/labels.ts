@@ -8,18 +8,36 @@ export type Plural = { one: string; other: string; zero?: string; two?: string; 
  */
 export type Label = string | Plural;
 
-const en = { close: "Close", loading: "Loading", decrement: "Decrease", increment: "Increase" } satisfies Record<
-  string,
-  Label
->;
+const en = {
+  close: "Close",
+  loading: "Loading",
+  decrement: "Decrease",
+  increment: "Increase",
+  clear: "Clear",
+  noMatches: "No matches",
+} satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
  * Use when: choosing defaults for a locale. Avoid when: formatting plural forms or numbers; use formatLabel.
  */
 export const labels = {
   en,
-  ar: { close: "إغلاق", loading: "جارٍ التحميل", decrement: "إنقاص", increment: "زيادة" },
-  ur: { close: "بند کریں", loading: "لوڈ ہو رہا ہے", decrement: "کم کریں", increment: "بڑھائیں" },
+  ar: {
+    close: "إغلاق",
+    loading: "جارٍ التحميل",
+    decrement: "إنقاص",
+    increment: "زيادة",
+    clear: "مسح",
+    noMatches: "لا توجد نتائج",
+  },
+  ur: {
+    close: "بند کریں",
+    loading: "لوڈ ہو رہا ہے",
+    decrement: "کم کریں",
+    increment: "بڑھائیں",
+    clear: "صاف کریں",
+    noMatches: "کوئی نتیجہ نہیں",
+  },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof en, Label>>;
 
 /** A key present in every built-in label set.

@@ -1,4 +1,4 @@
-import { Check, ChevronDown, type LucideProps, Minus, Plus, Search } from "lucide-react";
+import { Check, ChevronDown, type LucideProps, Minus, Plus, Search, X } from "lucide-react";
 
 /** A decorative check mark with Kumiko's stroke weight.
  * Use when: marking a checked choice. Avoid when: an icon must provide its own accessible name.
@@ -33,4 +33,11 @@ export function SearchIcon(props: LucideProps) {
  */
 export function ChevronDownIcon(props: LucideProps) {
   return <ChevronDown {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative cross with Kumiko's stroke weight.
+ * Use when: identifying a clear or close action. Avoid when: an icon must provide its own accessible name.
+ */
+export function XIcon(props: LucideProps) {
+  return <X {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
 }

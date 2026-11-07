@@ -524,6 +524,8 @@ function demoStates(mode: Mode, add: Add) {
   }
 }
 
+const expandedCount = () => document.querySelectorAll('[aria-expanded="true"]').length;
+
 /** Real mouse hover and press on one enabled and one disabled (or loading) button. */
 async function realPointer(mode: Mode, add: Add) {
   const buttons = actionables().filter(
@@ -541,6 +543,8 @@ async function realPointer(mode: Mode, add: Add) {
     const behind = backdrop(element);
     const rest = snap(element);
     const restBoxes = boxes();
+    // An item already highlighted at rest (a story can pin one) has nothing left for a hover to show.
+    const highlighted = element.hasAttribute("data-highlighted");
     element.setAttribute("data-ux-probe", "");
     try {
       await commands.uxMouse("move", "[data-ux-probe]");
@@ -550,13 +554,20 @@ async function realPointer(mode: Mode, add: Add) {
       const rect = element.getBoundingClientRect();
       const under = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
       const cursor = under ? getComputedStyle(under).cursor : "none";
-      const expanded = element.getAttribute("aria-expanded") === "true";
+      const expanded = expandedCount();
       await commands.uxMouse("down");
       await frame();
       const press = snap(element);
-      const opened = !expanded && element.getAttribute("aria-expanded") === "true";
+      const opened = expandedCount() > expanded;
       const pressBoxes = boxes();
       await commands.uxMouse("park");
+      // A probe leaves the story as it found it: close what the press opened, so later checks don't measure a popup
+      // that is still placing itself.
+      if (opened) {
+        await userEvent.keyboard("{Escape}");
+        for (let i = 0; i < 60 && (expandedCount() > expanded || document.querySelector("[data-ending-style]")); i++)
+          await frame();
+      }
       const allowed = expectedCursor("action", state);
       if (allowed && !allowed.includes(cursor))
         add("cursor", element, `the pointer shows ${cursor} over it, expected ${allowed.join(" or ")}`);
@@ -570,7 +581,8 @@ async function realPointer(mode: Mode, add: Add) {
         const changed = [...differences(rest, hover), ...differences(rest, press)];
         if (changed.length) add("disabled-inert", element, `a real hover or press changes ${[...new Set(changed)]}`);
       } else {
-        if (!changes(rest, hover, behind).length) add("hover-visible", element, "a real hover doesn't change it");
+        if (!highlighted && !changes(rest, hover, behind).length)
+          add("hover-visible", element, "a real hover doesn't change it");
         // A press that opens a popup is visible feedback in itself, even if the trigger's own style doesn't change.
         if (!opened && !changes(mode === "touch" ? rest : hover, press, behind).length)
           add("press-visible", element, "a real press doesn't change it");
