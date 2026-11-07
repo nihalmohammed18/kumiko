@@ -250,15 +250,13 @@ export const Disabled: Story = {
   play: async ({ args, canvas, canvasElement, globals, userEvent }) => {
     const input = canvas.getByRole("combobox", { name: "City" });
     const trigger = canvas.getByRole("button", { name: "City" });
-    const clear = canvas.getByRole("button", { name: labels[globals.dir === "rtl" ? "ar" : "en"].clear });
     await waitFor(() => {
       expect(input).toBeDisabled();
       expect(trigger).toBeDisabled();
-      expect(clear).toBeDisabled();
+      expect(canvas.queryByRole("button", { name: labels[globals.dir === "rtl" ? "ar" : "en"].clear })).toBeNull();
     });
     await userEvent.click(input);
     await userEvent.click(trigger);
-    await userEvent.click(clear);
     await userEvent.tab();
     await userEvent.keyboard("{ArrowDown}");
     await waitFor(() => {
@@ -277,14 +275,12 @@ export const ReadOnly: Story = {
   args: { readOnly: true, defaultValue: "London" },
   play: async ({ args, canvas, canvasElement, globals, userEvent }) => {
     const input = canvas.getByRole("combobox", { name: "City" });
-    const clear = canvas.getByRole("button", { name: labels[globals.dir === "rtl" ? "ar" : "en"].clear });
     await waitFor(() => {
       expect(input).toHaveAttribute("readonly");
       expect(input).not.toBeDisabled();
-      expect(clear).toBeDisabled();
+      expect(canvas.queryByRole("button", { name: labels[globals.dir === "rtl" ? "ar" : "en"].clear })).toBeNull();
     });
     await userEvent.type(input, "Paris");
-    await userEvent.click(clear);
     await waitFor(() => {
       expect(input).toHaveValue("London");
       expect(args.onValueChange).not.toHaveBeenCalled();

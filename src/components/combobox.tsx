@@ -53,16 +53,18 @@ export function ComboboxInput({ size, className, ...props }: ComboboxInputProps)
           <BaseCombobox.Input
             {...props}
             data-slot="combobox-input"
-            className="min-w-0 flex-1 bg-transparent py-1.5 outline-hidden cursor-text data-disabled:cursor-not-allowed placeholder:text-ink-muted data-disabled:placeholder:text-disabled-text"
+            className="min-w-0 flex-1 bg-transparent py-1.5 focus-visible:outline-transparent cursor-text data-disabled:cursor-not-allowed placeholder:text-ink-muted data-disabled:placeholder:text-disabled-text"
           />
-          <BaseCombobox.Clear
-            data-slot="combobox-clear"
-            disabled={state.readOnly}
-            aria-label={formatLabel(labels.clear, locale)}
-            className={iconButtonClassName}
-          >
-            <XIcon />
-          </BaseCombobox.Clear>
+          {/* Clearing can't happen in a disabled or read-only field, so the button isn't offered there. */}
+          {!state.disabled && !state.readOnly && (
+            <BaseCombobox.Clear
+              data-slot="combobox-clear"
+              aria-label={formatLabel(labels.clear, locale)}
+              className={iconButtonClassName}
+            >
+              <XIcon />
+            </BaseCombobox.Clear>
+          )}
           <BaseCombobox.Trigger data-slot="combobox-trigger" className={iconButtonClassName}>
             <BaseCombobox.Icon data-slot="combobox-icon" className="flex shrink-0 items-center">
               <ChevronDownIcon />
