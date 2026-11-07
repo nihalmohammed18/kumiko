@@ -10,7 +10,8 @@ function AnnounceButton() {
   return <Button onClick={() => announce("Saved")}>Save</Button>;
 }
 
-const meta = { title: "Foundation/Provider" } satisfies Meta;
+// No screenshots: the button is covered by Button's stories; this story tests behaviour.
+const meta = { title: "Foundation/Provider", parameters: { vrt: false } } satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
