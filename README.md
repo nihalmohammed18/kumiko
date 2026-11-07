@@ -10,44 +10,22 @@ Accessible React components built on [Base UI](https://base-ui.com) and Tailwind
 npm install kumiko-ui
 ```
 
-In your global stylesheet:
-
 ```css
+/* Your global stylesheet */
 @import "tailwindcss";
 @import "kumiko-ui/styles.css";
-
-/* Your brand. Set the dark values too if your brand colour needs them. */
-:root {
-  --kumiko-brand: #0f766e;
-  --kumiko-brand-fg: #ffffff;
-  --kumiko-radius-control: 8px;
-}
-.dark {
-  --kumiko-brand: #2dd4bf;
-  --kumiko-brand-fg: #042f2e;
-}
 ```
 
-Load the fonts and wrap the app once, in the root layout:
-
 ```tsx
+// Your root layout
 import "kumiko-ui/fonts.css";
 import { KumikoProvider } from "kumiko-ui";
 
 <KumikoProvider direction="ltr" locale="en">{children}</KumikoProvider>;
 ```
 
-Choose a tone for an action:
-
-```tsx
-import { Button } from "kumiko-ui";
-
-<Button tone="primary">Save changes</Button>;
-```
-
-Next.js apps should also add `experimental: { optimizePackageImports: ["kumiko-ui"] }` to `next.config.ts`.
-
-Requires React 19 and Tailwind CSS 4.3 or later, and supports Safari 16.4+, Chrome 111+ and Firefox 128+.
+The [setup guide](docs/setup.md) covers the rest: the app root, dark mode, right-to-left, CSP and Next.js. To give
+Kumiko your brand, see [Theming](docs/theming.md).
 
 ## License
 
