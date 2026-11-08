@@ -62,6 +62,7 @@ export {
   type ComboboxProps,
 } from "./components/combobox.tsx";
 export { CountUp, type CountUpOptions, type CountUpProps, useCountUp } from "./components/count-up.tsx";
+export { DataTable, type DataTableFeatures, type DataTableProps } from "./components/data-table.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
 export {
   Dialog,
@@ -196,6 +197,24 @@ export {
   type SelectValueProps,
 } from "./components/select.tsx";
 export { Separator, type SeparatorProps } from "./components/separator.tsx";
+export {
+  Sidebar,
+  SidebarContent,
+  type SidebarContentProps,
+  SidebarFooter,
+  type SidebarFooterProps,
+  SidebarGroup,
+  type SidebarGroupProps,
+  SidebarHeader,
+  type SidebarHeaderProps,
+  SidebarLayout,
+  type SidebarLayoutProps,
+  SidebarLink,
+  type SidebarLinkProps,
+  type SidebarProps,
+  SidebarTrigger,
+  type SidebarTriggerProps,
+} from "./components/sidebar.tsx";
 export { Skeleton, type SkeletonProps } from "./components/skeleton.tsx";
 export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./components/slider.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
@@ -253,6 +272,9 @@ export {
   type TooltipTriggerProps,
 } from "./components/tooltip.tsx";
 export {
+  ArrowDownIcon,
+  ArrowUpDownIcon,
+  ArrowUpIcon,
   CheckIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -262,6 +284,7 @@ export {
   FileIcon,
   FlameIcon,
   InfoIcon,
+  MenuIcon,
   MinusIcon,
   PlusIcon,
   SearchIcon,

@@ -43,6 +43,7 @@ if (import.meta.main) {
     button: `export { Button } from ${index};`,
     character: `export { Character } from ${index};`,
     tokens: `export * from ${JSON.stringify(join(root, "dist/tokens.js"))};`,
+    email: `export * from ${JSON.stringify(join(root, "dist/email/index.js"))};`,
   };
   const sizes: Record<string, Size> = {};
   for (const [name, source] of Object.entries(entries)) {
@@ -65,7 +66,7 @@ if (import.meta.main) {
         minify: true,
         write: false,
         rolldownOptions: {
-          external: ["react", "react-dom", "react/jsx-runtime"],
+          external: ["react", "react-dom", "react-dom/server", "react/jsx-runtime"],
           // ESM library builds preserve whitespace by default; measure fully minified consumer code.
           output: { minify: true, comments: false },
         },

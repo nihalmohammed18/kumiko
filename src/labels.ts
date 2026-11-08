@@ -15,11 +15,19 @@ export const englishLabels = {
   close: "Close",
   continue: "Continue",
   notifications: "Notifications",
+  navigation: "Navigation",
+  openNavigation: "Open navigation",
   loading: "Loading",
   decrement: "Decrease",
   increment: "Increase",
   clear: "Clear",
   noMatches: "No matches",
+  filterRows: "Filter rows",
+  selectAllRows: "Select all rows",
+  selectRow: "Select {label}",
+  selectedCount: { one: "{count} selected", other: "{count} selected" },
+  noRows: "Nothing here yet",
+  noMatchingRows: "No rows match your filter",
   moreCount: { one: "{count} more", other: "{count} more" },
   stepCompleted: "completed",
   stepUpcoming: "not started",
@@ -57,11 +65,25 @@ export const labels = {
     close: "إغلاق",
     continue: "متابعة",
     notifications: "الإشعارات",
+    navigation: "التنقل",
+    openNavigation: "فتح قائمة التنقل",
     loading: "جارٍ التحميل",
     decrement: "إنقاص",
     increment: "زيادة",
     clear: "مسح",
     noMatches: "لا توجد نتائج",
+    filterRows: "تصفية الصفوف",
+    selectAllRows: "تحديد كل الصفوف",
+    selectRow: "تحديد {label}",
+    selectedCount: {
+      one: "صف واحد محدد",
+      two: "صفان محددان",
+      few: "{count} صفوف محددة",
+      many: "{count} صفًا محددًا",
+      other: "{count} صف محدد",
+    },
+    noRows: "لا شيء هنا بعد",
+    noMatchingRows: "لا توجد صفوف تطابق التصفية",
     moreCount: {
       one: "واحد آخر",
       two: "اثنان آخران",
@@ -123,11 +145,19 @@ export const labels = {
     close: "بند کریں",
     continue: "جاری رکھیں",
     notifications: "اطلاعات",
+    navigation: "نیویگیشن",
+    openNavigation: "نیویگیشن کھولیں",
     loading: "لوڈ ہو رہا ہے",
     decrement: "کم کریں",
     increment: "بڑھائیں",
     clear: "صاف کریں",
     noMatches: "کوئی نتیجہ نہیں",
+    filterRows: "قطاریں فلٹر کریں",
+    selectAllRows: "تمام قطاریں منتخب کریں",
+    selectRow: "{label} منتخب کریں",
+    selectedCount: { one: "{count} منتخب", other: "{count} منتخب" },
+    noRows: "ابھی یہاں کچھ نہیں",
+    noMatchingRows: "فلٹر سے کوئی قطار نہیں ملتی",
     moreCount: { one: "{count} اور", other: "{count} اور" },
     stepCompleted: "مکمل",
     stepUpcoming: "شروع نہیں ہوا",
@@ -165,13 +195,15 @@ export const labels = {
  */
 export type LabelKey = keyof typeof labels.en;
 
-/** Resolves plural forms and formats every {count} with Intl in the same locale.
- * Use when: displaying labels with local plural forms and digits. Avoid when: formatting dates or currency.
+/** Resolves plural forms, locale-formatted {count} digits and named text parameters.
+ * Use when: displaying translated labels and interpolating plain text. Avoid when: formatting dates or currency.
  */
-export function formatLabel(label: Label, locale: string, count?: number): string {
-  const text =
+export function formatLabel(label: Label, locale: string, count?: number, parameters?: Record<string, string>): string {
+  let text =
     typeof label === "string"
       ? label
       : (label[count === undefined ? "other" : new Intl.PluralRules(locale).select(count)] ?? label.other);
-  return count === undefined ? text : text.replaceAll("{count}", new Intl.NumberFormat(locale).format(count));
+  if (count !== undefined) text = text.replaceAll("{count}", new Intl.NumberFormat(locale).format(count));
+  for (const [key, value] of Object.entries(parameters ?? {})) text = text.replaceAll(`{${key}}`, () => value);
+  return text;
 }
