@@ -8,19 +8,34 @@
 
 export { type ColorKey, checkTheme, type Theme, themeCss } from "./theme.ts";
 
+/** The light colour roles shared by the email kit and the full web palette.
+ * Use when: reading plain email colours without the web palettes. Avoid when: styling browser UI; use theme classes.
+ */
+export const emailColors = {
+  canvas: "#F3F1FC",
+  surface: "#FFFFFF",
+  field: "#F0EDFA",
+  line: "#D5CFEA",
+  ink: "#26203C",
+  "ink-muted": "#665B79",
+  brand: "#4F46E5",
+  "brand-fg": "#FFFFFF",
+  "brand-text": "#392DB2",
+} as const;
+
 /** Colour roles for light and dark mode.
  * Use when: reading plain colour values for email or images. Avoid when: styling components; use theme classes.
  */
 export const colors = {
   light: {
-    canvas: "#F3F1FC",
-    surface: "#FFFFFF",
-    field: "#F0EDFA",
-    line: "#D5CFEA",
+    canvas: emailColors.canvas,
+    surface: emailColors.surface,
+    field: emailColors.field,
+    line: emailColors.line,
     "skeleton-highlight": "#FFFFFF",
     "control-line": "#6E6094",
-    ink: "#26203C",
-    "ink-muted": "#665B79",
+    ink: emailColors.ink,
+    "ink-muted": emailColors["ink-muted"],
     strong: "#26203C",
     "strong-fg": "#FFFFFF",
     "edge-neutral": "#A2A2A5",
@@ -29,10 +44,10 @@ export const colors = {
     "disabled-fill": "#E2DFEC",
     "disabled-text": "#61596F",
     "disabled-line": "#8A809F",
-    brand: "#4F46E5",
-    "brand-fg": "#FFFFFF",
+    brand: emailColors.brand,
+    "brand-fg": emailColors["brand-fg"],
     "brand-tint": "#C8C2FF",
-    "brand-text": "#392DB2",
+    "brand-text": emailColors["brand-text"],
     sun: "#FFC844",
     "sun-fg": "#26203C",
     "sun-tint": "#FFE298",
@@ -273,11 +288,12 @@ export const distances = { "celebration-hop": "24px" } as const;
 /** Theme names the class merger uses to separate colours, text sizes and other scales.
  * Use when: configuring tailwind-merge. Avoid when: registering duration or layer classes; use class groups.
  */
-export const themeNames = {
+// Email bundles can omit this derived web metadata and its unused token dependencies.
+export const themeNames = /* @__PURE__ */ (() => ({
   color: [...Object.keys(colors.light), ...Object.keys(forcedColors)],
   text: Object.keys(text),
   radius: Object.keys(radii),
   spacing: ["control-sm", "control", "control-lg"],
   font: Object.keys(fonts),
   ease: Object.keys(easings),
-};
+}))();
