@@ -226,8 +226,19 @@ export const durations = {
   sheet: "300ms",
   "count-up": "600ms",
   "streak-pop": "240ms",
+  "celebration-anticipation": "120ms",
+  "celebration-rise": "240ms",
+  "celebration-fall": "240ms",
+  "celebration-landing": "100ms",
+  "celebration-settle": "140ms",
+  "celebration-progress": "300ms",
   skeleton: "1400ms",
 } as const;
+
+/** Millisecond offsets for the celebration's staged feedback and completion.
+ * Use when: scheduling celebration cues. Avoid when: setting CSS transition durations; use durations.
+ */
+export const celebrationCues = { streak: 980, increment: 1100, end: 1300 } as const;
 
 /** Easing curves by motion purpose.
  * Use when: shaping interruptible transitions. Avoid when: animating keyboard-driven highlights.
@@ -237,14 +248,27 @@ export const easings = {
   move: "cubic-bezier(0.65, 0, 0.35, 1)",
   sheet: "cubic-bezier(0.32, 0.72, 0, 1)",
   pop: "cubic-bezier(0.34, 1.3, 0.64, 1)",
-  rise: "cubic-bezier(0.333, 0.667, 0.667, 1)",
-  fall: "cubic-bezier(0.333, 0, 0.667, 0.333)",
+  rise: "cubic-bezier(0.3333333333333333, 0.6666666666666666, 0.6666666666666666, 1)",
+  fall: "cubic-bezier(0.3333333333333333, 0, 0.6666666666666666, 0.3333333333333333)",
 } as const;
 
-/** Scale factors for streak feedback.
+/** Scale factors for streak feedback and the celebration's squash and ground shadow.
  * Use when: sizing the peak and starting pose of delight motion. Avoid when: scaling pressable controls.
  */
-export const scales = { "streak-peak": 1.15, "increment-from": 0.75 } as const;
+export const scales = {
+  "streak-peak": 1.15,
+  "increment-from": 0.75,
+  "celebration-anticipation-x": 1.06,
+  "celebration-anticipation-y": 0.92,
+  "celebration-landing-x": 1.08,
+  "celebration-landing-y": 0.9,
+  "celebration-shadow": 0.6,
+} as const;
+
+/** Travel distances for decorative motion.
+ * Use when: playing the celebration's hop. Avoid when: translating pressable controls; use the press recipe.
+ */
+export const distances = { "celebration-hop": "24px" } as const;
 
 /** Theme names the class merger uses to separate colours, text sizes and other scales.
  * Use when: configuring tailwind-merge. Avoid when: registering duration or layer classes; use class groups.
