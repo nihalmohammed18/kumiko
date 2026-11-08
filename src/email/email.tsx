@@ -23,6 +23,12 @@ img{border:0}
 
 /** An email-safe document with a hidden preview and a centred, responsive 600px table.
  * Use when: composing sign-in links, receipts or digests. Avoid when: rendering an interactive application page.
+ *
+ * @example
+ * <Email title="Your weekly job alert" preview="A frontend role matches your search.">
+ *   <EmailHeading>Your next role awaits</EmailHeading><EmailText>Cedar Labs is hiring a frontend engineer.</EmailText>
+ *   <EmailButton href="https://jobs.example.com/jobs/frontend">View job</EmailButton>
+ * </Email>
  */
 export function Email({ lang = "en", dir = "ltr", preview, title, theme, children }: EmailProps) {
   const colors = resolveEmailTheme(theme);

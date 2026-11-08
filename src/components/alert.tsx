@@ -41,6 +41,11 @@ const statuses = {
  * Use when: showing context in page content; static alerts need no role. Pass `role="alert"` for urgent,
  * dynamically shown errors.
  * Avoid when: announcing a completed answer or save; use FeedbackBanner.
+ *
+ * @example
+ * <Alert status="warning" title="Your resume is missing">
+ *   Add a resume before submitting this application.
+ * </Alert>
  */
 export function Alert({ status = "info", title, children, action, className, ...props }: AlertProps) {
   const { labels, locale } = useKumiko();

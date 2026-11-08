@@ -79,6 +79,10 @@ const cast = {
 /** Pip, Mori or Tuck in a static pose, recoloured by the product's palette.
  * Use when: adding friendly art to an empty state or a moment of delight.
  * Avoid when: conveying essential information without text, or when a product uses objects only.
+ *
+ * @example
+ * <EmptyState art={<Character name="pip" pose="waving" />} title="No applications yet"
+ *   description="Find a role you love and send your first application." />
  */
 export function Character({ name, pose = "idle", size = 180, title, ...props }: CharacterProps) {
   const clipId = useId();

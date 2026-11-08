@@ -21,7 +21,8 @@
     "dark-mode"
   ],
   "files": [
-    "dist"
+    "dist",
+    "llms.txt"
   ],
   "sideEffects": [
     "**/*.css"
@@ -46,7 +47,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
     "tokens": "node scripts/build-tokens.ts",
-    "build": "node scripts/build-tokens.ts && rm -rf dist && tsc -p tsconfig.build.json && node scripts/copy-css.ts && node scripts/check.ts --dist",
+    "build": "node scripts/build-tokens.ts && rm -rf dist && tsc -p tsconfig.build.json && node scripts/copy-css.ts && node scripts/check.ts --dist && node scripts/agent-docs.ts",
     "size": "node scripts/size.ts",
     "build:storybook": "storybook build -o storybook-static --quiet",
     "lint": "biome check .",

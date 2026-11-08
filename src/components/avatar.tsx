@@ -23,6 +23,9 @@ export interface AvatarProps extends Omit<BaseAvatar.Root.Props, "children" | "c
 
 /** A round profile image with accessible, grapheme-aware initials while loading or after an image error.
  * Use when: identifying a person visually. Avoid when: the image needs to be a control; wrap it in a Link or Button.
+ *
+ * @example
+ * <Avatar name="Aisha Khan" src="https://jobs.example.com/profiles/aisha.png" />
  */
 export function Avatar({ src, name, size = "md", accent = "brand", className, ...props }: AvatarProps) {
   const { locale } = useKumiko();

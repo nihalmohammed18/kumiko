@@ -98,6 +98,14 @@ function syncInputFiles(input: HTMLInputElement | null, files: File[]) {
 /** A native file picker and dropzone with a removable list, localized feedback and Field validation.
  * Use when: choosing a resume or several attachments; submit the listed files with FormData.
  * Avoid when: starting a server upload automatically; handle that separately with onFilesChange.
+ *
+ * @example
+ * <Field name="resume">
+ *   <FieldLabel>Resume</FieldLabel>
+ *   <FileUpload accept=".pdf" maxSize={5_000_000} required />
+ *   <FieldDescription>Upload a PDF up to 5 MB.</FieldDescription>
+ *   <FieldError />
+ * </Field>
  */
 export function FileUpload({
   files: filesProp,

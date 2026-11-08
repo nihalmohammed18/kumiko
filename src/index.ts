@@ -36,6 +36,7 @@ export {
   CardTitle,
   type CardTitleProps,
 } from "./components/card.tsx";
+export { Celebration, type CelebrationProps } from "./components/celebration.tsx";
 export { Character, type CharacterProps } from "./components/character.tsx";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
@@ -250,6 +251,7 @@ export {
 } from "./components/tabs.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export {
+  type ToastAchievementOptions,
   Toaster,
   type ToasterProps,
   type ToastOptions,

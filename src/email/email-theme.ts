@@ -1,5 +1,5 @@
 import type { ComponentProps, JSX } from "react";
-import { colors } from "../tokens.ts";
+import { emailColors } from "../tokens.ts";
 
 /** Plain colour roles for an email.
  * Use when: branding email parts. Avoid when: supplying CSS variables or web component themes.
@@ -20,15 +20,15 @@ export interface EmailTheme {
  * Use when: extending the default email colours. Avoid when: expecting automatic email client dark mode.
  */
 export const defaultEmailTheme: Readonly<EmailTheme> = {
-  brand: colors.light.brand,
-  "brand-fg": colors.light["brand-fg"],
-  edge: colors.light["brand-text"],
-  ink: colors.light.ink,
-  "ink-muted": colors.light["ink-muted"],
-  canvas: colors.light.canvas,
-  surface: colors.light.surface,
-  line: colors.light.line,
-  field: colors.light.field,
+  brand: emailColors.brand,
+  "brand-fg": emailColors["brand-fg"],
+  edge: emailColors["brand-text"],
+  ink: emailColors.ink,
+  "ink-muted": emailColors["ink-muted"],
+  canvas: emailColors.canvas,
+  surface: emailColors.surface,
+  line: emailColors.line,
+  field: emailColors.field,
 };
 
 /** Native email part props with an explicit colour theme and guaranteed inline styling.

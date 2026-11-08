@@ -206,6 +206,21 @@ function DataTableSpacer({ height, columns }: { height: number; columns: number 
  * Keep data and columns stable; column meta.align="end" aligns numeric headers and cells.
  * Rows become cards below 30rem of card width (phones). Supply meta.label for headers that render custom markup.
  * virtualize requires a CSS height; use pageSize=0 to virtualize the whole dataset. --kumiko-data-table-height sizes its scroll area.
+ *
+ * @example
+ * import { useMemo } from "react";
+ * const applications = [{ id: "a1", role: "Frontend engineer", status: "Interview", salary: 90000 }];
+ * function ApplicationsPage() {
+ *   const { locale } = useKumiko();
+ *   const columns = useMemo<DataTableProps<(typeof applications)[number]>["columns"]>(() => [
+ *     { accessorKey: "role", header: "Role" },
+ *     { accessorKey: "status", header: "Status", cell: ({ row }) => <Badge>{row.original.status}</Badge> },
+ *     { accessorKey: "salary", header: "Salary", meta: { align: "end" }, cell: ({ row }) =>
+ *       new Intl.NumberFormat(locale, { style: "currency", currency: "USD" }).format(row.original.salary) },
+ *   ], [locale]);
+ *   return <DataTable caption="Job applications" data={applications} columns={columns} filter selectable
+ *     getRowId={(row) => row.id} getRowLabel={(row) => row.role} />;
+ * }
  */
 export function DataTable<TData extends RowData>({
   columns,

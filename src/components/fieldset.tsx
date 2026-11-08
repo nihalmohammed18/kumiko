@@ -12,6 +12,14 @@ export interface FieldsetProps extends Omit<BaseFieldset.Root.Props, "className"
 
 /** Groups related fields under one accessible legend.
  * Use when: a form has a named section. Avoid when: grouping one control and its helper text; use Field.
+ *
+ * @example
+ * <Fieldset>
+ *   <FieldsetLegend>Job alert preferences</FieldsetLegend>
+ *   <Field name="keywords">
+ *     <FieldLabel>Role or keyword</FieldLabel><Input placeholder="Frontend engineer" /><FieldError />
+ *   </Field>
+ * </Fieldset>
  */
 export function Fieldset({ className, ...props }: FieldsetProps) {
   return (

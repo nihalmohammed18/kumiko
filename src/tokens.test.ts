@@ -4,7 +4,19 @@ import { expect, it } from "vitest";
 import { themeCss as tailwindThemeCss, tokensCss } from "../scripts/build-tokens.ts";
 import { readPaletteNames } from "../scripts/check.ts";
 import { cn } from "./lib/tv.ts";
-import { checkTheme, colors } from "./tokens.ts";
+import { checkTheme, colors, easings } from "./tokens.ts";
+
+it("keeps rise and fall on a linear time axis with exactly quadratic displacement", () => {
+  const cubic = (t: number, a: number, b: number) => 3 * (1 - t) ** 2 * t * a + 3 * (1 - t) * t ** 2 * b + t ** 3;
+  for (const [easing, displacement] of [
+    [easings.rise, 0.4375],
+    [easings.fall, 0.0625],
+  ] as const) {
+    const [x1, y1, x2, y2] = easing.match(/[\d.]+/g)!.map(Number);
+    expect(cubic(0.25, x1!, x2!)).toBeCloseTo(0.25, 14);
+    expect(cubic(0.25, y1!, y2!)).toBeCloseTo(displacement, 14);
+  }
+});
 
 it("meets text and control contrast thresholds in both themes", () => {
   expect(checkTheme({})).toEqual([]);

@@ -10,6 +10,9 @@ export interface EmailLinkProps extends EmailPartProps<"a"> {
 
 /** An underlined brand-coloured email link.
  * Use when: linking a phrase or a secondary destination. Avoid when: presenting the primary destination; use EmailButton.
+ *
+ * @example
+ * <EmailText><EmailLink href="https://jobs.example.com/alerts">Manage your job alerts</EmailLink>.</EmailText>
  */
 export function EmailLink({ theme, ...props }: EmailLinkProps) {
   const colors = resolveEmailTheme(theme);

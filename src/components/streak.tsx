@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentProps, useEffect, useState } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useState } from "react";
 import { CheckIcon, FlameIcon } from "../icons.tsx";
 import { formatLabel } from "../labels.ts";
 import { cn } from "../lib/tv.ts";
@@ -18,12 +18,17 @@ export interface StreakProps extends Omit<ComponentProps<"div">, "children"> {
   done: readonly string[];
   /** Shows a +1 chip and pops the flame once on mount or when changed from false to true. */
   increment?: boolean;
+  /** Replaces the decorative number display; count remains the final accessible value. */
+  countDisplay?: ReactNode;
 }
 
 /** A localized streak counter and calendar week with checked completed days.
  * Use when: encouraging a daily habit. Avoid when: picking a date; use a date input or calendar.
+ *
+ * @example
+ * <Streak count={3} today="2026-11-08" done={["2026-11-06", "2026-11-07", "2026-11-08"]} />
  */
-export function Streak({ count, today, done, increment = false, className, ...props }: StreakProps) {
+export function Streak({ count, today, done, increment = false, countDisplay, className, ...props }: StreakProps) {
   const { locale, labels } = useKumiko();
   const [popping, setPopping] = useState(false);
   useEffect(() => {
@@ -71,7 +76,7 @@ export function Streak({ count, today, done, increment = false, className, ...pr
         <p data-slot="streak-label" className="min-w-0 wrap-anywhere font-display text-headline font-bold">
           <span aria-hidden>
             {placeholder < 0 ? "" : template.slice(0, placeholder)}
-            <CountUp value={count} />
+            {countDisplay ?? <CountUp value={count} />}
             {placeholder < 0 ? ` ${template}` : formatLabel(template.slice(placeholder + 7), locale, count)}
           </span>
           <span className="sr-only">{formatLabel(labels.streak, locale, count)}</span>

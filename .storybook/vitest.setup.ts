@@ -8,6 +8,7 @@ type Mode = (typeof MODES)[number];
 declare module "vitest" {
   export interface ProvidedContext {
     mode: Mode;
+    engine: "chromium" | "webkit";
     vrt: "all" | "states" | "none";
   }
 }
@@ -83,5 +84,5 @@ afterEach(async ({ task }) => {
     const target = window.__kumikoVrtPage || !story ? document.body : story;
     await expect.element(page.elementLocator(target)).toMatchScreenshot(`${task.name}-${mode}`);
   }
-  await checkUx(mode, window.__kumikoUx);
+  await checkUx(mode, window.__kumikoUx, inject("engine"));
 });

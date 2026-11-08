@@ -21,6 +21,9 @@ export const ToggleGroupSizeContext = /*#__PURE__*/ createContext<ToggleProps["s
 /** A tactile button that stays pressed for a filter, formatting option or segment.
  * Use when: a button represents a persistent selection, such as "Remote only".
  * Avoid when: an on/off setting applies immediately; use Switch (coming in M3).
+ *
+ * @example
+ * <Toggle defaultPressed>Remote jobs only</Toggle>
  */
 export function Toggle({ size, className, ...props }: ToggleProps) {
   const groupSize = use(ToggleGroupSizeContext);

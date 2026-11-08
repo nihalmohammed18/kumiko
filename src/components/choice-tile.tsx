@@ -21,6 +21,16 @@ export interface ChoiceTileProps extends Omit<BaseRadio.Root.Props<string>, "cla
 
 /** A large tactile answer tile with a check badge when selected.
  * Use when: presenting prominent choices in ChoiceTileGroup. Avoid when: compact form choices suffice; use Radio or Checkbox.
+ *
+ * @example
+ * <Field name="department">
+ *   <FieldLabel>Your next team</FieldLabel>
+ *   <ChoiceTileGroup defaultValue="engineering" columns={2}>
+ *     <ChoiceTile value="engineering" description="Build the product">Engineering</ChoiceTile>
+ *     <ChoiceTile value="design" description="Shape the experience">Design</ChoiceTile>
+ *   </ChoiceTileGroup>
+ *   <FieldError />
+ * </Field>
  */
 export function ChoiceTile({
   icon,

@@ -50,6 +50,11 @@ export interface KumikoProviderProps {
  *
  * Use when: always; one per app, inside your theme provider.
  * Avoid when: nesting it for a single section; set `dir` on that element instead.
+ *
+ * @example
+ * <KumikoProvider direction="ltr" locale="en">
+ *   <Toaster /><main><LinkButton href="/jobs">Browse jobs</LinkButton></main>
+ * </KumikoProvider>
  */
 export function KumikoProvider({ direction = "ltr", locale = "en", labels, nonce, children }: KumikoProviderProps) {
   const region = useRef<HTMLDivElement>(null);
