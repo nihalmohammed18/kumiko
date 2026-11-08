@@ -1,0 +1,55 @@
+[data-slot="table-card"] {
+  box-shadow: 0 var(--kumiko-edge-h) 0 var(--kumiko-edge-neutral);
+}
+
+[data-slot="table-scroll"] {
+  border-radius: inherit;
+
+  /* An inset ring stays inside the card's clipping boundary. */
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: calc(-1 * var(--kumiko-ring-width));
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline-color: var(--kumiko-forced-ink);
+    }
+  }
+}
+
+[data-slot="table"] {
+  --kumiko-table-row-height: var(--kumiko-control-md);
+
+  &[data-size="sm"] {
+    --kumiko-table-row-height: var(--kumiko-control-sm);
+  }
+
+  &[data-size="lg"] {
+    --kumiko-table-row-height: var(--kumiko-control-lg);
+  }
+}
+
+[data-slot="table-row"] {
+  block-size: var(--kumiko-table-row-height);
+}
+
+[data-slot="table-head"] {
+  border-block-end: var(--kumiko-border) solid var(--kumiko-control-line);
+}
+
+[data-slot="table-body"] > tr > :is(th, td) {
+  border-block-end: 1px solid var(--kumiko-line);
+}
+
+[data-slot="table-row"][data-selected] > :is(th, td) {
+  background-color: color-mix(in oklab, var(--kumiko-brand) 15%, var(--kumiko-surface));
+}
+
+[data-slot="table-body"] > tr:last-child > :is(th, td) {
+  border-block-end: 0;
+}
+
+[data-slot="table-footer"] {
+  border-block-start: var(--kumiko-border) solid var(--kumiko-control-line);
+}

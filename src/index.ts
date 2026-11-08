@@ -199,6 +199,24 @@ export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";
 export {
+  Table,
+  TableBody,
+  type TableBodyProps,
+  TableCaption,
+  type TableCaptionProps,
+  TableCell,
+  type TableCellProps,
+  TableFooter,
+  type TableFooterProps,
+  TableHead,
+  TableHeader,
+  type TableHeaderProps,
+  type TableHeadProps,
+  type TableProps,
+  TableRow,
+  type TableRowProps,
+} from "./components/table.tsx";
+export {
   Tab,
   type TabProps,
   Tabs,
