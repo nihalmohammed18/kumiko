@@ -195,6 +195,24 @@ export {
   type SelectValueProps,
 } from "./components/select.tsx";
 export { Separator, type SeparatorProps } from "./components/separator.tsx";
+export {
+  Sidebar,
+  SidebarContent,
+  type SidebarContentProps,
+  SidebarFooter,
+  type SidebarFooterProps,
+  SidebarGroup,
+  type SidebarGroupProps,
+  SidebarHeader,
+  type SidebarHeaderProps,
+  SidebarLayout,
+  type SidebarLayoutProps,
+  SidebarLink,
+  type SidebarLinkProps,
+  type SidebarProps,
+  SidebarTrigger,
+  type SidebarTriggerProps,
+} from "./components/sidebar.tsx";
 export { Skeleton, type SkeletonProps } from "./components/skeleton.tsx";
 export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./components/slider.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
@@ -260,6 +278,7 @@ export {
   FileIcon,
   FlameIcon,
   InfoIcon,
+  MenuIcon,
   MinusIcon,
   PlusIcon,
   SearchIcon,
