@@ -15,8 +15,13 @@ export interface RadioGroupProps<Value = string> extends Omit<BaseRadioGroup.Pro
  *
  * @example
  * <Field name="workplace">
- *   <FieldLabel>Preferred workplace</FieldLabel>
- *   <RadioGroup defaultValue="remote"><Radio value="remote">Remote</Radio><Radio value="office">Office</Radio></RadioGroup>
+ *   <Fieldset>
+ *     <FieldsetLegend id="workplace-legend">Preferred workplace</FieldsetLegend>
+ *     <RadioGroup aria-labelledby="workplace-legend" defaultValue="remote">
+ *       <Radio value="remote">Remote</Radio>
+ *       <Radio value="office">Office</Radio>
+ *     </RadioGroup>
+ *   </Fieldset>
  *   <FieldError />
  * </Field>
  */

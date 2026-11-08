@@ -24,11 +24,13 @@ export interface ChoiceTileProps extends Omit<BaseRadio.Root.Props<string>, "cla
  *
  * @example
  * <Field name="department">
- *   <FieldLabel>Your next team</FieldLabel>
- *   <ChoiceTileGroup defaultValue="engineering" columns={2}>
- *     <ChoiceTile value="engineering" description="Build the product">Engineering</ChoiceTile>
- *     <ChoiceTile value="design" description="Shape the experience">Design</ChoiceTile>
- *   </ChoiceTileGroup>
+ *   <Fieldset>
+ *     <FieldsetLegend id="department-legend">Your next team</FieldsetLegend>
+ *     <ChoiceTileGroup aria-labelledby="department-legend" defaultValue="engineering" columns={2}>
+ *       <ChoiceTile value="engineering" description="Build the product">Engineering</ChoiceTile>
+ *       <ChoiceTile value="design" description="Shape the experience">Design</ChoiceTile>
+ *     </ChoiceTileGroup>
+ *   </Fieldset>
  *   <FieldError />
  * </Field>
  */

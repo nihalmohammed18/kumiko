@@ -61,6 +61,8 @@ it("generates linked guides for every public module with declared props and inhe
     }
     const dialog = readFileSync(join(docs, "components/dialog.md"), "utf8");
     expect(dialog).toContain("Plus Base UI Dialog.Popup's props");
+    expect(dialog).toContain("installed with Kumiko, or https://base-ui.com/react/components/dialog");
+    expect(readFileSync(join(docs, "components/badge.md"), "utf8")).toContain('`BadgeTone` (`"danger" \\| "info"');
     expect(dialog).toContain("### Props (`DialogPopupProps`)");
     expect(dialog).not.toContain("## DialogPopupProps");
     expect(dialog).toContain('| `size?` | `"sm" \\| "md" \\| "lg"` | `"md"` |');

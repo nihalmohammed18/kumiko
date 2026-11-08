@@ -1,6 +1,7 @@
 // Generates the documentation agents read in the installed package, after the build.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
+import { createRequire } from "node:module";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
@@ -28,12 +29,22 @@ const rules = [
   "Name every icon-only control with an accessible label.",
   "Put form controls in Field with FieldLabel and FieldError.",
   "Theme through `--kumiko-*` variables; do not override Kumiko's colour, radius or shadow classes with Tailwind.",
-  'Set `.dark` or `[data-theme="dark"]` on `<html>` for dark mode; do not use `dark:`.',
+  'Turn on dark mode with `.dark` or `[data-theme="dark"]` on `<html>`. Never add `dark:` classes to Kumiko components; if the app\'s own markup uses `dark:`, add the custom variant from the setup guide.',
   "Explain a disabled control's reason in visible text, never only in a tooltip.",
   "Use container queries, not viewport breakpoints, inside components.",
 ]
   .map((rule) => `- ${rule}`)
   .join("\n");
+
+// Base UI ships its docs in the package; inherited props point at the page for the part's module.
+const baseUiDocs = join(dirname(createRequire(import.meta.url).resolve("@base-ui/react")), "docs/react/components");
+function baseUiDoc(specifier: string): string {
+  const slug = specifier.split("/")[2];
+  const page = slug && [slug, `${slug}-group`].find((name) => existsSync(join(baseUiDocs, `${name}.md`)));
+  return page
+    ? ` (see \`@base-ui/react/docs/react/components/${page}.md\`, installed with Kumiko, or https://base-ui.com/react/components/${page})`
+    : "";
+}
 
 function original(symbol: ts.Symbol): ts.Symbol {
   return symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol;
@@ -79,7 +90,9 @@ function inheritance(
   const args = node.typeArguments ?? [];
   if (name === "Omit" || name === "Pick")
     return inheritance(args[0]!, substitutions, seen).map(
-      (part) => `${part} (${name === "Omit" ? "excluding" : "only"} ${code(args[1]!.getText())})`,
+      // Before a "(see …)" docs pointer, so the sentence reads in order.
+      (part) =>
+        part.replace(/(?= \(see |$)/, ` (${name === "Omit" ? "excluding" : "only"} ${code(args[1]!.getText())})`),
     );
   if (name === "ComponentProps" || name === "ComponentPropsWithoutRef") {
     const tag = substitutions.get(args[0]!.getText()) ?? args[0]!;
@@ -113,7 +126,7 @@ function inheritance(
     const module = imported.parent.parent.parent.moduleSpecifier;
     if (ts.isStringLiteral(module) && module.text.startsWith("@base-ui/react"))
       return [
-        `Base UI ${name.replace(identifier.getText(), (imported.propertyName ?? imported.name).text).replace(/\.Props$/, "")}'s props`,
+        `Base UI ${name.replace(identifier.getText(), (imported.propertyName ?? imported.name).text).replace(/\.Props$/, "")}'s props${baseUiDoc(module.text)}`,
       ];
     if (ts.isStringLiteral(module)) return [`${code(name)} from ${code(module.text)}`];
   }
@@ -145,7 +158,14 @@ function propsTable(component: ts.FunctionDeclaration): string {
         .replace(/\s+/g, " ")
         .replaceAll("|", "&#124;");
       const defaultValue = defaults.get(property.name);
-      return `| ${code(name)} | ${code(types.join(" | "))} | ${defaultValue === undefined ? "—" : code(defaultValue)} | ${description} |`;
+      // An alias such as BadgeTone hides its values; spell out a union of literals next to the written type.
+      const written = types.join(" | ");
+      const value = checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(property, parameter));
+      const members = value.isUnion() ? value.types : [value];
+      const resolved = members.map((member) => checker.typeToString(member)).join(" | ");
+      const literals = members.every((member) => member.isStringLiteral() || member.isNumberLiteral());
+      const type = literals && resolved !== written ? `${code(written)} (${code(resolved)})` : code(written);
+      return `| ${code(name)} | ${type} | ${defaultValue === undefined ? "—" : code(defaultValue)} | ${description} |`;
     });
   const inherited = [...new Set(inheritance(parameter.type))].map(
     (part, index) => `${rows.length || index ? "Plus" : "Takes"} ${part}.`,
@@ -262,6 +282,6 @@ writeFileSync(
 );
 writeFileSync(
   join(destination, "llms.txt"),
-  `# Kumiko\n\n> Kumiko (kumiko-ui) is an accessible React 19 component library built on Base UI and Tailwind CSS v4. Its tactile Playground controls support dark mode and right-to-left layouts.\n\n## Install and setup\n\n1. Install with \`npm install kumiko-ui\`; use React 19 and Tailwind CSS 4.3 or later.\n2. In global CSS, import \`tailwindcss\`, then \`kumiko-ui/styles.css\`.\n3. Import \`kumiko-ui/fonts.css\` once in the root layout.\n4. Import \`KumikoProvider\` from \`kumiko-ui\`.\n5. Wrap the app in \`<KumikoProvider direction="ltr" locale="en">{children}</KumikoProvider>\`; set theme, lang and dir on \`<html>\`.\n\n## Rules for agents\n\n${rules}\n\n## Documentation\n\n- [Component index](dist/docs/README.md): summaries, props and examples for every public module.\n\n## Guides\n\n${guideLinks("dist/docs/")}\n`,
+  `# Kumiko\n\n> Kumiko (kumiko-ui) is an accessible React 19 component library built on Base UI and Tailwind CSS v4. Its tactile Playground controls support dark mode and right-to-left layouts.\n\n## Install and setup\n\n1. Install with \`npm install kumiko-ui\`; use React 19 and Tailwind CSS 4.3 or later.\n2. In global CSS, import \`tailwindcss\`, then \`kumiko-ui/styles.css\`.\n3. Import \`kumiko-ui/fonts.css\` once in the root layout.\n4. Import \`KumikoProvider\` from \`kumiko-ui\`.\n5. Wrap the app in \`<KumikoProvider direction="ltr" locale="en">{children}</KumikoProvider>\`; set theme, lang and dir on \`<html>\`.\n\n## Rules for agents\n\n${rules}\n\n## Documentation\n\n- [Component index](dist/docs/README.md): summaries, props and examples for every public module.\n- Base UI's own docs, for the props Kumiko passes through: \`docs/index.md\` in the installed \`@base-ui/react\` package, or https://base-ui.com.\n\n## Guides\n\n${guideLinks("dist/docs/")}\n`,
 );
 console.log(`Generated ${modules.size} component module guides, four guides and llms.txt`);
