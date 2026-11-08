@@ -103,16 +103,24 @@ export function Streak({ count, today, done, increment = false, className, ...pr
               data-date={iso}
               data-done={completed ? "" : undefined}
               aria-current={current ? "date" : undefined}
-              className={cn(
-                "flex size-8 shrink-0 items-center justify-center gap-0.5 rounded-full border-2 border-line text-label font-bold forced-colors:border-forced-ink",
-                completed &&
-                  "border-sun bg-sun text-sun-fg forced-colors:forced-color-adjust-none forced-colors:bg-forced-fill forced-colors:text-forced-fg",
-                current &&
-                  "ring-2 ring-brand forced-colors:outline-solid forced-colors:outline-2 forced-colors:outline-forced-ink",
-              )}
+              className="flex shrink-0 flex-col items-center gap-1"
             >
-              <span aria-hidden>{narrow.format(date)}</span>
-              {completed && <CheckIcon className="size-3 shrink-0" />}
+              <span aria-hidden className={cn("text-caption font-bold text-ink-muted", current && "text-brand-text")}>
+                {narrow.format(date)}
+              </span>
+              <span
+                aria-hidden
+                data-slot="streak-mark"
+                className={cn(
+                  "flex size-8 items-center justify-center rounded-full border-2 border-line forced-colors:border-forced-ink",
+                  completed &&
+                    "border-sun bg-sun text-sun-fg forced-colors:forced-color-adjust-none forced-colors:bg-forced-fill forced-colors:text-forced-fg",
+                  current &&
+                    "ring-2 ring-brand forced-colors:outline-solid forced-colors:outline-2 forced-colors:outline-forced-ink",
+                )}
+              >
+                {completed && <CheckIcon className="size-4" />}
+              </span>
               <span className="sr-only">
                 {full.format(date)}
                 {completed && `, ${formatLabel(labels.done, locale)}`}
