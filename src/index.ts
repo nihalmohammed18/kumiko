@@ -18,6 +18,12 @@ export {
 export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from "./components/avatar.tsx";
 export { Badge, type BadgeProps } from "./components/badge.tsx";
 export { type BadgeTone, badgeStyles } from "./components/badge-styles.ts";
+export {
+  BreadcrumbItem,
+  type BreadcrumbItemProps,
+  Breadcrumbs,
+  type BreadcrumbsProps,
+} from "./components/breadcrumbs.tsx";
 export { Button, type ButtonProps, IconButton, type IconButtonProps } from "./components/button.tsx";
 export { type ButtonStyleProps, type ButtonTone, buttonStyles } from "./components/button-styles.ts";
 export {
@@ -146,6 +152,7 @@ export {
 } from "./components/menu.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
 export { NumberField, type NumberFieldProps } from "./components/number-field.tsx";
+export { Pagination, type PaginationProps, paginationRange } from "./components/pagination.tsx";
 export {
   Popover,
   PopoverClose,
@@ -189,6 +196,16 @@ export { Skeleton, type SkeletonProps } from "./components/skeleton.tsx";
 export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./components/slider.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";
+export {
+  Tab,
+  type TabProps,
+  Tabs,
+  TabsList,
+  type TabsListProps,
+  TabsPanel,
+  type TabsPanelProps,
+  type TabsProps,
+} from "./components/tabs.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export {
   Toaster,
@@ -213,6 +230,7 @@ export {
 export {
   CheckIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
   ChevronRightIcon,
   CircleAlertIcon,
   CircleCheckIcon,
