@@ -5,8 +5,10 @@ import type { ComponentProps } from "react";
 import { XIcon } from "../icons.tsx";
 import { formatLabel } from "../labels.ts";
 import { cn } from "../lib/tv.ts";
+import { useScrollFocus } from "../lib/use-scroll-focus.ts";
 import { useKumiko } from "../provider.tsx";
 import { type ButtonStyleProps, buttonStyles } from "./button-styles.ts";
+import { dialogStyles } from "./dialog-styles.ts";
 
 /** Controlled or uncontrolled dialog state and Base UI focus and dismissal options.
  * Use when: typing Dialog. Avoid when: typing its visible surface; use DialogPopupProps.
@@ -75,7 +77,7 @@ export function DialogPopup({ size = "md", container, className, children, ...pr
           <BaseDialog.Close
             data-slot="dialog-close"
             aria-label={formatLabel(labels.close, locale)}
-            className={buttonStyles({ tone: "ghost", size: "sm", iconOnly: true, className: "dialog-corner-close" })}
+            className={dialogStyles.cornerClose}
           >
             <XIcon />
           </BaseDialog.Close>
@@ -97,13 +99,7 @@ export interface DialogTitleProps extends Omit<BaseDialog.Title.Props, "classNam
  * Use when: giving every DialogPopup a visible name. Avoid when: writing body content; use DialogBody.
  */
 export function DialogTitle({ className, ...props }: DialogTitleProps) {
-  return (
-    <BaseDialog.Title
-      {...props}
-      data-slot="dialog-title"
-      className={cn("min-w-0 shrink-0 pe-12 font-display text-title font-bold", className)}
-    />
-  );
+  return <BaseDialog.Title {...props} data-slot="dialog-title" className={cn(dialogStyles.title, className)} />;
 }
 
 /** Base UI paragraph props for the dialog's accessible description.
@@ -121,7 +117,7 @@ export function DialogDescription({ className, ...props }: DialogDescriptionProp
     <BaseDialog.Description
       {...props}
       data-slot="dialog-description"
-      className={cn("min-w-0 shrink-0 pe-12 text-body text-ink-muted", className)}
+      className={cn(dialogStyles.description, className)}
     />
   );
 }
@@ -134,8 +130,17 @@ export interface DialogBodyProps extends ComponentProps<"div"> {}
 /** Scrolls the middle while keeping the title, footer and controls' edges and focus rings visible.
  * Use when: containing the dialog's task or long content. Avoid when: placing its title or primary actions.
  */
-export function DialogBody({ className, ...props }: DialogBodyProps) {
-  return <div {...props} data-slot="dialog-body" className={cn("dialog-body min-h-0 min-w-0 -mx-3 p-3", className)} />;
+export function DialogBody({ className, ref, ...props }: DialogBodyProps) {
+  const [scrollRef, tabIndex] = useScrollFocus(ref);
+  return (
+    <div
+      tabIndex={tabIndex}
+      {...props}
+      ref={scrollRef}
+      data-slot="dialog-body"
+      className={cn(dialogStyles.body, className)}
+    />
+  );
 }
 
 /** Native div props for a dialog's actions row.
@@ -147,13 +152,7 @@ export interface DialogFooterProps extends ComponentProps<"div"> {}
  * Use when: placing Cancel before the primary action. Avoid when: placing content that should scroll.
  */
 export function DialogFooter({ className, ...props }: DialogFooterProps) {
-  return (
-    <div
-      {...props}
-      data-slot="dialog-footer"
-      className={cn("dialog-footer flex shrink-0 flex-wrap justify-end gap-3", className)}
-    />
-  );
+  return <div {...props} data-slot="dialog-footer" className={cn(dialogStyles.footer, className)} />;
 }
 
 /** Base UI close props with Button's tone and size.

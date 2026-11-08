@@ -1,0 +1,43 @@
+/* Art keeps its authored colours in forced colours, like a raster image. */
+:where([data-slot="character"], [data-slot="illustration"]) {
+  max-inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+  forced-color-adjust: none;
+}
+
+:where([data-slot="character"]) {
+  --kumiko-cast-body: var(--kumiko-brand);
+  --kumiko-cast-highlight: color-mix(in oklab, var(--kumiko-cast-body) 55%, var(--kumiko-art-white));
+  --kumiko-cast-shade: color-mix(in oklab, var(--kumiko-cast-body) 78%, var(--kumiko-art-black));
+  --kumiko-cast-ground: color-mix(in oklab, var(--kumiko-cast-shade) 24%, var(--kumiko-surface));
+  --kumiko-cast-ink: var(--kumiko-art-ink);
+  --kumiko-cast-blush: var(--kumiko-art-blush);
+  --kumiko-cast-blush-strong: var(--kumiko-art-blush-strong);
+}
+
+:where([data-slot="character"][data-character="mori"]) {
+  --kumiko-cast-body: var(--kumiko-leaf);
+}
+
+:where([data-slot="character"][data-character="tuck"]) {
+  --kumiko-cast-body: var(--kumiko-coral);
+}
+
+/* Move the thought trail to inline-end, preserving the orientation of each Z. */
+[data-slot="character"]:dir(rtl) :is([data-slot="character-thoughts"], [data-slot="character-sleep-marks"]) {
+  transform-box: view-box;
+  transform-origin: center;
+  transform: scaleX(-1);
+}
+
+[data-slot="character"]:dir(rtl) [data-slot="character-sleep-mark"] {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scaleX(-1);
+}
+
+:where([data-slot="illustration"]) {
+  --kumiko-art-light: color-mix(in oklab, var(--kumiko-brand) 55%, var(--kumiko-art-white));
+  --kumiko-art-dark: color-mix(in oklab, var(--kumiko-brand) 78%, var(--kumiko-art-black));
+}
