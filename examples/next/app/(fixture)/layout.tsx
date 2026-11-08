@@ -1,19 +1,13 @@
-import { KumikoProvider } from "kumiko-ui";
 import type { ReactNode } from "react";
-import "kumiko-ui/fonts.css";
-import "../globals.css";
+import "./fixture.css";
 
-// Keep this root free of the job-board shell so the existing bundle check stays isolated.
+// Next 15's webpack build maps a client module shared by several root layouts (KumikoProvider, a shared stylesheet)
+// to one layout's chunks, so a route here would load the job-board shell. This root shares nothing with the others,
+// and Button falls back to English and left-to-right without a provider.
 export default function FixtureLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" dir="ltr">
-      <body>
-        <div className="app-root">
-          <KumikoProvider direction="ltr" locale="en">
-            {children}
-          </KumikoProvider>
-        </div>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
