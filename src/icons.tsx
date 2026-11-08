@@ -1,7 +1,6 @@
 import {
   Check,
   ChevronDown,
-  ChevronRight,
   CircleAlert,
   CircleCheck,
   File,
@@ -14,7 +13,6 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { cn } from "./lib/tv.ts";
 
 /** A decorative check mark with Kumiko's stroke weight.
  * Use when: marking a checked choice. Avoid when: an icon must provide its own accessible name.
@@ -49,22 +47,6 @@ export function SearchIcon(props: LucideProps) {
  */
 export function ChevronDownIcon(props: LucideProps) {
   return <ChevronDown {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
-}
-
-/** A decorative inline-end chevron, mirrored in right-to-left layouts.
- * Use when: indicating a submenu. Avoid when: indicating a downward disclosure; use ChevronDownIcon.
- */
-export function ChevronRightIcon({ className, ...props }: LucideProps) {
-  return (
-    <ChevronRight
-      {...props}
-      className={cn(className, "rtl:-scale-x-100")}
-      aria-hidden
-      strokeWidth={2.5}
-      data-slot="icon"
-      data-icon-directional
-    />
-  );
 }
 
 /** A decorative cross with Kumiko's stroke weight.

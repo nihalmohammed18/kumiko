@@ -22,12 +22,6 @@
     transition-duration: var(--kumiko-duration-popup-out);
   }
 
-  /* A menu or popover takes focus itself when it opens without a highlighted item. */
-  &:focus-visible {
-    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
-    outline-offset: var(--kumiko-ring-gap);
-  }
-
   @media (prefers-reduced-motion: reduce) {
     transition-property: opacity;
 
@@ -63,7 +57,7 @@
   }
 
   &:active:not([data-disabled]) {
-    background-color: color-mix(in oklab, var(--kumiko-brand-tint) 88%, var(--kumiko-brand-text));
+    background-color: color-mix(in oklab, var(--kumiko-brand-tint) 80%, var(--kumiko-brand-text));
     color: var(--kumiko-brand-text);
   }
 
@@ -86,32 +80,6 @@
   }
 }
 
-@utility menu-item-danger {
-  /* Forced colours use popup-item's system highlight instead of a tone tint. */
-  @media (forced-colors: none) {
-    &.popup-item:not([data-disabled]) {
-      color: var(--kumiko-danger-text);
-
-      &[data-highlighted] {
-        background-color: var(--kumiko-danger-tint);
-        color: var(--kumiko-danger-text);
-      }
-
-      @media (hover: hover) {
-        &:hover {
-          background-color: var(--kumiko-danger-tint);
-          color: var(--kumiko-danger-text);
-        }
-      }
-
-      &:active {
-        background-color: color-mix(in oklab, var(--kumiko-danger-tint) 88%, var(--kumiko-danger-text));
-        color: var(--kumiko-danger-text);
-      }
-    }
-  }
-}
-
 @utility popover-popup {
   position: relative;
   max-inline-size: min(20rem, var(--available-width));
@@ -120,6 +88,11 @@
   &.popup {
     padding: 0;
     overflow: visible;
+  }
+
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: var(--kumiko-ring-gap);
   }
 }
 
