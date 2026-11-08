@@ -17,9 +17,9 @@ export interface SwitchProps extends Omit<BaseSwitch.Root.Props, "className"> {
  * Use when: a setting takes effect immediately. Avoid when: confirming terms or selecting form options; use Checkbox.
  *
  * @example
- * <Field name="jobAlerts">
- *   <FieldLabel>Email job alerts</FieldLabel><Switch defaultChecked /><FieldError />
- * </Field>
+ * import { useState } from "react";
+ * const [alerts, setAlerts] = useState(true);
+ * <Switch checked={alerts} onCheckedChange={setAlerts}>Email job alerts</Switch>
  */
 export function Switch({ children, className, id: idProp, render, ...props }: SwitchProps) {
   const generatedId = useId();

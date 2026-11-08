@@ -18,8 +18,13 @@ export interface RadioProps<Value = string> extends Omit<BaseRadio.Root.Props<Va
  *
  * @example
  * <Field name="employment">
- *   <FieldLabel>Employment type</FieldLabel>
- *   <RadioGroup defaultValue="full-time"><Radio value="full-time">Full time</Radio><Radio value="contract">Contract</Radio></RadioGroup>
+ *   <Fieldset>
+ *     <FieldsetLegend id="employment-legend">Employment type</FieldsetLegend>
+ *     <RadioGroup aria-labelledby="employment-legend" defaultValue="full-time">
+ *       <Radio value="full-time">Full time</Radio>
+ *       <Radio value="contract">Contract</Radio>
+ *     </RadioGroup>
+ *   </Fieldset>
  *   <FieldError />
  * </Field>
  */
