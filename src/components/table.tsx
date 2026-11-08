@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { cn } from "../lib/tv.ts";
 import { TableScroll } from "./table-scroll.tsx";
 
@@ -7,6 +7,8 @@ import { TableScroll } from "./table-scroll.tsx";
  */
 export interface TableProps extends ComponentProps<"table"> {
   size?: "sm" | "md" | "lg";
+  /** Controls inside the card, before its scroll area. */
+  toolbar?: ReactNode;
 }
 
 /** A server-safe table in a clipped, tactile card with an inner horizontal scroll region.
@@ -21,7 +23,7 @@ export interface TableProps extends ComponentProps<"table"> {
  *   <TableBody><TableRow><TableCell>Frontend engineer</TableCell><TableCell><Badge>Applied</Badge></TableCell></TableRow></TableBody>
  * </Table>
  */
-export function Table({ size = "md", className, children, ...props }: TableProps) {
+export function Table({ size = "md", className, children, toolbar, ...props }: TableProps) {
   return (
     <div
       data-slot="table-card"
@@ -29,6 +31,7 @@ export function Table({ size = "md", className, children, ...props }: TableProps
       lang={props.lang}
       className="min-w-0 max-w-full overflow-hidden rounded-card border-2 border-line bg-surface"
     >
+      {toolbar}
       <TableScroll>
         <table {...props} data-slot="table" data-size={size} className={cn("w-full border-collapse", className)}>
           {children}
@@ -51,7 +54,7 @@ export function TableCaption({ className, ...props }: TableCaptionProps) {
     <caption
       {...props}
       data-slot="table-caption"
-      className={cn("caption-top wrap-anywhere px-3 py-3 text-start text-body-sm font-bold text-ink", className)}
+      className={cn("caption-top wrap-break-word px-3 py-3 text-start text-body-sm font-bold text-ink", className)}
     />
   );
 }
@@ -125,7 +128,7 @@ export function TableHead({ align = "start", scope = "col", className, ...props 
       data-align={align}
       scope={scope}
       className={cn(
-        "wrap-anywhere bg-field px-3 py-1 align-middle text-label font-bold text-ink",
+        "wrap-break-word bg-field px-3 py-1 align-middle text-label font-bold text-ink",
         align === "end" ? "text-end tabular-nums" : "text-start",
         className,
       )}
@@ -150,7 +153,7 @@ export function TableCell({ align = "start", className, ...props }: TableCellPro
       data-slot="table-cell"
       data-align={align}
       className={cn(
-        "wrap-anywhere px-3 py-1 align-middle text-body-sm text-ink",
+        "wrap-break-word px-3 py-1 align-middle text-body-sm text-ink",
         align === "end" ? "text-end tabular-nums" : "text-start",
         className,
       )}
