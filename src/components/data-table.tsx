@@ -204,7 +204,7 @@ function DataTableSpacer({ height, columns }: { height: number; columns: number 
 /** A named table with sorting, global filtering, row selection and page navigation.
  * Use when: browsing client data or server pages with Kumiko's table parts. Avoid when: laying out unrelated content.
  * Keep data and columns stable; column meta.align="end" aligns numeric headers and cells.
- * Rows become cards below 36rem of card width. Supply meta.label for headers that render custom markup.
+ * Rows become cards below 30rem of card width (phones). Supply meta.label for headers that render custom markup.
  * virtualize requires a CSS height; use pageSize=0 to virtualize the whole dataset. --kumiko-data-table-height sizes its scroll area.
  */
 export function DataTable<TData extends RowData>({
@@ -485,7 +485,7 @@ export function DataTable<TData extends RowData>({
                         className="press press-ghost flex h-full min-h-control-sm w-full min-w-0 items-center justify-start gap-2 px-3 py-1 text-start font-body text-label font-bold text-ink"
                         onClick={header.column.getToggleSortingHandler()}
                       >
-                        <span className="min-w-0 wrap-anywhere">
+                        <span className="min-w-0 wrap-break-word">
                           <FlexRender header={header} />
                         </span>
                         <Icon className="size-4 shrink-0" />

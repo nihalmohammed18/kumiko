@@ -1,5 +1,4 @@
 [data-slot="table-card"] {
-  container-type: inline-size;
   box-shadow: 0 var(--kumiko-edge-h) 0 var(--kumiko-edge-neutral);
 }
 
@@ -79,6 +78,11 @@
   }
 }
 
+/* Only DataTable's card is a size container: containment would collapse a plain Table placed in a flex row. */
+[data-slot="data-table"] [data-slot="table-card"] {
+  container-type: inline-size;
+}
+
 [data-slot="data-table"][data-virtualize] [data-slot="table-scroll"] {
   block-size: var(--kumiko-data-table-height);
   overflow: auto;
@@ -105,7 +109,7 @@
   display: none;
 }
 
-@container (inline-size < 36rem) {
+@container (inline-size < 30rem) {
   [data-slot="data-table-card-tools"] {
     display: grid;
   }

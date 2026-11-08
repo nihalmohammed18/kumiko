@@ -47,7 +47,7 @@ export function TableCaption({ className, ...props }: TableCaptionProps) {
     <caption
       {...props}
       data-slot="table-caption"
-      className={cn("caption-top wrap-anywhere px-3 py-3 text-start text-body-sm font-bold text-ink", className)}
+      className={cn("caption-top wrap-break-word px-3 py-3 text-start text-body-sm font-bold text-ink", className)}
     />
   );
 }
@@ -121,7 +121,7 @@ export function TableHead({ align = "start", scope = "col", className, ...props 
       data-align={align}
       scope={scope}
       className={cn(
-        "wrap-anywhere bg-field px-3 py-1 align-middle text-label font-bold text-ink",
+        "wrap-break-word bg-field px-3 py-1 align-middle text-label font-bold text-ink",
         align === "end" ? "text-end tabular-nums" : "text-start",
         className,
       )}
@@ -146,7 +146,7 @@ export function TableCell({ align = "start", className, ...props }: TableCellPro
       data-slot="table-cell"
       data-align={align}
       className={cn(
-        "wrap-anywhere px-3 py-1 align-middle text-body-sm text-ink",
+        "wrap-break-word px-3 py-1 align-middle text-body-sm text-ink",
         align === "end" ? "text-end tabular-nums" : "text-start",
         className,
       )}
