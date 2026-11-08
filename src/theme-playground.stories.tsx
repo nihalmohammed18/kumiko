@@ -204,10 +204,10 @@ function ColorControl({
     if (hexPattern.test(next)) onValueChange(next.toUpperCase());
   }
   return (
-    <fieldset className="min-w-0">
-      <legend id={`${id}-legend`} className="mb-2 wrap-anywhere font-code text-body-sm font-bold text-ink">
+    <div className="min-w-0">
+      <p id={`${id}-legend`} className="mb-2 wrap-anywhere font-code text-body-sm font-bold text-ink">
         {modeNames[mode]} {role}
-      </legend>
+      </p>
       <div className="grid grid-cols-[4rem_minmax(0,1fr)] items-start gap-3">
         <div className="grid gap-1.5">
           <label id={`${id}-colour-label`} htmlFor={`${id}-colour`} className="text-label font-bold cursor-pointer">
@@ -236,7 +236,7 @@ function ColorControl({
           {invalid && <FieldError match>Use a six-digit hex colour: #RRGGBB.</FieldError>}
         </Field>
       </div>
-    </fieldset>
+    </div>
   );
 }
 
