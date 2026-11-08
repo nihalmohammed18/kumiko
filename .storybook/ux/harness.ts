@@ -559,6 +559,18 @@ function demoStates(mode: Mode, add: Add) {
 
 const expandedCount = () => document.querySelectorAll('[aria-expanded="true"]').length;
 
+/** Waits until these elements stop moving (up to half a second): a virtual list measures and re-renders rows a frame
+ * after anything scrolls it, and an earlier probe's change shouldn't count against the next one. */
+async function steady(boxes: () => Rect[]) {
+  let last = JSON.stringify(boxes());
+  for (let i = 0; i < 30; i++) {
+    await frame();
+    const now = JSON.stringify(boxes());
+    if (now === last) return;
+    last = now;
+  }
+}
+
 /** Real mouse hover and press on one enabled and one disabled (or loading) button. */
 async function realPointer(mode: Mode, add: Add) {
   const buttons = actionables().filter(
@@ -575,6 +587,7 @@ async function realPointer(mode: Mode, add: Add) {
     const state = stateOf(control);
     const behind = backdrop(element);
     const rest = snap(element);
+    await steady(boxes);
     const restBoxes = boxes();
     // An item already highlighted at rest (a story can pin one) has nothing left for a hover to show.
     const highlighted = element.hasAttribute("data-highlighted");

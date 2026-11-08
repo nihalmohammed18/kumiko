@@ -5,13 +5,14 @@ interface SurfaceNode<T> {
 }
 
 // Controls whose look is painted by an ancestor, keyed by data-slot: a field-styled group paints its input's boundary
-// and focus ring, a linked card paints its stretched link's press, edge and ring, and a dropzone paints a hidden
-// file input's.
+// and focus ring, a linked card paints its stretched link's press, edge and ring, a dropzone paints a hidden
+// file input's, and a table's card rings its focused scroll area.
 const SURFACES: Record<string, string> = {
   "number-field-input": "number-field-group",
   "combobox-input": "combobox-input-group",
   "card-link": "card",
   "file-upload-input": "file-upload-dropzone",
+  "table-scroll": "table-card",
 };
 
 /** Finds the part that paints an input's boundary, interaction feedback and focus ring.

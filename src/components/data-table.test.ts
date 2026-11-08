@@ -34,7 +34,7 @@ it("sorts the complete client dataset before taking a page", () => {
   expect(html).toMatch(/<th[^>]*aria-sort="ascending"/);
   expect(html.indexOf("Researcher")).toBeLessThan(html.indexOf("Designer"));
   expect(html).not.toContain("Engineer");
-  expect(html).toMatch(/<td[^>]*data-align="end"[^>]*>80000<\/td>/);
+  expect(html).toMatch(/<td[^>]*data-align="end"[^>]*><span[^>]*>Salary<\/span>80000<\/td>/);
   expect(html).not.toMatch(/<button[^>]*>[^<]*Company/);
 });
 
@@ -101,4 +101,58 @@ it("replaces data with page-sized skeleton rows and guarantees the table's busy 
   expect(html.match(/data-slot="skeleton"/g)).toHaveLength(6);
   expect(html).not.toContain("Designer");
   expect(html).not.toContain("Nothing here yet");
+});
+
+it("trusts server ordering, filtering and page boundaries and uses the server total for navigation", () => {
+  const html = render({
+    manual: true,
+    rowCount: 200,
+    defaultSorting: [{ id: "salary", desc: false }],
+    defaultGlobalFilter: "unobtainium",
+    pagination: { pageIndex: 1, pageSize: 1 },
+  });
+  expect(html.indexOf("Designer")).toBeLessThan(html.indexOf("Engineer"));
+  expect(html.indexOf("Engineer")).toBeLessThan(html.indexOf("Researcher"));
+  expect(html).toContain('aria-label="Page 200"');
+});
+
+it("keeps server rows readable while refreshing and uses skeletons only for the first load", () => {
+  const html = render({ manual: true, loading: true, pageSize: 2, "aria-busy": false });
+  expect(html).toMatch(/<table[^>]*aria-busy="true"/);
+  expect(html).toContain("Designer");
+  expect(html).toContain("Engineer");
+  expect(html).not.toContain('data-slot="skeleton"');
+  expect(html).toContain('data-slot="pagination"');
+  const firstLoad = render({ manual: true, loading: true, pageSize: 2, data: [] });
+  expect(firstLoad.match(/data-slot="skeleton"/g)).toHaveLength(6);
+});
+
+it("bounds the initial DOM for ten thousand rows while exposing the full row count and logical row indexes", () => {
+  const html = render({
+    virtualize: true,
+    height: "30rem",
+    pageSize: 0,
+    data: Array.from({ length: 10000 }, (_, index) => ({
+      ...data[0]!,
+      id: String(index),
+      role: `Application ${index}`,
+    })),
+  });
+  expect(html.match(/<tr\b/g)?.length).toBeLessThanOrEqual(60);
+  expect(html).toMatch(/<table[^>]*aria-rowcount="10001"/);
+  expect(html).toMatch(/<tr[^>]*aria-rowindex="2"/);
+  expect(html).not.toContain("Application 9999");
+});
+
+it("keeps explicit table roles and hidden per-cell header labels alongside the card sorting control", () => {
+  const html = render();
+  expect(html).toMatch(/<table[^>]*role="table"/);
+  expect(html).toMatch(/<thead[^>]*role="rowgroup"/);
+  expect(html).toMatch(/<tbody[^>]*role="rowgroup"/);
+  expect(html).toMatch(/<tr[^>]*role="row"/);
+  expect(html).toMatch(/<th[^>]*role="columnheader"[^>]*aria-label="Salary"/);
+  expect(html).toMatch(/<td[^>]*role="cell"/);
+  expect(html).toMatch(/<span[^>]*data-slot="data-table-card-label"[^>]*aria-hidden="true"[^>]*>Role<\/span>/);
+  expect(html).toContain('data-slot="data-table-card-tools"');
+  expect(html).toContain("Sort by");
 });
