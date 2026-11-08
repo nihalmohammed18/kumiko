@@ -10,8 +10,9 @@ body {
   font-family: var(--kumiko-font-body);
 }
 
-/* Storybook only. Screenshots can't depend on which face Linux picks for the generic monospace: in the same Playwright
-   image it once picked a CJK face with half-width Latin. Pin the face the baselines use; other systems fall through. */
+/* Storybook only. In the Playwright image, fontconfig resolves the generic monospace to WenQuanYi Zen Hei Mono (a CJK
+   face with narrow Latin and no bold) or to Liberation Mono depending on how Chromium asks, so screenshots of code text
+   flipped between runs. Name the installed Liberation Mono; systems without it fall through to their own monospace. */
 :root {
-  --kumiko-font-code: "DejaVu Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --kumiko-font-code: "Liberation Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
