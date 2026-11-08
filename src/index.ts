@@ -36,6 +36,7 @@ export {
   CardTitle,
   type CardTitleProps,
 } from "./components/card.tsx";
+export { Character, type CharacterProps } from "./components/character.tsx";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
 export { Chip, ChipGroup, type ChipGroupProps, type ChipProps } from "./components/chip.tsx";
@@ -118,6 +119,7 @@ export {
   validateFiles,
 } from "./components/file-upload.tsx";
 export { Form, type FormProps } from "./components/form.tsx";
+export { Illustration, type IllustrationProps } from "./components/illustration.tsx";
 export { Input, type InputProps } from "./components/input.tsx";
 export { Kbd, type KbdProps } from "./components/kbd.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
