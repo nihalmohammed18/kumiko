@@ -293,6 +293,9 @@ export const Links: Story = {
 };
 
 export const Open: Story = {
+  // Base UI's trigger focus guards call each other without end in WebKit when Tab reaches a menu held open with
+  // `open`, so the nightly WebKit run skips this story; Chromium runs it.
+  tags: ["no-webkit"],
   args: { open: true },
   parameters: { vrt: "page" },
   render: (args) => <ActionMenu {...args} highlighted disabledItem />,

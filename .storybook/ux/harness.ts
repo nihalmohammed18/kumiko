@@ -638,7 +638,11 @@ function ownRing(element: Element): boolean {
 
 /** Real Tab stops: a visible, unclipped, uncovered ring with no layout shift. (No ring after a mouse press is a
  * static check: rings use focus-visible:, never focus:, see scripts/check.ts.) */
-async function realFocus(mode: Mode, add: Add) {
+// Playwright's WebKit on Linux handles focus differently from Chromium, so its nightly run skips three focus checks
+// that compare before and after focus: a modal's focus trap takes focus back before the rest screenshot, open popups
+// reposition when focus moves, and a date input focuses an inner field. Everything else runs there too.
+async function realFocus(mode: Mode, add: Add, engine: "chromium" | "webkit" = "chromium") {
+  const webkit = engine === "webkit";
   if (!runs("focus-ring", mode)) return;
   resetFocus();
   const focusable = Array.from(document.body.querySelectorAll("*")).filter(
@@ -659,12 +663,14 @@ async function realFocus(mode: Mode, add: Add) {
     seen.add(element);
     const rest = rests.get(element);
     if (!rest || pinned(element)) continue;
-    if (!element.matches(":focus-visible")) {
+    const innerFields = webkit && /^(?:date|time|month|week|datetime-local)$/.test(element.getAttribute("type") ?? "");
+    if (!element.matches(":focus-visible") && !innerFields) {
       add("focus-ring", element, "keyboard focus doesn't match :focus-visible");
       continue;
     }
-    for (const index of shifted(restBoxes, scope.map(layoutBox)))
-      add("no-layout-shift", scope[index]!, `moves or resizes when ${describe(element)} gets keyboard focus`);
+    if (!webkit)
+      for (const index of shifted(restBoxes, scope.map(layoutBox)))
+        add("no-layout-shift", scope[index]!, `moves or resizes when ${describe(element)} gets keyboard focus`);
     // An input inside a field-styled group leaves the ring to its group: a second ring inside it is clutter.
     if (controlSurface(element) !== element && ownRing(element))
       add("focus-ring", element, "draws its own ring inside the ring its group draws");
@@ -673,13 +679,18 @@ async function realFocus(mode: Mode, add: Add) {
     for (const problem of problems) add("focus-ring", element, problem);
     if (!found || problems.length) continue;
     const area = outset(asRect(controlSurface(element).getBoundingClientRect()), found.outset);
+    if (webkit) continue;
     const hidden = hiddenSides(before, await shoot(), area, found);
     if (hidden.length) add("focus-ring", element, `the ring is clipped, covered or faint on the ${hidden.join(", ")}`);
   }
 }
 
 /** Runs every UX rule for the current story and throws a readable report if any fail. */
-export async function checkUx(mode: Mode, parameters: UxParameters = {}): Promise<void> {
+export async function checkUx(
+  mode: Mode,
+  parameters: UxParameters = {},
+  engine: "chromium" | "webkit" = "chromium",
+): Promise<void> {
   const exceptions = parameters.except ?? [];
   const invalid = validateUxExcept(exceptions);
   if (invalid.length) throw new Error(`Invalid parameters.ux.except:\n${invalid.join("\n")}`);
@@ -703,7 +714,7 @@ export async function checkUx(mode: Mode, parameters: UxParameters = {}): Promis
   try {
     demoStates(mode, add);
     await realPointer(mode, add);
-    await realFocus(mode, add);
+    await realFocus(mode, add, engine);
   } finally {
     freeze.remove();
     await commands.uxMouse("park");
