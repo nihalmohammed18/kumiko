@@ -724,5 +724,10 @@ export async function checkUx(mode: Mode, parameters: UxParameters = {}): Promis
     if (missing.length) throw new Error(`This UX fixture should trigger ${missing.join(", ")} in ${mode}`);
     return;
   }
-  if (failures.length) throw new Error(`UX rules failed in ${mode}:\n${format(failures)}`);
+  if (failures.length) {
+    const error = new Error(`UX rules failed in ${mode}:\n${format(failures)}`);
+    // WebKit's stack has no message line, and Vitest groups failures by stack: keep each story's report in it.
+    if (error.stack && !error.stack.includes(error.message)) error.stack = `${error.message}\n${error.stack}`;
+    throw error;
+  }
 }
