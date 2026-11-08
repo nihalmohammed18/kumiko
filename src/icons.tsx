@@ -59,7 +59,7 @@ export function ChevronLeftIcon({ className, ...props }: LucideProps) {
   return (
     <ChevronLeft
       {...props}
-      className={cn("rtl:scale-x-[-1]", className)}
+      className={cn(className, "rtl:-scale-x-100")}
       aria-hidden
       strokeWidth={2.5}
       data-slot="icon"
@@ -68,14 +68,15 @@ export function ChevronLeftIcon({ className, ...props }: LucideProps) {
   );
 }
 
-/** A decorative next-direction chevron that mirrors in right-to-left.
- * Use when: indicating next navigation or a breadcrumb separator. Avoid when: an icon must provide its own accessible name.
+/** A decorative inline-end chevron, mirrored in right-to-left layouts.
+ * Use when: indicating next navigation, a breadcrumb separator or a submenu. Avoid when: indicating a downward
+ * disclosure; use ChevronDownIcon.
  */
 export function ChevronRightIcon({ className, ...props }: LucideProps) {
   return (
     <ChevronRight
       {...props}
-      className={cn("rtl:scale-x-[-1]", className)}
+      className={cn(className, "rtl:-scale-x-100")}
       aria-hidden
       strokeWidth={2.5}
       data-slot="icon"

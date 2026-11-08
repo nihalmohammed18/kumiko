@@ -78,6 +78,24 @@ export {
   DialogTrigger,
   type DialogTriggerProps,
 } from "./components/dialog.tsx";
+export {
+  Drawer,
+  DrawerBody,
+  type DrawerBodyProps,
+  DrawerClose,
+  type DrawerCloseProps,
+  DrawerDescription,
+  type DrawerDescriptionProps,
+  DrawerFooter,
+  type DrawerFooterProps,
+  DrawerPopup,
+  type DrawerPopupProps,
+  type DrawerProps,
+  DrawerTitle,
+  type DrawerTitleProps,
+  DrawerTrigger,
+  type DrawerTriggerProps,
+} from "./components/drawer.tsx";
 export { EmptyState, type EmptyStateProps } from "./components/empty-state.tsx";
 export { FeedbackBanner, type FeedbackBannerProps } from "./components/feedback-banner.tsx";
 export {
@@ -104,6 +122,34 @@ export { Input, type InputProps } from "./components/input.tsx";
 export { Kbd, type KbdProps } from "./components/kbd.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
+export {
+  Menu,
+  MenuCheckboxItem,
+  type MenuCheckboxItemProps,
+  MenuGroup,
+  MenuGroupLabel,
+  type MenuGroupLabelProps,
+  type MenuGroupProps,
+  MenuItem,
+  type MenuItemProps,
+  MenuLinkItem,
+  type MenuLinkItemProps,
+  MenuPopup,
+  type MenuPopupProps,
+  type MenuProps,
+  MenuRadioGroup,
+  type MenuRadioGroupProps,
+  MenuRadioItem,
+  type MenuRadioItemProps,
+  MenuSeparator,
+  type MenuSeparatorProps,
+  MenuSubmenu,
+  type MenuSubmenuProps,
+  MenuSubmenuTrigger,
+  type MenuSubmenuTriggerProps,
+  MenuTrigger,
+  type MenuTriggerProps,
+} from "./components/menu.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
 export { NumberField, type NumberFieldProps } from "./components/number-field.tsx";
 export { Pagination, type PaginationProps, paginationRange } from "./components/pagination.tsx";
