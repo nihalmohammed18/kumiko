@@ -3,6 +3,7 @@
 import { AlertDialog as BaseAlertDialog } from "@base-ui/react/alert-dialog";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "../lib/tv.ts";
+import { useScrollFocus } from "../lib/use-scroll-focus.ts";
 import { type ButtonStyleProps, buttonStyles } from "./button-styles.ts";
 import type { DialogPopupProps } from "./dialog.tsx";
 
@@ -126,10 +127,13 @@ export interface AlertDialogDescriptionProps extends Omit<BaseAlertDialog.Descri
 /** Explains the consequences of the irreversible action with muted, wrapping text.
  * Use when: stating what will be lost or changed. Avoid when: omitting information needed to make the decision.
  */
-export function AlertDialogDescription({ className, ...props }: AlertDialogDescriptionProps) {
+export function AlertDialogDescription({ className, ref, ...props }: AlertDialogDescriptionProps) {
+  const [scrollRef, tabIndex] = useScrollFocus(ref);
   return (
     <BaseAlertDialog.Description
+      tabIndex={tabIndex}
       {...props}
+      ref={scrollRef}
       data-slot="alert-dialog-description"
       className={cn("dialog-body min-h-0 min-w-0 -mx-3 p-3 text-body text-ink-muted", className)}
     />
