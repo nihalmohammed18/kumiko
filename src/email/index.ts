@@ -10,3 +10,8 @@ export { EmailSection, type EmailSectionProps } from "./email-section.tsx";
 export { EmailText, type EmailTextProps } from "./email-text.tsx";
 export { defaultEmailTheme, type EmailTheme } from "./email-theme.ts";
 export { renderEmail } from "./render-email.ts";
+export { JobAlertDigestEmail, type JobAlertDigestEmailProps } from "./templates/job-alert-digest-email.tsx";
+export { PlainEmail, type PlainEmailProps } from "./templates/plain-email.tsx";
+export { ReceiptEmail, type ReceiptEmailProps } from "./templates/receipt-email.tsx";
+export { SignInEmail, type SignInEmailProps } from "./templates/sign-in-email.tsx";
+export { VerifyEmail, type VerifyEmailProps } from "./templates/verify-email.tsx";
