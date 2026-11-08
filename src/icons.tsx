@@ -11,6 +11,7 @@ import {
   File,
   Info,
   type LucideProps,
+  Menu,
   Minus,
   Plus,
   Search,
@@ -68,6 +69,13 @@ export function PlusIcon(props: LucideProps) {
  */
 export function SearchIcon(props: LucideProps) {
   return <Search {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative menu icon with Kumiko's stroke weight.
+ * Use when: opening app navigation. Avoid when: an icon must provide its own accessible name.
+ */
+export function MenuIcon(props: LucideProps) {
+  return <Menu {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
 }
 
 /** A decorative downward chevron with Kumiko's stroke weight.

@@ -35,6 +35,10 @@
       "types": "./dist/tokens.d.ts",
       "default": "./dist/tokens.js"
     },
+    "./email": {
+      "types": "./dist/email/index.d.ts",
+      "default": "./dist/email/index.js"
+    },
     "./styles.css": "./dist/styles.css",
     "./fonts.css": "./dist/fonts.css",
     "./package.json": "./package.json"

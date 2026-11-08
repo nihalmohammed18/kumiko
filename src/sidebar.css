@@ -1,0 +1,84 @@
+@utility sidebar-column {
+  position: sticky;
+  inset-block-start: 0;
+  block-size: 100dvh;
+  background-color: var(--kumiko-surface);
+  border-inline-end: var(--kumiko-border) solid var(--kumiko-line);
+}
+
+@utility sidebar-drawer {
+  &.drawer-popup[data-side="start"] {
+    inline-size: 16rem;
+  }
+}
+
+/* A navigation link, not a menu item: its own hover, press, current and focus looks. */
+@utility sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-block-size: var(--kumiko-control-md);
+  padding: 0.5rem 0.75rem;
+  border: var(--kumiko-border) solid transparent;
+  border-radius: var(--kumiko-radius-control);
+  color: var(--kumiko-ink-muted);
+  text-decoration: none;
+  cursor: pointer;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--kumiko-field);
+      color: var(--kumiko-ink);
+    }
+  }
+
+  /* Ink on the pressed fill keeps about 8:1; touch screens press without hovering first. */
+  &:active {
+    background-color: color-mix(in oklab, var(--kumiko-field) 80%, var(--kumiko-ink));
+    color: var(--kumiko-ink);
+  }
+
+  &[aria-current="page"] {
+    border-color: var(--kumiko-brand-text);
+    background-color: var(--kumiko-brand-tint);
+    color: var(--kumiko-brand-text);
+
+    /* The current link is already tinted, so hover underlines its label instead. */
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--kumiko-brand-tint);
+        color: var(--kumiko-brand-text);
+        text-decoration-line: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2em;
+      }
+    }
+
+    &:active {
+      background-color: color-mix(in oklab, var(--kumiko-brand-tint) 88%, var(--kumiko-brand-text));
+    }
+  }
+
+  /* Inset, just inside the border: stacked links never share ring pixels, and the current link's border stays. */
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-width)));
+  }
+
+  @media (forced-colors: active) {
+    border-color: var(--kumiko-forced-ink);
+
+    &[aria-current="page"] {
+      forced-color-adjust: none;
+      border-color: var(--kumiko-forced-fill);
+      background-color: var(--kumiko-forced-fill);
+      color: var(--kumiko-forced-fg);
+
+      /* Outside the Highlight fill, on Canvas: the 6px gap between links leaves room for it. */
+      &:focus-visible {
+        outline-color: var(--kumiko-forced-ink);
+        outline-offset: var(--kumiko-ring-gap);
+      }
+    }
+  }
+}

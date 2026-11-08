@@ -1,0 +1,12 @@
+export { Email, type EmailProps } from "./email.tsx";
+export { EmailButton, type EmailButtonProps } from "./email-button.tsx";
+export { EmailCard, type EmailCardProps } from "./email-card.tsx";
+export { EmailCode, type EmailCodeProps } from "./email-code.tsx";
+export { EmailDivider, type EmailDividerProps } from "./email-divider.tsx";
+export { EmailHeading, type EmailHeadingProps } from "./email-heading.tsx";
+export { EmailLink, type EmailLinkProps } from "./email-link.tsx";
+export { EmailLogo, type EmailLogoProps } from "./email-logo.tsx";
+export { EmailSection, type EmailSectionProps } from "./email-section.tsx";
+export { EmailText, type EmailTextProps } from "./email-text.tsx";
+export { defaultEmailTheme, type EmailTheme } from "./email-theme.ts";
+export { renderEmail } from "./render-email.ts";
