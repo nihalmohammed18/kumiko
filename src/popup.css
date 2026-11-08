@@ -57,7 +57,7 @@
   }
 
   &:active:not([data-disabled]) {
-    background-color: color-mix(in oklab, var(--kumiko-brand-tint) 80%, var(--kumiko-brand-text));
+    background-color: color-mix(in oklab, var(--kumiko-brand-tint) 88%, var(--kumiko-brand-text));
     color: var(--kumiko-brand-text);
   }
 
@@ -76,6 +76,32 @@
       forced-color-adjust: none;
       background-color: Highlight;
       color: HighlightText;
+    }
+  }
+}
+
+@utility menu-item-danger {
+  /* Forced colours use popup-item's system highlight instead of a tone tint. */
+  @media (forced-colors: none) {
+    &.popup-item:not([data-disabled]) {
+      color: var(--kumiko-danger-text);
+
+      &[data-highlighted] {
+        background-color: var(--kumiko-danger-tint);
+        color: var(--kumiko-danger-text);
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--kumiko-danger-tint);
+          color: var(--kumiko-danger-text);
+        }
+      }
+
+      &:active {
+        background-color: color-mix(in oklab, var(--kumiko-danger-tint) 88%, var(--kumiko-danger-text));
+        color: var(--kumiko-danger-text);
+      }
     }
   }
 }
