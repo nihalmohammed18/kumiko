@@ -186,7 +186,8 @@ When composing building blocks, pass the same theme to each coloured part.
 
 ## For coding agents
 
-Use `llms.txt` for the plain-text guide and `dist/docs/` for the component documentation shipped in the package.
+Point your coding agent at `node_modules/kumiko-ui/llms.txt` after installing. It lists the rules agents must follow
+and links a guide for every component in `node_modules/kumiko-ui/dist/docs/`, with props and a checked example.
 
 ## Browser support and testing
 
