@@ -122,6 +122,20 @@ export const colors = {
   },
 } as const;
 
+/** Fixed face colours, art mix endpoints and the calendar's SVG type scale.
+ * Use when: drawing palette-derived art that keeps its face colours in both themes.
+ * Avoid when: styling text or controls; use the semantic colours.
+ */
+export const art = {
+  ink: "#26203C",
+  white: "#FFFFFF",
+  black: "#000000",
+  blush: "#F4A4B7",
+  "blush-strong": "#F28BA9",
+  "calendar-font-size": "7px",
+  "calendar-font-weight": 800,
+} as const;
+
 /** Font stacks for display, body and code text.
  * Use when: choosing a type role. Avoid when: assuming these values install the fonts.
  */

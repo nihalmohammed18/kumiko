@@ -18,6 +18,12 @@ export {
 export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from "./components/avatar.tsx";
 export { Badge, type BadgeProps } from "./components/badge.tsx";
 export { type BadgeTone, badgeStyles } from "./components/badge-styles.ts";
+export {
+  BreadcrumbItem,
+  type BreadcrumbItemProps,
+  Breadcrumbs,
+  type BreadcrumbsProps,
+} from "./components/breadcrumbs.tsx";
 export { Button, type ButtonProps, IconButton, type IconButtonProps } from "./components/button.tsx";
 export { type ButtonStyleProps, type ButtonTone, buttonStyles } from "./components/button-styles.ts";
 export {
@@ -30,6 +36,7 @@ export {
   CardTitle,
   type CardTitleProps,
 } from "./components/card.tsx";
+export { Character, type CharacterProps } from "./components/character.tsx";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
 export { Chip, ChipGroup, type ChipGroupProps, type ChipProps } from "./components/chip.tsx";
@@ -73,6 +80,24 @@ export {
   DialogTrigger,
   type DialogTriggerProps,
 } from "./components/dialog.tsx";
+export {
+  Drawer,
+  DrawerBody,
+  type DrawerBodyProps,
+  DrawerClose,
+  type DrawerCloseProps,
+  DrawerDescription,
+  type DrawerDescriptionProps,
+  DrawerFooter,
+  type DrawerFooterProps,
+  DrawerPopup,
+  type DrawerPopupProps,
+  type DrawerProps,
+  DrawerTitle,
+  type DrawerTitleProps,
+  DrawerTrigger,
+  type DrawerTriggerProps,
+} from "./components/drawer.tsx";
 export { EmptyState, type EmptyStateProps } from "./components/empty-state.tsx";
 export { FeedbackBanner, type FeedbackBannerProps } from "./components/feedback-banner.tsx";
 export {
@@ -95,12 +120,42 @@ export {
   validateFiles,
 } from "./components/file-upload.tsx";
 export { Form, type FormProps } from "./components/form.tsx";
+export { Illustration, type IllustrationProps } from "./components/illustration.tsx";
 export { Input, type InputProps } from "./components/input.tsx";
 export { Kbd, type KbdProps } from "./components/kbd.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
+export {
+  Menu,
+  MenuCheckboxItem,
+  type MenuCheckboxItemProps,
+  MenuGroup,
+  MenuGroupLabel,
+  type MenuGroupLabelProps,
+  type MenuGroupProps,
+  MenuItem,
+  type MenuItemProps,
+  MenuLinkItem,
+  type MenuLinkItemProps,
+  MenuPopup,
+  type MenuPopupProps,
+  type MenuProps,
+  MenuRadioGroup,
+  type MenuRadioGroupProps,
+  MenuRadioItem,
+  type MenuRadioItemProps,
+  MenuSeparator,
+  type MenuSeparatorProps,
+  MenuSubmenu,
+  type MenuSubmenuProps,
+  MenuSubmenuTrigger,
+  type MenuSubmenuTriggerProps,
+  MenuTrigger,
+  type MenuTriggerProps,
+} from "./components/menu.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
 export { NumberField, type NumberFieldProps } from "./components/number-field.tsx";
+export { Pagination, type PaginationProps, paginationRange } from "./components/pagination.tsx";
 export {
   Popover,
   PopoverClose,
@@ -146,6 +201,16 @@ export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
 export { StatTile, type StatTileProps, type StatTileTone } from "./components/stat-tile.tsx";
 export { Streak, type StreakProps } from "./components/streak.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";
+export {
+  Tab,
+  type TabProps,
+  Tabs,
+  TabsList,
+  type TabsListProps,
+  TabsPanel,
+  type TabsPanelProps,
+  type TabsProps,
+} from "./components/tabs.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export {
   Toaster,
@@ -170,6 +235,8 @@ export {
 export {
   CheckIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   CircleAlertIcon,
   CircleCheckIcon,
   FileIcon,

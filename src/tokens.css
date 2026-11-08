@@ -115,6 +115,13 @@
 }
 
 :root {
+  --kumiko-art-ink: #26203C;
+  --kumiko-art-white: #FFFFFF;
+  --kumiko-art-black: #000000;
+  --kumiko-art-blush: #F4A4B7;
+  --kumiko-art-blush-strong: #F28BA9;
+  --kumiko-art-calendar-font-size: 7px;
+  --kumiko-art-calendar-font-weight: 800;
   --kumiko-forced-fill: Highlight;
   --kumiko-forced-fg: HighlightText;
   --kumiko-forced-ink: CanvasText;

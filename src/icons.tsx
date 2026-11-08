@@ -1,6 +1,8 @@
 import {
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   CircleAlert,
   CircleCheck,
   File,
@@ -49,6 +51,39 @@ export function SearchIcon(props: LucideProps) {
  */
 export function ChevronDownIcon(props: LucideProps) {
   return <ChevronDown {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative previous-direction chevron that mirrors in right-to-left.
+ * Use when: indicating previous navigation. Avoid when: indicating a disclosure; use ChevronDownIcon.
+ */
+export function ChevronLeftIcon({ className, ...props }: LucideProps) {
+  return (
+    <ChevronLeft
+      {...props}
+      className={cn(className, "rtl:-scale-x-100")}
+      aria-hidden
+      strokeWidth={2.5}
+      data-slot="icon"
+      data-icon-directional
+    />
+  );
+}
+
+/** A decorative inline-end chevron, mirrored in right-to-left layouts.
+ * Use when: indicating next navigation, a breadcrumb separator or a submenu. Avoid when: indicating a downward
+ * disclosure; use ChevronDownIcon.
+ */
+export function ChevronRightIcon({ className, ...props }: LucideProps) {
+  return (
+    <ChevronRight
+      {...props}
+      className={cn(className, "rtl:-scale-x-100")}
+      aria-hidden
+      strokeWidth={2.5}
+      data-slot="icon"
+      data-icon-directional
+    />
+  );
 }
 
 /** A decorative cross with Kumiko's stroke weight.

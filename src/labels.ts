@@ -40,6 +40,11 @@ export const englishLabels = {
   streak: { one: "{count} day streak", other: "{count} day streak" },
   done: "Done",
   today: "Today",
+  pagination: "Pagination",
+  previousPage: "Previous page",
+  nextPage: "Next page",
+  page: { one: "Page {count}", other: "Page {count}" },
+  breadcrumbs: "Breadcrumbs",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -100,6 +105,17 @@ export const labels = {
     },
     done: "تم",
     today: "اليوم",
+    pagination: "ترقيم الصفحات",
+    previousPage: "الصفحة السابقة",
+    nextPage: "الصفحة التالية",
+    page: {
+      one: "الصفحة {count}",
+      two: "الصفحة {count}",
+      few: "الصفحة {count}",
+      many: "الصفحة {count}",
+      other: "الصفحة {count}",
+    },
+    breadcrumbs: "مسار التنقل",
   },
   ur: {
     close: "بند کریں",
@@ -133,6 +149,11 @@ export const labels = {
     streak: { one: "{count} دن کا سلسلہ", other: "{count} دن کا سلسلہ" },
     done: "مکمل",
     today: "آج",
+    pagination: "صفحات",
+    previousPage: "پچھلا صفحہ",
+    nextPage: "اگلا صفحہ",
+    page: { one: "صفحہ {count}", other: "صفحہ {count}" },
+    breadcrumbs: "راستہ",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 

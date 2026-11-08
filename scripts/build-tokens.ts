@@ -2,6 +2,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { cssScope, cssVars } from "../src/lib/theme-css.ts";
 import {
+  art,
   border,
   colors,
   controls,
@@ -25,6 +26,7 @@ const themeVars = (names: string[], prefix: string, tokenPrefix = prefix) =>
  */
 export function tokensCss(): string {
   const globals = [
+    cssVars(art, "art-"),
     cssVars(forcedColors),
     cssVars(fonts, "font-"),
     cssVars(
