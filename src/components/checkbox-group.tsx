@@ -12,14 +12,18 @@ export interface CheckboxGroupProps extends Omit<BaseCheckboxGroup.Props, "class
 
 /** Shares a controlled or uncontrolled set of values between checkboxes.
  * Use when: selecting several related options. Avoid when: selecting exactly one option; use RadioGroup.
+ * Name it with a FieldsetLegend through aria-labelledby, not a FieldLabel. In a named Field, a form submits the checked
+ * values as an array under the Field's name.
  *
  * @example
  * <Field name="workplaces">
- *   <FieldLabel>Preferred workplaces</FieldLabel>
- *   <CheckboxGroup defaultValue={["remote"]}>
- *     <Checkbox value="remote">Remote</Checkbox>
- *     <Checkbox value="hybrid">Hybrid</Checkbox>
- *   </CheckboxGroup>
+ *   <Fieldset>
+ *     <FieldsetLegend id="workplaces-legend">Preferred workplaces</FieldsetLegend>
+ *     <CheckboxGroup aria-labelledby="workplaces-legend" defaultValue={["remote"]}>
+ *       <Checkbox value="remote">Remote</Checkbox>
+ *       <Checkbox value="hybrid">Hybrid</Checkbox>
+ *     </CheckboxGroup>
+ *   </Fieldset>
  *   <FieldError />
  * </Field>
  */

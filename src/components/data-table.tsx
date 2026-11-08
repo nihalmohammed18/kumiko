@@ -106,6 +106,8 @@ export type DataTableProps<TData extends RowData> = Omit<TableProps, "children" 
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
   enableRowSelection?: TableOptions<DataTableFeatures, TData>["enableRowSelection"];
   getRowDisabledReason?: (row: TData) => string | null | undefined;
+  /** Actions for the selection, given every selected row in data: rows the filter hides and rows on other pages too.
+   * In manual mode that means the selected rows currently loaded. */
   bulkActions?: (selectedRows: TData[]) => ReactNode;
   emptyTitle?: ReactNode;
   emptyDescription?: ReactNode;
