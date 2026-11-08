@@ -19,17 +19,16 @@ import { colors, radii } from "./tokens.ts";
 
 /** The generated CSS in a scroll area that keyboard users can reach while it overflows. */
 function CssOutput({ labelledBy, children }: { labelledBy: string; children: ReactNode }) {
-  const [ref, tabIndex] = useScrollFocus<HTMLDivElement>();
+  const [ref, tabIndex] = useScrollFocus<HTMLElement>();
   return (
-    <div
+    <section
       ref={ref}
       tabIndex={tabIndex}
-      role="region"
       aria-labelledby={labelledBy}
       className="max-h-80 min-w-0 overflow-y-auto rounded-control border-2 border-line bg-field p-4 focus-visible:outline-solid focus-visible:outline-(length:--kumiko-ring-width) focus-visible:outline-focus focus-visible:-outline-offset-2"
     >
       {children}
-    </div>
+    </section>
   );
 }
 
