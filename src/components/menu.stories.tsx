@@ -223,6 +223,7 @@ export const Submenu: Story = {
 };
 
 export const WithShortcutsAndIcons: Story = {
+  tags: ["no-webkit"], // held open: see Open
   name: "With shortcuts and icons",
   args: { open: true },
   parameters: { vrt: "page" },
@@ -255,6 +256,7 @@ function AppLink(props: ComponentProps<"a">) {
 }
 
 export const Links: Story = {
+  tags: ["no-webkit"], // held open: see Open
   args: { open: true, onAction: fn((event: MouseEvent<HTMLElement>) => event.preventDefault()) },
   parameters: { vrt: "page" },
   render: ({ onAction, ...args }) => (
@@ -330,6 +332,7 @@ export const Disabled: Story = {
 };
 
 export const LongLabels: Story = {
+  tags: ["no-webkit"], // held open: see Open
   name: "Long labels",
   args: { open: true },
   parameters: { vrt: "page" },
@@ -357,6 +360,7 @@ export const LongLabels: Story = {
 /** Applicable trigger and item states side by side, held open through the UX harness's focus reset. */
 /** The open menu's action states, short enough to fit a phone screen; closed trigger states live in States. */
 export const ItemStates: Story = {
+  tags: ["no-webkit"], // held open: see Open
   name: "Item states",
   parameters: { vrt: "page" },
   render: ({ onAction, ...args }) => (
@@ -395,6 +399,7 @@ export const ItemStates: Story = {
 
 /** Checkable items and submenu triggers in an open menu. */
 export const ChoiceStates: Story = {
+  tags: ["no-webkit"], // held open: see Open
   name: "Choice states",
   parameters: { vrt: "page" },
   render: ({ onAction, ...args }) => (

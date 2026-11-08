@@ -663,8 +663,9 @@ async function realFocus(mode: Mode, add: Add, engine: "chromium" | "webkit" = "
     seen.add(element);
     const rest = rests.get(element);
     if (!rest || pinned(element)) continue;
-    const innerFields = webkit && /^(?:date|time|month|week|datetime-local)$/.test(element.getAttribute("type") ?? "");
-    if (!element.matches(":focus-visible") && !innerFields) {
+    // WebKit focuses a date-type input's inner field and highlights it natively; the input never matches :focus-visible.
+    if (webkit && /^(?:date|time|month|week|datetime-local)$/.test(element.getAttribute("type") ?? "")) continue;
+    if (!element.matches(":focus-visible")) {
       add("focus-ring", element, "keyboard focus doesn't match :focus-visible");
       continue;
     }
