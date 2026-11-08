@@ -22,6 +22,12 @@
     transition-duration: var(--kumiko-duration-popup-out);
   }
 
+  /* A menu or popover takes focus itself when it opens without a highlighted item. */
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: var(--kumiko-ring-gap);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     transition-property: opacity;
 
@@ -114,11 +120,6 @@
   &.popup {
     padding: 0;
     overflow: visible;
-  }
-
-  &:focus-visible {
-    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
-    outline-offset: var(--kumiko-ring-gap);
   }
 }
 
