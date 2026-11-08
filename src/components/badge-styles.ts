@@ -6,7 +6,7 @@ import { tv, type VariantProps } from "../lib/tv.ts";
 export const badgeStyles = tv({
   base: [
     "inline-flex min-w-0 max-w-full items-center gap-1 rounded-full px-3 py-1 font-body text-label font-black",
-    "uppercase tracking-[0.04em] arabic:normal-case arabic:tracking-normal wrap-anywhere",
+    "uppercase tracking-[0.04em] arabic:normal-case arabic:tracking-normal wrap-break-word",
     "[&_svg]:size-3.5 [&_svg]:shrink-0 forced-colors:border forced-colors:border-forced-ink",
   ],
   variants: {
