@@ -125,6 +125,16 @@ export const StartAndEnd: Story = {
 type Point = { x: number; y: number };
 
 /** Drawer ignores touch pointer moves; its native touch pipeline owns scrolling and swiping. */
+/** Desktop WebKit can't build synthetic touches; the Chromium projects cover swiping there. */
+function touchSupported() {
+  try {
+    new Touch({ identifier: 0, target: document.body });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function touchSwipe(target: Element, start: Point, end: Point) {
   target.dispatchEvent(
     new PointerEvent("pointerdown", {
@@ -189,6 +199,11 @@ export const Swipe: Story = {
     const y = title.getBoundingClientRect().top + title.getBoundingClientRect().height / 2;
     const towardEdge = { x: box.left + box.width * (globals.dir === "rtl" ? 0.8 : 0.2), y };
     const awayFromEdge = { x: box.left + box.width * (globals.dir === "rtl" ? 0.2 : 0.8), y };
+    if (!touchSupported()) {
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => expect(document.querySelector("[data-slot=drawer-popup]")).toBeNull());
+      return;
+    }
     await touchSwipe(title, towardEdge, awayFromEdge);
     await waitFor(() => {
       expect(popup).toBeVisible();
@@ -240,13 +255,15 @@ export const SnapPoints: Story = {
     const handle = document.querySelector("[data-slot=drawer-handle]")!;
     const box = handle.getBoundingClientRect();
     const start = { x: box.left + box.width / 2, y: box.top + box.height / 2 };
-    await touchSwipe(handle, start, { x: start.x, y: start.y - window.innerHeight * 0.55 });
-    await waitFor(() => {
-      const popup = within(document.body).getByRole("dialog");
-      expect(popup).toHaveAttribute("data-expanded");
-      expect(popup.getBoundingClientRect().bottom).toBeCloseTo(window.innerHeight, 0);
-      expect(popup.getBoundingClientRect().height).toBeCloseTo(window.innerHeight * 0.85, 0);
-    });
+    if (touchSupported()) {
+      await touchSwipe(handle, start, { x: start.x, y: start.y - window.innerHeight * 0.55 });
+      await waitFor(() => {
+        const popup = within(document.body).getByRole("dialog");
+        expect(popup).toHaveAttribute("data-expanded");
+        expect(popup.getBoundingClientRect().bottom).toBeCloseTo(window.innerHeight, 0);
+        expect(popup.getBoundingClientRect().height).toBeCloseTo(window.innerHeight * 0.85, 0);
+      });
+    }
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(document.querySelector("[data-slot=drawer-popup]")).toBeNull());
   },
