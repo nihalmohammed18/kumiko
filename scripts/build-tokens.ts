@@ -6,6 +6,7 @@ import {
   border,
   colors,
   controls,
+  distances,
   durations,
   easings,
   edge,
@@ -47,6 +48,7 @@ export function tokensCss(): string {
     cssVars(durations, "duration-"),
     cssVars(easings, "ease-"),
     cssVars(scales, "scale-"),
+    cssVars(distances, "distance-"),
   ].join("\n");
   return (
     "/* Generated from src/tokens.ts by `pnpm tokens`. Don't edit by hand. */\n" +

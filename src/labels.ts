@@ -13,6 +13,7 @@ export type Label = string | Plural;
  */
 export const englishLabels = {
   close: "Close",
+  continue: "Continue",
   notifications: "Notifications",
   loading: "Loading",
   decrement: "Decrease",
@@ -54,6 +55,7 @@ export const labels = {
   en: englishLabels,
   ar: {
     close: "إغلاق",
+    continue: "متابعة",
     notifications: "الإشعارات",
     loading: "جارٍ التحميل",
     decrement: "إنقاص",
@@ -119,6 +121,7 @@ export const labels = {
   },
   ur: {
     close: "بند کریں",
+    continue: "جاری رکھیں",
     notifications: "اطلاعات",
     loading: "لوڈ ہو رہا ہے",
     decrement: "کم کریں",
