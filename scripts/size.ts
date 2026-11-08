@@ -41,6 +41,7 @@ if (import.meta.main) {
   const entries = {
     all: `export * from ${index};`,
     button: `export { Button } from ${index};`,
+    character: `export { Character } from ${index};`,
     tokens: `export * from ${JSON.stringify(join(root, "dist/tokens.js"))};`,
   };
   const sizes: Record<string, Size> = {};

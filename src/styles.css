@@ -8,6 +8,7 @@
 @import "./progress.css";
 @import "./skeleton.css";
 @import "./toast.css";
+@import "./art.css";
 @source "./";
 @source not "./docs";
 
