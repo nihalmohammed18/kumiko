@@ -48,7 +48,15 @@ interface Project {
  * screenshot comparisons. Each project's conditions are asserted before its first story (see vitest.setup.ts).
  */
 const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfiguration => {
-  const { dir = "ltr", theme = "light", context, phone = false, vrt = "all", axe = true, browser = "chromium" } = project;
+  const {
+    dir = "ltr",
+    theme = "light",
+    context,
+    phone = false,
+    vrt = "all",
+    axe = true,
+    browser = "chromium",
+  } = project;
   // Storybook's Vitest plugin resizes the page before every story: to a named viewport from globals.viewport, or
   // else to 1200×900. mobile1 is Storybook's built-in 320×568.
   const globals = { theme, dir, ...(phone && { viewport: { value: "mobile1" } }) };
@@ -123,7 +131,9 @@ export default defineConfig({
       stories("forced", { context: { forcedColors: "active" }, vrt: "states" }),
       stories("motion", { context: { reducedMotion: "no-preference" }, vrt: "none", axe: false }),
       // Nightly only (KUMIKO_WEBKIT=1): the light project's play tests, axe and UX rules in WebKit, without screenshots.
-      ...(process.env.KUMIKO_WEBKIT === "1" ? [stories("light", { browser: "webkit", name: "webkit", vrt: "none" })] : []),
+      ...(process.env.KUMIKO_WEBKIT === "1"
+        ? [stories("light", { browser: "webkit", name: "webkit", vrt: "none" })]
+        : []),
     ],
   },
 });
