@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { cn } from "../lib/tv.ts";
 import { TableScroll } from "./table-scroll.tsx";
 
@@ -7,6 +7,8 @@ import { TableScroll } from "./table-scroll.tsx";
  */
 export interface TableProps extends ComponentProps<"table"> {
   size?: "sm" | "md" | "lg";
+  /** Controls inside the card, before its scroll area. */
+  toolbar?: ReactNode;
 }
 
 /** A server-safe table in a clipped, tactile card with an inner horizontal scroll region.
@@ -14,7 +16,7 @@ export interface TableProps extends ComponentProps<"table"> {
  * Avoid when: presenting a layout grid or expecting built-in sorting or selection.
  * Its scroll area becomes a Tab stop only while the table overflows (a small client part; Table stays server-safe).
  */
-export function Table({ size = "md", className, children, ...props }: TableProps) {
+export function Table({ size = "md", className, children, toolbar, ...props }: TableProps) {
   return (
     <div
       data-slot="table-card"
@@ -22,6 +24,7 @@ export function Table({ size = "md", className, children, ...props }: TableProps
       lang={props.lang}
       className="min-w-0 max-w-full overflow-hidden rounded-card border-2 border-line bg-surface"
     >
+      {toolbar}
       <TableScroll>
         <table {...props} data-slot="table" data-size={size} className={cn("w-full border-collapse", className)}>
           {children}

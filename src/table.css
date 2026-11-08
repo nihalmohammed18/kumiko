@@ -1,20 +1,24 @@
 [data-slot="table-card"] {
+  container-type: inline-size;
   box-shadow: 0 var(--kumiko-edge-h) 0 var(--kumiko-edge-neutral);
+}
+
+/* A focused scroll area rings the whole card, outside its edge, as a dialog's popup is ringed: an inset ring on the
+   scroll area would sit under a virtualized table's sticky header. */
+[data-slot="table-card"]:has(> [data-slot="table-scroll"]:focus-visible) {
+  outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+  outline-offset: calc(var(--kumiko-edge-h) + var(--kumiko-ring-gap));
+
+  @media (forced-colors: active) {
+    outline-color: var(--kumiko-forced-ink);
+  }
 }
 
 [data-slot="table-scroll"] {
   border-radius: inherit;
 
-  /* An inset ring stays inside the card's clipping boundary. */
   &:focus-visible {
-    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
-    outline-offset: calc(-1 * var(--kumiko-ring-width));
-  }
-
-  @media (forced-colors: active) {
-    &:focus-visible {
-      outline-color: var(--kumiko-forced-ink);
-    }
+    outline-style: none;
   }
 }
 
@@ -71,6 +75,99 @@
 
     &:focus-visible {
       outline-color: var(--kumiko-forced-ink);
+    }
+  }
+}
+
+[data-slot="data-table"][data-virtualize] [data-slot="table-scroll"] {
+  block-size: var(--kumiko-data-table-height);
+  overflow: auto;
+}
+
+[data-slot="data-table"][data-virtualize] [data-slot="table-header"] {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--kumiko-layer-sticky);
+}
+
+[data-slot="data-table"][data-virtualize] [data-slot="table"] {
+  table-layout: fixed;
+}
+
+[data-slot="table-body"] > [data-slot="data-table-spacer"] > td {
+  block-size: inherit;
+  border: 0;
+  padding: 0;
+}
+
+[data-slot="data-table-card-tools"],
+[data-slot="data-table-card-label"] {
+  display: none;
+}
+
+@container (inline-size < 36rem) {
+  [data-slot="data-table-card-tools"] {
+    display: grid;
+  }
+
+  [data-slot="table"][data-cards] {
+    position: relative;
+    display: block;
+
+    > [data-slot="table-caption"] {
+      display: block;
+    }
+
+    > [data-slot="table-header"] {
+      /* Keep column headings available to assistive technology in the card layout. */
+      position: absolute;
+      inset-block-start: auto;
+      inline-size: 1px;
+      block-size: 1px;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+
+      :is([data-slot="data-table-sort"], [data-slot="checkbox"]) {
+        display: none;
+      }
+    }
+
+    > [data-slot="table-body"] {
+      display: block;
+      padding-block-start: 0.75rem;
+      padding-inline: 0.75rem;
+
+      > [data-slot="table-row"] {
+        display: block;
+        block-size: auto;
+        margin-block-end: 0.75rem;
+        overflow: hidden;
+        border: var(--kumiko-border) solid var(--kumiko-line);
+        border-radius: var(--kumiko-radius-control);
+
+        > [data-slot="table-cell"]:last-child {
+          border-block-end: 0;
+        }
+      }
+
+      > [data-slot="data-table-spacer"],
+      > [data-slot="data-table-spacer"] > td {
+        display: block;
+      }
+    }
+
+    [data-slot="table-cell"] {
+      display: block;
+      inline-size: auto;
+      padding-block: 0.5rem;
+      text-align: start;
+    }
+
+    [data-slot="data-table-card-label"] {
+      display: block;
+      margin-block-end: 0.25rem;
     }
   }
 }
