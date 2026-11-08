@@ -1,19 +1,37 @@
 @import "tailwindcss";
 @import "kumiko-ui/styles.css";
 
-/* An app wearing its own brand by overriding Kumiko's theme variables. */
-:root {
+/* An app wearing its own brand: themeCss() output for the teal theme in docs/theming.md, which checkTheme() passes. */
+:root,
+.light,
+[data-theme="light"] {
   --kumiko-brand: #0f766e;
   --kumiko-brand-fg: #ffffff;
-  --kumiko-radius-control: 8px;
+  --kumiko-brand-tint: #ccfbf1;
+  --kumiko-brand-text: #115e59;
+  --kumiko-focus: #0f766e;
 }
-.dark {
+
+.dark,
+[data-theme="dark"] {
   --kumiko-brand: #2dd4bf;
   --kumiko-brand-fg: #042f2e;
+  --kumiko-brand-tint: #134e4a;
+  --kumiko-brand-text: #99f6e4;
+  --kumiko-focus: #5eead4;
+}
+
+:root {
+  --kumiko-radius-control: 8px;
 }
 
 body {
+  position: relative;
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--kumiko-font-body);
+}
+
+.app-root {
+  isolation: isolate;
 }
