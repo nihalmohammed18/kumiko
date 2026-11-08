@@ -37,6 +37,11 @@ export const englishLabels = {
   fileSizeRejected: "This file is too large",
   filesAdded: { one: "{count} file added", other: "{count} files added" },
   fileCountRejected: { one: "You can add only {count} file", other: "You can add up to {count} files" },
+  pagination: "Pagination",
+  previousPage: "Previous page",
+  nextPage: "Next page",
+  page: { one: "Page {count}", other: "Page {count}" },
+  breadcrumbs: "Breadcrumbs",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -88,6 +93,17 @@ export const labels = {
       many: "يمكنك إضافة {count} ملفًا كحد أقصى",
       other: "يمكنك إضافة {count} ملف كحد أقصى",
     },
+    pagination: "ترقيم الصفحات",
+    previousPage: "الصفحة السابقة",
+    nextPage: "الصفحة التالية",
+    page: {
+      one: "الصفحة {count}",
+      two: "الصفحة {count}",
+      few: "الصفحة {count}",
+      many: "الصفحة {count}",
+      other: "الصفحة {count}",
+    },
+    breadcrumbs: "مسار التنقل",
   },
   ur: {
     close: "بند کریں",
@@ -118,6 +134,11 @@ export const labels = {
       one: "آپ صرف {count} فائل شامل کر سکتے ہیں",
       other: "آپ زیادہ سے زیادہ {count} فائلیں شامل کر سکتے ہیں",
     },
+    pagination: "صفحات",
+    previousPage: "پچھلا صفحہ",
+    nextPage: "اگلا صفحہ",
+    page: { one: "صفحہ {count}", other: "صفحہ {count}" },
+    breadcrumbs: "راستہ",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 

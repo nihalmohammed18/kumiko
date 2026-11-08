@@ -1,0 +1,96 @@
+@utility tabs-scroll {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  /* The bar covers the rule and this clearance, leaving the tab's inset ring visible. */
+  padding-block-end: var(--kumiko-border);
+}
+
+@utility tabs-list {
+  position: relative;
+  display: flex;
+  inline-size: max-content;
+  min-inline-size: 100%;
+  border-block-end: var(--kumiko-border) solid var(--kumiko-line);
+}
+
+@utility tabs-tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  block-size: var(--kumiko-control-md);
+  padding-inline: 1rem;
+  color: var(--kumiko-ink-muted);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-active]:not([data-disabled]) {
+    color: var(--kumiko-brand-text);
+  }
+
+  @media (hover: hover) {
+    &:hover:not([data-disabled]) {
+      background-color: var(--kumiko-field);
+      color: var(--kumiko-ink);
+    }
+  }
+
+  /* Ink text here too: touch devices press without the hover rule that sets it. */
+  &:active:not([data-disabled]) {
+    background-color: color-mix(in oklab, var(--kumiko-field) 80%, var(--kumiko-ink));
+    color: var(--kumiko-ink);
+  }
+
+  &:focus-visible {
+    outline: var(--kumiko-border) solid var(--kumiko-focus);
+    outline-offset: -2px;
+  }
+
+  &[data-disabled] {
+    color: var(--kumiko-disabled-text);
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    border: var(--kumiko-border) solid var(--kumiko-forced-ink);
+
+    &:focus-visible {
+      /* Show the ring beside the resting border in high contrast. */
+      outline-offset: calc(-2 * var(--kumiko-border));
+    }
+
+    &[data-disabled] {
+      border-color: var(--kumiko-forced-disabled);
+    }
+  }
+}
+
+@utility tabs-indicator {
+  position: absolute;
+  pointer-events: none;
+  inset-inline-start: 0;
+  inset-block-end: calc(-2 * var(--kumiko-border));
+  inline-size: var(--active-tab-width);
+  block-size: 0.25rem;
+  border-radius: var(--kumiko-radius-pill);
+  background-color: var(--kumiko-brand);
+  translate: var(--active-tab-left) 0;
+  transition: translate var(--kumiko-duration-move) var(--kumiko-ease-move);
+
+  &:dir(rtl) {
+    translate: calc(-1 * var(--active-tab-right)) 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: var(--kumiko-forced-fill);
+  }
+}

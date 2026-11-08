@@ -18,6 +18,12 @@ export {
 export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from "./components/avatar.tsx";
 export { Badge, type BadgeProps } from "./components/badge.tsx";
 export { type BadgeTone, badgeStyles } from "./components/badge-styles.ts";
+export {
+  BreadcrumbItem,
+  type BreadcrumbItemProps,
+  Breadcrumbs,
+  type BreadcrumbsProps,
+} from "./components/breadcrumbs.tsx";
 export { Button, type ButtonProps, IconButton, type IconButtonProps } from "./components/button.tsx";
 export { type ButtonStyleProps, type ButtonTone, buttonStyles } from "./components/button-styles.ts";
 export {
@@ -30,6 +36,7 @@ export {
   CardTitle,
   type CardTitleProps,
 } from "./components/card.tsx";
+export { Character, type CharacterProps } from "./components/character.tsx";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
 export { Chip, ChipGroup, type ChipGroupProps, type ChipProps } from "./components/chip.tsx";
@@ -112,6 +119,7 @@ export {
   validateFiles,
 } from "./components/file-upload.tsx";
 export { Form, type FormProps } from "./components/form.tsx";
+export { Illustration, type IllustrationProps } from "./components/illustration.tsx";
 export { Input, type InputProps } from "./components/input.tsx";
 export { Kbd, type KbdProps } from "./components/kbd.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
@@ -146,6 +154,7 @@ export {
 } from "./components/menu.tsx";
 export { NativeSelect, type NativeSelectProps } from "./components/native-select.tsx";
 export { NumberField, type NumberFieldProps } from "./components/number-field.tsx";
+export { Pagination, type PaginationProps, paginationRange } from "./components/pagination.tsx";
 export {
   Popover,
   PopoverClose,
@@ -207,6 +216,16 @@ export {
   TableRow,
   type TableRowProps,
 } from "./components/table.tsx";
+export {
+  Tab,
+  type TabProps,
+  Tabs,
+  TabsList,
+  type TabsListProps,
+  TabsPanel,
+  type TabsPanelProps,
+  type TabsProps,
+} from "./components/tabs.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export {
   Toaster,
@@ -231,6 +250,7 @@ export {
 export {
   CheckIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
   ChevronRightIcon,
   CircleAlertIcon,
   CircleCheckIcon,
