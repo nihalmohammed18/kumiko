@@ -1,6 +1,8 @@
 import {
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   CircleAlert,
   CircleCheck,
   File,
@@ -13,6 +15,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import { cn } from "./lib/tv.ts";
 
 /** A decorative check mark with Kumiko's stroke weight.
  * Use when: marking a checked choice. Avoid when: an icon must provide its own accessible name.
@@ -47,6 +50,38 @@ export function SearchIcon(props: LucideProps) {
  */
 export function ChevronDownIcon(props: LucideProps) {
   return <ChevronDown {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative previous-direction chevron that mirrors in right-to-left.
+ * Use when: indicating previous navigation. Avoid when: indicating a disclosure; use ChevronDownIcon.
+ */
+export function ChevronLeftIcon({ className, ...props }: LucideProps) {
+  return (
+    <ChevronLeft
+      {...props}
+      className={cn("rtl:scale-x-[-1]", className)}
+      aria-hidden
+      strokeWidth={2.5}
+      data-slot="icon"
+      data-icon-directional
+    />
+  );
+}
+
+/** A decorative next-direction chevron that mirrors in right-to-left.
+ * Use when: indicating next navigation or a breadcrumb separator. Avoid when: an icon must provide its own accessible name.
+ */
+export function ChevronRightIcon({ className, ...props }: LucideProps) {
+  return (
+    <ChevronRight
+      {...props}
+      className={cn("rtl:scale-x-[-1]", className)}
+      aria-hidden
+      strokeWidth={2.5}
+      data-slot="icon"
+      data-icon-directional
+    />
+  );
 }
 
 /** A decorative cross with Kumiko's stroke weight.
