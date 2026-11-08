@@ -27,6 +27,9 @@ export interface StatTileProps extends Omit<ComponentProps<"div">, "children"> {
 
 /** A wrapping statistic on a card surface with a neutral lower edge.
  * Use when: showing one labelled metric, including a CountUp value. Avoid when: presenting an interactive card.
+ *
+ * @example
+ * <StatTile label="Offers received" value={2} tone="leaf" caption="This month" />
  */
 export function StatTile({ label, value, icon, tone = "brand", caption, className, ...props }: StatTileProps) {
   return (

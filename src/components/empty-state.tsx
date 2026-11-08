@@ -16,6 +16,10 @@ export interface EmptyStateProps extends Omit<ComponentProps<"div">, "title" | "
 /** A centred empty state with decorative art, explanatory text and wrapping actions.
  * Use when: a collection or search has no items and the user needs a useful next step.
  * Avoid when: showing a failure that requires recovery or content that is still loading.
+ *
+ * @example
+ * <EmptyState title="No applications yet" description="Your next role starts with a search."
+ *   art={<Illustration name="envelope" />} actions={<LinkButton href="/jobs" tone="primary">Browse jobs</LinkButton>} />
  */
 export function EmptyState({
   art,

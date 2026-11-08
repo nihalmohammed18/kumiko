@@ -144,6 +144,12 @@ const statuses = {
 /** Renders global notifications with pauseable timers, F6 navigation and swipe dismissal toward the inline end.
  * Use when: once per app, inside KumikoProvider; Base UI's live region also stays accessible over modal dialogs.
  * Avoid when: adding another announcer for these messages; Base UI already announces each toast.
+ *
+ * @example
+ * <>
+ *   <Toaster />
+ *   <Button onClick={() => toast.success("Job alert saved")}>Save job alert</Button>
+ * </>
  */
 export function Toaster({ limit = 3, className }: ToasterProps) {
   return (

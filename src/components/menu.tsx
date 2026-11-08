@@ -14,6 +14,15 @@ export type MenuProps<Payload = unknown> = BaseMenu.Root.Props<Payload>;
 
 /** Shares open state and keyboard navigation between an action menu's parts.
  * Use when: offering a list of actions. Avoid when: choosing a form value; use Select or Combobox.
+ *
+ * @example
+ * <Menu>
+ *   <MenuTrigger>Application actions</MenuTrigger>
+ *   <MenuPopup>
+ *     <MenuItem onClick={() => navigator.clipboard.writeText("https://jobs.example.com/applications/a1")}>Copy application link</MenuItem>
+ *     <MenuLinkItem href="/applications/a1">View application</MenuLinkItem>
+ *   </MenuPopup>
+ * </Menu>
  */
 export function Menu<Payload = unknown>(props: MenuProps<Payload>) {
   return <BaseMenu.Root {...props} />;

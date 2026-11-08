@@ -13,6 +13,9 @@ export interface EmailLogoProps
 
 /** A responsive email logo with explicit dimensions and alternative text.
  * Use when: showing a product's image mark. Avoid when: relying on CSS or an icon font to draw a logo.
+ *
+ * @example
+ * <EmailLogo src="https://jobs.example.com/logo.png" width={120} height={40} alt="Cedar Jobs" />
  */
 export function EmailLogo({ width, height, alt, ...props }: EmailLogoProps) {
   return (

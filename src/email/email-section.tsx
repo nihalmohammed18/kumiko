@@ -8,6 +8,9 @@ export interface EmailSectionProps extends Omit<ComponentProps<"td">, "className
 
 /** A full-width layout table that adds vertical space around a group of email parts.
  * Use when: separating an email's content groups. Avoid when: inserting spacing within a sentence.
+ *
+ * @example
+ * <EmailSection><EmailHeading>New jobs for you</EmailHeading><EmailText>Your saved alert has a match.</EmailText></EmailSection>
  */
 export function EmailSection({ children, dir, ...props }: EmailSectionProps) {
   return (

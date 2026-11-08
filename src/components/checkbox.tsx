@@ -16,6 +16,13 @@ export interface CheckboxProps extends Omit<BaseCheckbox.Root.Props, "className"
 
 /** A compact checkbox with a check or minus mark and an optional wrapping label.
  * Use when: selecting any number of independent options. Avoid when: one option excludes the others; use RadioGroup.
+ *
+ * @example
+ * <Field name="emailAlerts">
+ *   <FieldLabel>Email me matching jobs</FieldLabel>
+ *   <Checkbox defaultChecked />
+ *   <FieldError />
+ * </Field>
  */
 export function Checkbox({ children, className, id: idProp, render, ...props }: CheckboxProps) {
   const generatedId = useId();

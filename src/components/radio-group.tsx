@@ -12,6 +12,13 @@ export interface RadioGroupProps<Value = string> extends Omit<BaseRadioGroup.Pro
 
 /** Shares one controlled or uncontrolled value between keyboard-navigable radio options.
  * Use when: choosing exactly one related option. Avoid when: several options may apply; use CheckboxGroup.
+ *
+ * @example
+ * <Field name="workplace">
+ *   <FieldLabel>Preferred workplace</FieldLabel>
+ *   <RadioGroup defaultValue="remote"><Radio value="remote">Remote</Radio><Radio value="office">Office</Radio></RadioGroup>
+ *   <FieldError />
+ * </Field>
  */
 export function RadioGroup<Value = string>({ className, ...props }: RadioGroupProps<Value>) {
   return <BaseRadioGroup {...props} data-slot="radio-group" className={cn("grid min-w-0 gap-3", className)} />;

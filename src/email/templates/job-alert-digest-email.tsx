@@ -20,6 +20,11 @@ export interface JobAlertDigestEmailProps extends BrandedEmailProps {
 
 /** A complete job alert digest showing up to ten linked job cards.
  * Use when: sending saved alert results. Avoid when: rendering every result; link to the alert for the remainder.
+ *
+ * @example
+ * <JobAlertDigestEmail productName="Cedar Jobs" alertName="Frontend roles"
+ *   jobs={[{ title: "Frontend engineer", company: "Cedar Labs", location: "Remote", url: "https://jobs.example.com/jobs/frontend" }]}
+ *   manageUrl="https://jobs.example.com/alerts/frontend" />
  */
 export function JobAlertDigestEmail({
   productName,

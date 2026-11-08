@@ -16,6 +16,17 @@ export type SelectProps<Value = string, Multiple extends boolean | undefined = f
 /** Shares a controlled or uncontrolled value and popup state between select parts.
  * Use when: choosing from a predefined list. Avoid when: a form has fewer than five options that can all stay visible;
  * use RadioGroup. For searching options, use Combobox.
+ *
+ * @example
+ * const departments = ["Engineering", "Design", "Operations", "Sales", "Marketing"];
+ * <Field name="department">
+ *   <FieldLabel>Department</FieldLabel>
+ *   <Select items={departments.map((value) => ({ value, label: value }))} defaultValue="Engineering">
+ *     <SelectTrigger><SelectValue /></SelectTrigger>
+ *     <SelectPopup>{departments.map((department) => <SelectItem key={department} value={department}>{department}</SelectItem>)}</SelectPopup>
+ *   </Select>
+ *   <FieldError />
+ * </Field>
  */
 export function Select<Value, Multiple extends boolean | undefined = false>(props: SelectProps<Value, Multiple>) {
   return <BaseSelect.Root {...props} />;

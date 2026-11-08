@@ -14,6 +14,15 @@ export type AlertDialogProps<Payload = unknown> = BaseAlertDialog.Root.Props<Pay
 
 /** Requires a response to a modal confirmation and prevents dismissal by pressing outside.
  * Use when: confirming a destructive or irreversible action. Avoid when: editing or reading content; use Dialog.
+ *
+ * @example
+ * <AlertDialog>
+ *   <AlertDialogTrigger tone="danger">Delete job alert</AlertDialogTrigger>
+ *   <AlertDialogPopup cancel="Keep alert" actions={<AlertDialogClose tone="danger">Delete alert</AlertDialogClose>}>
+ *     <AlertDialogTitle>Delete your frontend alert?</AlertDialogTitle>
+ *     <AlertDialogDescription>You will stop receiving matching jobs.</AlertDialogDescription>
+ *   </AlertDialogPopup>
+ * </AlertDialog>
  */
 export function AlertDialog<Payload>(props: AlertDialogProps<Payload>) {
   return <BaseAlertDialog.Root {...props} />;

@@ -18,6 +18,17 @@ export type DialogProps<Payload = unknown> = BaseDialog.Root.Props<Payload>;
 /** Shares modal state, traps focus and locks page scrolling by default.
  * Use when: completing a focused task without leaving the page. Avoid when: confirming an irreversible action;
  * use AlertDialog.
+ *
+ * @example
+ * <Dialog>
+ *   <DialogTrigger>Application details</DialogTrigger>
+ *   <DialogPopup size="sm">
+ *     <DialogTitle>Frontend engineer at Cedar Labs</DialogTitle>
+ *     <DialogDescription>Your interview is the next step.</DialogDescription>
+ *     <DialogBody><p>Bring a project you are proud of to discuss with the team.</p></DialogBody>
+ *     <DialogFooter><DialogClose>Done</DialogClose></DialogFooter>
+ *   </DialogPopup>
+ * </Dialog>
  */
 export function Dialog<Payload>(props: DialogProps<Payload>) {
   return <BaseDialog.Root {...props} />;

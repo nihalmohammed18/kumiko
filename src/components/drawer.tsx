@@ -35,6 +35,16 @@ const DrawerSettings = createContext<DrawerSettings>({
 /** Shares controlled or uncontrolled drawer state and maps logical edges to physical dismissal swipes.
  * Use when: showing a sheet or side panel that can be swiped closed. Avoid when: gestures are unnecessary;
  * use Dialog, or AlertDialog for irreversible-action confirmations.
+ *
+ * @example
+ * <Drawer side="end">
+ *   <DrawerTrigger>View saved jobs</DrawerTrigger>
+ *   <DrawerPopup>
+ *     <DrawerTitle>Saved jobs</DrawerTitle>
+ *     <DrawerDescription>Roles you want to revisit.</DrawerDescription>
+ *     <DrawerBody><Link href="/jobs/frontend">Frontend engineer at Cedar Labs</Link></DrawerBody>
+ *   </DrawerPopup>
+ * </Drawer>
  */
 export function Drawer<Payload>({ side = "bottom", modal = true, ...props }: DrawerProps<Payload>) {
   const { direction } = useKumiko();

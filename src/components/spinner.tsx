@@ -14,6 +14,9 @@ export interface SpinnerProps extends ComponentProps<"span"> {
  *
  * Use when: waiting takes under a few seconds and there's no progress to report.
  * Avoid when: you know how far along it is (use Progress) or the layout of the result is known (use Skeleton).
+ *
+ * @example
+ * <Spinner label="Loading job applications" />
  */
 export function Spinner({ label, className, ...props }: SpinnerProps) {
   const ring = (

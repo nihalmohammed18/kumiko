@@ -11,6 +11,13 @@ export type DateInputProps = Omit<InputProps, "type">;
 
 /** A native date input using the platform's date picker and Field validation.
  * Use when: collecting one calendar date. Avoid when: needing a custom calendar or a date range.
+ *
+ * @example
+ * <Field name="availableFrom">
+ *   <FieldLabel>Available from</FieldLabel>
+ *   <DateInput />
+ *   <FieldError />
+ * </Field>
  */
 export function DateInput({ size, className, ...props }: DateInputProps) {
   return <BaseInput {...props} data-slot="date-input" type="date" className={fieldStyles({ size, className })} />;
