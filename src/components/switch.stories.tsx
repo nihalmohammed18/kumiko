@@ -22,7 +22,24 @@ export const Default: Story = {
   },
 };
 
-export const Checked: Story = { args: { defaultChecked: true } };
+export const Checked: Story = {
+  args: { defaultChecked: true },
+  play: async ({ canvas }) => {
+    const track = canvas.getByRole("switch", { name: "Enable notifications" });
+    const thumb = track.querySelector<HTMLElement>("[data-slot=switch-thumb]")!;
+    await waitFor(() => {
+      const style = getComputedStyle(track);
+      const outer = track.getBoundingClientRect();
+      const inner = thumb.getBoundingClientRect();
+      const endGap =
+        style.direction === "rtl"
+          ? inner.left - outer.left - parseFloat(style.borderLeftWidth)
+          : outer.right - parseFloat(style.borderRightWidth) - inner.right;
+      // An unchecked thumb sits one padding from the start, so a checked one sits one padding from the end.
+      expect(endGap).toBeCloseTo(parseFloat(style.paddingInlineEnd), 0);
+    });
+  },
+};
 
 export const Keyboard: Story = {
   play: async ({ canvas, userEvent }) => {

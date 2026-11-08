@@ -49,7 +49,7 @@ export function Switch({ children, className, id: idProp, render, ...props }: Sw
         data-slot="switch-thumb"
         className={cn(
           "press press-secondary h-6 w-7 shrink-0 [--press-radius:var(--kumiko-radius-pill)]",
-          "data-checked:translate-x-[1.75rem] rtl:data-checked:-translate-x-[1.75rem] group-active/switch:not-data-disabled:translate-y-(--kumiko-edge-h) group-active/switch:not-data-disabled:shadow-none",
+          "data-checked:translate-x-6 rtl:data-checked:-translate-x-6 group-active/switch:not-data-disabled:translate-y-(--kumiko-edge-h) group-active/switch:not-data-disabled:shadow-none",
           "transition-none motion-safe:transition-[translate,box-shadow] motion-safe:duration-press-out motion-safe:ease-enter group-active/switch:not-data-disabled:motion-safe:duration-press-in group-focus-visible/switch:transition-none",
           "forced-colors:[--press-fill:var(--kumiko-forced-surface)] forced-colors:[--press-text:var(--kumiko-forced-ink)] forced-colors:[--press-line:var(--kumiko-forced-ink)] forced-colors:shadow-none forced-colors:data-disabled:border-forced-disabled",
         )}
