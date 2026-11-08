@@ -209,7 +209,7 @@ export const controls = { sm: "2.5rem", md: "3rem", lg: "3.5rem" } as const;
  */
 export const layers = { base: 0, sticky: 100, overlay: 200, popup: 300, toast: 400, tooltip: 500 } as const;
 
-/** Transition budgets by interaction and the Skeleton loading loop.
+/** Transition budgets by interaction, decorative number counts and the Skeleton loading loop.
  * Use when: timing interface feedback. Avoid when: relying on durations to suppress reduced-motion movement.
  */
 export const durations = {
@@ -224,6 +224,8 @@ export const durations = {
   "toast-out": "160ms",
   move: "200ms",
   sheet: "300ms",
+  "count-up": "600ms",
+  "streak-pop": "240ms",
   skeleton: "1400ms",
 } as const;
 
@@ -238,6 +240,11 @@ export const easings = {
   rise: "cubic-bezier(0.333, 0.667, 0.667, 1)",
   fall: "cubic-bezier(0.333, 0, 0.667, 0.333)",
 } as const;
+
+/** Scale factors for streak feedback.
+ * Use when: sizing the peak and starting pose of delight motion. Avoid when: scaling pressable controls.
+ */
+export const scales = { "streak-peak": 1.15, "increment-from": 0.75 } as const;
 
 /** Theme names the class merger uses to separate colours, text sizes and other scales.
  * Use when: configuring tailwind-merge. Avoid when: registering duration or layer classes; use class groups.

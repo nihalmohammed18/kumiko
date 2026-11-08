@@ -1,0 +1,16 @@
+@utility streak-flame {
+  scale: 1;
+  transition: scale calc(var(--kumiko-duration-streak-pop) / 2) var(--kumiko-ease-enter);
+
+  &[data-popping] {
+    scale: var(--kumiko-scale-streak-peak);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &[data-popping] {
+      scale: 1;
+    }
+  }
+}

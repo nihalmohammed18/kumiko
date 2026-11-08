@@ -60,6 +60,7 @@ export {
   type ComboboxPopupProps,
   type ComboboxProps,
 } from "./components/combobox.tsx";
+export { CountUp, type CountUpOptions, type CountUpProps, useCountUp } from "./components/count-up.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
 export {
   Dialog,
@@ -197,6 +198,8 @@ export { Separator, type SeparatorProps } from "./components/separator.tsx";
 export { Skeleton, type SkeletonProps } from "./components/skeleton.tsx";
 export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./components/slider.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
+export { StatTile, type StatTileProps, type StatTileTone } from "./components/stat-tile.tsx";
+export { Streak, type StreakProps } from "./components/streak.tsx";
 export { Switch, type SwitchProps } from "./components/switch.tsx";
 export {
   Table,
@@ -255,6 +258,7 @@ export {
   CircleAlertIcon,
   CircleCheckIcon,
   FileIcon,
+  FlameIcon,
   InfoIcon,
   MinusIcon,
   PlusIcon,

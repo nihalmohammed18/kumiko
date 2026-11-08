@@ -14,6 +14,7 @@ import {
   layers,
   radii,
   ring,
+  scales,
   text,
 } from "../src/tokens.ts";
 
@@ -45,6 +46,7 @@ export function tokensCss(): string {
     cssVars(layers, "layer-"),
     cssVars(durations, "duration-"),
     cssVars(easings, "ease-"),
+    cssVars(scales, "scale-"),
   ].join("\n");
   return (
     "/* Generated from src/tokens.ts by `pnpm tokens`. Don't edit by hand. */\n" +
