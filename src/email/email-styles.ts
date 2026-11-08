@@ -1,5 +1,15 @@
 import { text } from "../tokens.ts";
 
+/** Email font stacks: Kumiko's faces by their installed names, then fonts every mail client has. Email can't load
+ * Kumiko's web fonts, so the web stacks' variable-font names would only ever fall through.
+ * Use when: styling email text. Avoid when: styling browser UI; use the theme's font utilities.
+ */
+export const emailFonts = {
+  display: "Fredoka, Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  body: "Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  code: "ui-monospace, 'SF Mono', Menlo, Consolas, 'Courier New', monospace",
+} as const;
+
 /** Converts token type sizes to pixels at the email kit's 16px root.
  * Use when: styling email text without rem support. Avoid when: sizing browser UI text.
  */

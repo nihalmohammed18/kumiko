@@ -1,5 +1,4 @@
-import { fonts } from "../tokens.ts";
-import { emailAlignment, emailTypeStyle } from "./email-styles.ts";
+import { emailAlignment, emailFonts, emailTypeStyle } from "./email-styles.ts";
 import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
 
 /** Native heading props and the email heading's level.
@@ -22,7 +21,7 @@ export function EmailHeading({ level = 1, theme, dir, ...props }: EmailHeadingPr
       data-slot="email-heading"
       style={{
         margin: "0 0 12px",
-        fontFamily: fonts.display,
+        fontFamily: emailFonts.display,
         ...emailTypeStyle(level === 1 ? "headline" : "title"),
         fontWeight: 700,
         color: colors.ink,

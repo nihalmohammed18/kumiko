@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { fonts } from "../tokens.ts";
-import { emailAlignment, emailTypeStyle } from "./email-styles.ts";
+import { emailAlignment, emailFonts, emailTypeStyle } from "./email-styles.ts";
 import { type EmailTheme, resolveEmailTheme } from "./email-theme.ts";
 
 /** Document metadata, reading direction and explicit email colours.
@@ -57,7 +56,7 @@ export function Email({ lang = "en", dir = "ltr", preview, title, theme, childre
           backgroundColor: colors.canvas,
           color: colors.ink,
           colorScheme: "light",
-          fontFamily: fonts.body,
+          fontFamily: emailFonts.body,
           ...emailTypeStyle("body"),
         }}
       >

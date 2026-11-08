@@ -1,5 +1,4 @@
-import { fonts } from "../tokens.ts";
-import { emailAlignment, emailTypeStyle } from "./email-styles.ts";
+import { emailAlignment, emailFonts, emailTypeStyle } from "./email-styles.ts";
 import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
 
 /** Native paragraph props and a muted colour variant.
@@ -21,7 +20,7 @@ export function EmailText({ muted = false, theme, dir, ...props }: EmailTextProp
       data-slot="email-text"
       style={{
         margin: "0 0 16px",
-        fontFamily: fonts.body,
+        fontFamily: emailFonts.body,
         ...emailTypeStyle("body"),
         color: muted ? colors["ink-muted"] : colors.ink,
         textAlign: emailAlignment(dir),

@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
-import { edge, fonts, radii } from "../tokens.ts";
-import { emailAlignment, emailJoinedScript, emailTypeStyle } from "./email-styles.ts";
+import { edge, radii } from "../tokens.ts";
+import { emailAlignment, emailFonts, emailJoinedScript, emailTypeStyle } from "./email-styles.ts";
 import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
 
 /** Native link props and an explicit theme for an email call to action.
@@ -50,7 +50,7 @@ export function EmailButton({ theme, dir, lang, children, ...props }: EmailButto
                         backgroundColor: colors.brand,
                         color: colors["brand-fg"],
                         borderRadius: radii.control,
-                        fontFamily: fonts.body,
+                        fontFamily: emailFonts.body,
                         ...emailTypeStyle("button"),
                         fontWeight: 800,
                         letterSpacing: emailJoinedScript(lang) ? "normal" : "0.06em",

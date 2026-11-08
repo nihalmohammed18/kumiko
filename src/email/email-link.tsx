@@ -1,4 +1,4 @@
-import { fonts } from "../tokens.ts";
+import { emailFonts } from "./email-styles.ts";
 import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
 
 /** Native anchor props and an explicit email theme.
@@ -19,7 +19,7 @@ export function EmailLink({ theme, ...props }: EmailLinkProps) {
       data-slot="email-link"
       style={{
         color: colors.brand,
-        fontFamily: fonts.body,
+        fontFamily: emailFonts.body,
         textDecoration: "underline",
         overflowWrap: "anywhere",
         cursor: "pointer",

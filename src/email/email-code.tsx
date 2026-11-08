@@ -1,5 +1,5 @@
-import { border, fonts, radii } from "../tokens.ts";
-import { emailAlignment, emailJoinedScript, emailTypeStyle } from "./email-styles.ts";
+import { border, radii } from "../tokens.ts";
+import { emailAlignment, emailFonts, emailJoinedScript, emailTypeStyle } from "./email-styles.ts";
 import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
 
 /** Native code props and an explicit email theme.
@@ -40,7 +40,7 @@ export function EmailCode({ theme, dir, lang, ...props }: EmailCodeProps) {
               lang={lang}
               data-slot="email-code"
               style={{
-                fontFamily: fonts.code,
+                fontFamily: emailFonts.code,
                 ...emailTypeStyle("headline"),
                 fontWeight: 700,
                 letterSpacing: emailJoinedScript(lang) ? "normal" : "0.18em",
