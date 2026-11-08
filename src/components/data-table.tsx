@@ -185,7 +185,7 @@ function DataTableRow<TData extends RowData>({
           </span>
           <FlexRender cell={cell} />
           {selectionLabel !== undefined && reason && index === 0 && (
-            <span id={reasonId} className="block wrap-anywhere text-body-sm text-ink-muted">
+            <span id={reasonId} className="block wrap-break-word text-body-sm text-ink-muted">
               {reason}
             </span>
           )}

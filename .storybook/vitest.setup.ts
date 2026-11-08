@@ -82,7 +82,20 @@ afterEach(async ({ task }) => {
     // Just the story, unless it opens something outside it (dialogs, menus, toasts): those set parameters.vrt = "page".
     const story = document.querySelector<HTMLElement>("[data-kumiko-story]");
     const target = window.__kumikoVrtPage || !story ? document.body : story;
-    await expect.element(page.elementLocator(target)).toMatchScreenshot(`${task.name}-${mode}`);
+    // Chromium paints only the part of the test frame inside its viewport, so a taller target came out blank below
+    // the fold: grow the frame to fit it, then restore the height for the UX checks.
+    const height = innerHeight;
+    const bottom = Math.ceil(
+      target === document.body
+        ? document.documentElement.scrollHeight
+        : target.getBoundingClientRect().bottom + scrollY,
+    );
+    if (bottom > height) await page.viewport(innerWidth, bottom);
+    try {
+      await expect.element(page.elementLocator(target)).toMatchScreenshot(`${task.name}-${mode}`);
+    } finally {
+      if (bottom > height) await page.viewport(innerWidth, height);
+    }
   }
   await checkUx(mode, window.__kumikoUx, inject("engine"));
 });

@@ -109,6 +109,8 @@ jobs:
           path: |
             **/__screenshots__/**/*.png
             .vitest/attachments
+          # The failure diffs live in a hidden folder, which upload-artifact skips by default.
+          include-hidden-files: true
           if-no-files-found: ignore
 
   consumer:

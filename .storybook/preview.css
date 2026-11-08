@@ -9,3 +9,10 @@ body {
   color: var(--color-ink);
   font-family: var(--kumiko-font-body);
 }
+
+/* Storybook only. In the Playwright image, fontconfig resolves the generic monospace to WenQuanYi Zen Hei Mono (a CJK
+   face with narrow Latin and no bold) or to Liberation Mono depending on how Chromium asks, so screenshots of code text
+   flipped between runs. Name the installed Liberation Mono; systems without it fall through to their own monospace. */
+:root {
+  --kumiko-font-code: "Liberation Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
