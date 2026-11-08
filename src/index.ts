@@ -61,6 +61,7 @@ export {
   type ComboboxProps,
 } from "./components/combobox.tsx";
 export { CountUp, type CountUpOptions, type CountUpProps, useCountUp } from "./components/count-up.tsx";
+export { DataTable, type DataTableFeatures, type DataTableProps } from "./components/data-table.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
 export {
   Dialog,
@@ -269,6 +270,9 @@ export {
   type TooltipTriggerProps,
 } from "./components/tooltip.tsx";
 export {
+  ArrowDownIcon,
+  ArrowUpDownIcon,
+  ArrowUpIcon,
   CheckIcon,
   ChevronDownIcon,
   ChevronLeftIcon,

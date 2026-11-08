@@ -1,4 +1,7 @@
 import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   Check,
   ChevronDown,
   ChevronLeft,
@@ -18,6 +21,27 @@ import {
 } from "lucide-react";
 import type { ComponentProps } from "react";
 import { cn } from "./lib/tv.ts";
+
+/** A decorative ascending-sort arrow with Kumiko's stroke weight.
+ * Use when: identifying ascending table order. Avoid when: indicating inline navigation; use a directional chevron.
+ */
+export function ArrowUpIcon(props: LucideProps) {
+  return <ArrowUp {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative descending-sort arrow with Kumiko's stroke weight.
+ * Use when: identifying descending table order. Avoid when: indicating a disclosure; use ChevronDownIcon.
+ */
+export function ArrowDownIcon(props: LucideProps) {
+  return <ArrowDown {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative neutral sorting icon with Kumiko's stroke weight.
+ * Use when: identifying a sortable, unsorted column. Avoid when: indicating inline navigation.
+ */
+export function ArrowUpDownIcon(props: LucideProps) {
+  return <ArrowUpDown {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
 
 /** A decorative check mark with Kumiko's stroke weight.
  * Use when: marking a checked choice. Avoid when: an icon must provide its own accessible name.
