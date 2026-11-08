@@ -16,6 +16,13 @@ export interface BreadcrumbsProps extends ComponentProps<"nav"> {
 /** A wrapping navigation trail whose last item is plain current-page text.
  * Use when: showing where a page sits in a hierarchy. Avoid when: switching peer views; use Tabs.
  * Server-safe: client code passes useKumiko().labels and useKumiko().locale for translated landmark names.
+ *
+ * @example
+ * <Breadcrumbs>
+ *   <BreadcrumbItem href="/jobs">Jobs</BreadcrumbItem>
+ *   <BreadcrumbItem href="/applications">Applications</BreadcrumbItem>
+ *   <BreadcrumbItem current>Frontend engineer</BreadcrumbItem>
+ * </Breadcrumbs>
  */
 export function Breadcrumbs({
   labels = englishLabels,

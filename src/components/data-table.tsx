@@ -157,6 +157,21 @@ function DataTableRow<TData extends RowData>({
 /** A named client-side table with sorting, global filtering, row selection and page navigation.
  * Use when: browsing a complete dataset with Kumiko's table parts. Avoid when: rendering server pages or virtual rows.
  * Keep data and columns stable; column meta.align="end" aligns numeric headers and cells.
+ *
+ * @example
+ * import { useMemo } from "react";
+ * const applications = [{ id: "a1", role: "Frontend engineer", status: "Interview", salary: 90000 }];
+ * function ApplicationsPage() {
+ *   const { locale } = useKumiko();
+ *   const columns = useMemo<DataTableProps<(typeof applications)[number]>["columns"]>(() => [
+ *     { accessorKey: "role", header: "Role" },
+ *     { accessorKey: "status", header: "Status", cell: ({ row }) => <Badge>{row.original.status}</Badge> },
+ *     { accessorKey: "salary", header: "Salary", meta: { align: "end" }, cell: ({ row }) =>
+ *       new Intl.NumberFormat(locale, { style: "currency", currency: "USD" }).format(row.original.salary) },
+ *   ], [locale]);
+ *   return <DataTable caption="Job applications" data={applications} columns={columns} filter selectable
+ *     getRowId={(row) => row.id} getRowLabel={(row) => row.role} />;
+ * }
  */
 export function DataTable<TData extends RowData>({
   columns,

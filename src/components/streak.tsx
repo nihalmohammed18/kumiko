@@ -24,6 +24,9 @@ export interface StreakProps extends Omit<ComponentProps<"div">, "children"> {
 
 /** A localized streak counter and calendar week with checked completed days.
  * Use when: encouraging a daily habit. Avoid when: picking a date; use a date input or calendar.
+ *
+ * @example
+ * <Streak count={3} today="2026-11-08" done={["2026-11-06", "2026-11-07", "2026-11-08"]} />
  */
 export function Streak({ count, today, done, increment = false, countDisplay, className, ...props }: StreakProps) {
   const { locale, labels } = useKumiko();

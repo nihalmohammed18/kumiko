@@ -25,6 +25,14 @@ export function useKumikoField() {
 
 /** Groups a control with its label, description and validation errors.
  * Use when: collecting one value. Avoid when: grouping several fields; use Fieldset.
+ *
+ * @example
+ * <Field name="email">
+ *   <FieldLabel>Email for job alerts</FieldLabel>
+ *   <Input type="email" autoComplete="email" required />
+ *   <FieldDescription>We will only send jobs matching your alert.</FieldDescription>
+ *   <FieldError />
+ * </Field>
  */
 export function Field({ disabled = false, invalid, className, ...props }: FieldProps) {
   return (

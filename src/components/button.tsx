@@ -36,6 +36,9 @@ function useLoadingAnnouncement(loading: boolean) {
  * destructive actions, and `type="submit"` inside forms.
  * For a disabled reason, show text linked with aria-describedby and use focusableWhenDisabled; Tooltip's Disabled reason story shows this pattern.
  * Avoid when: navigating; use LinkButton or Link.
+ *
+ * @example
+ * <Button tone="primary" type="submit">Submit application</Button>
  */
 export function Button({
   tone = "secondary",

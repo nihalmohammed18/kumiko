@@ -15,6 +15,11 @@ export interface SwitchProps extends Omit<BaseSwitch.Root.Props, "className"> {
 
 /** An on/off track with a tactile thumb and an optional label before it.
  * Use when: a setting takes effect immediately. Avoid when: confirming terms or selecting form options; use Checkbox.
+ *
+ * @example
+ * <Field name="jobAlerts">
+ *   <FieldLabel>Email job alerts</FieldLabel><Switch defaultChecked /><FieldError />
+ * </Field>
  */
 export function Switch({ children, className, id: idProp, render, ...props }: SwitchProps) {
   const generatedId = useId();

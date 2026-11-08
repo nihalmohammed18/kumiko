@@ -15,6 +15,11 @@ export interface TextareaProps extends ComponentProps<"textarea"> {
 
 /** A resizable multiline control connected to Field's label and validation.
  * Use when: entering a message or description. Avoid when: collecting a single line; use Input.
+ *
+ * @example
+ * <Field name="coverLetter">
+ *   <FieldLabel>Cover letter</FieldLabel><Textarea rows={5} required /><FieldError />
+ * </Field>
  */
 export function Textarea({
   size,

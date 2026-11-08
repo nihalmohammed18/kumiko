@@ -30,6 +30,13 @@ const renderStepper: Exclude<BaseNumberField.Increment.Props["render"], ReactEle
 
 /** A locale-aware numeric input with ghost decrement and increment presses inside its field boundary.
  * Use when: entering an exact quantity with bounds or steps. Avoid when: free-form text or a range is needed.
+ *
+ * @example
+ * <Field name="minSalary">
+ *   <FieldLabel>Minimum annual salary</FieldLabel>
+ *   <NumberField defaultValue={80000} min={0} step={5000} format={{ style: "currency", currency: "USD" }} />
+ *   <FieldError />
+ * </Field>
  */
 export function NumberField({
   size,

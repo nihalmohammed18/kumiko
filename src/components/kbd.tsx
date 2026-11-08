@@ -8,6 +8,9 @@ export type KbdProps = ComponentProps<"kbd">;
 
 /** A static keycap with a small neutral edge.
  * Use when: showing shortcut keys such as Ctrl, K or Enter. Avoid when: rendering an actionable control; use Button.
+ *
+ * @example
+ * <p>Press <Kbd>Enter</Kbd> to search jobs.</p>
  */
 export function Kbd({ className, ...props }: KbdProps) {
   return (

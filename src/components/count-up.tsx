@@ -62,6 +62,9 @@ export interface CountUpProps extends Omit<ComponentProps<"span">, "children">, 
 
 /** An animated locale-formatted number with stable width and one accessible final value.
  * Use when: drawing attention to a changed statistic. Avoid when: motion would distract from frequent numeric updates.
+ *
+ * @example
+ * <StatTile label="Applications sent" value={<CountUp from={11} value={12} />} />
  */
 export function CountUp({ value, from, duration, format, className, ...props }: CountUpProps) {
   const { locale } = useKumiko();

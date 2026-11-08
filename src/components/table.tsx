@@ -13,6 +13,13 @@ export interface TableProps extends ComponentProps<"table"> {
  * Use when: presenting tabular data; give the table a name with TableCaption or aria-label.
  * Avoid when: presenting a layout grid or expecting built-in sorting or selection.
  * Its scroll area becomes a Tab stop only while the table overflows (a small client part; Table stays server-safe).
+ *
+ * @example
+ * <Table>
+ *   <TableCaption>Job applications</TableCaption>
+ *   <TableHeader><TableRow><TableHead>Role</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
+ *   <TableBody><TableRow><TableCell>Frontend engineer</TableCell><TableCell><Badge>Applied</Badge></TableCell></TableRow></TableBody>
+ * </Table>
  */
 export function Table({ size = "md", className, children, ...props }: TableProps) {
   return (

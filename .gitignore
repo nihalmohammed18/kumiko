@@ -12,3 +12,4 @@ examples/next/package-lock.json
 **/__screenshots__/**/*-darwin.png
 *.tgz
 .DS_Store
+/llms.txt

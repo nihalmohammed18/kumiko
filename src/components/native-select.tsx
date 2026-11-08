@@ -16,6 +16,13 @@ export interface NativeSelectProps extends Omit<ComponentProps<"select">, "size"
 
 /** A native single-choice select connected to Field's label and validation.
  * Use when: choosing from a short list with the platform's picker. Avoid when: needing a searchable or custom popup.
+ *
+ * @example
+ * <Field name="workplace">
+ *   <FieldLabel>Workplace</FieldLabel>
+ *   <NativeSelect defaultValue="remote"><option value="remote">Remote</option><option value="hybrid">Hybrid</option></NativeSelect>
+ *   <FieldError />
+ * </Field>
  */
 export function NativeSelect({
   size,

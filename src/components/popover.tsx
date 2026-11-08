@@ -13,6 +13,14 @@ export type PopoverProps<Payload = unknown> = BasePopover.Root.Props<Payload>;
 
 /** Shares open state and trigger payload between an anchored popup's parts.
  * Use when: showing supplementary content or controls. Avoid when: blocking a task; use Dialog.
+ *
+ * @example
+ * <Popover>
+ *   <PopoverTrigger>How is this salary estimated?</PopoverTrigger>
+ *   <PopoverPopup><PopoverTitle>Salary estimate</PopoverTitle>
+ *     <PopoverDescription>Based on similar roles in this location.</PopoverDescription>
+ *   </PopoverPopup>
+ * </Popover>
  */
 export function Popover<Payload = unknown>(props: PopoverProps<Payload>) {
   return <BasePopover.Root {...props} />;

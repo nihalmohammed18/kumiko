@@ -11,6 +11,11 @@ export type SearchFieldProps = Omit<InputProps, "type">;
 
 /** A search input with a decorative icon at the inline start.
  * Use when: entering a search query. Avoid when: choosing from suggestions; use a combobox.
+ *
+ * @example
+ * <Field name="query">
+ *   <FieldLabel>Search applications</FieldLabel><SearchField placeholder="Role or company" /><FieldError />
+ * </Field>
  */
 export function SearchField({ className, ...props }: SearchFieldProps) {
   return (

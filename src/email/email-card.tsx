@@ -9,6 +9,9 @@ export interface EmailCardProps extends EmailPartProps<"td"> {}
 
 /** A table-backed content box with a two-pixel border and 20px corners.
  * Use when: grouping a digest item or receipt block. Avoid when: wrapping the whole email; use Email.
+ *
+ * @example
+ * <EmailCard><EmailHeading level={2}>Frontend engineer</EmailHeading><EmailText>Cedar Labs · Remote</EmailText></EmailCard>
  */
 export function EmailCard({ theme, dir, children, ...props }: EmailCardProps) {
   const colors = resolveEmailTheme(theme);

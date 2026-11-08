@@ -15,6 +15,11 @@ export interface PlainEmailProps extends Omit<EmailProps, "children" | "title" |
 
 /** A complete personal note with underlined ink links and an optional signature.
  * Use when: sending body text without template decoration. Avoid when: needing branding; only theme.ink is used.
+ *
+ * @example
+ * <PlainEmail title="Your application update" preview="The team would like to meet you." signature="Aisha at Cedar Labs">
+ *   <p>Thanks for applying. We would love to hear about your recent work.</p>
+ * </PlainEmail>
  */
 export function PlainEmail({
   children,

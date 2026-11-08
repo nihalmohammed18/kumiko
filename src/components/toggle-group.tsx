@@ -17,6 +17,11 @@ export interface ToggleGroupProps extends Omit<BaseToggleGroup.Props, "className
  * Use when: choosing a view, period or related formatting options.
  * Avoid when: switching panels; use Tabs.
  * Single selection cancels changes to an empty value without calling onValueChange; multiple may be cleared.
+ *
+ * @example
+ * <ToggleGroup defaultValue={["cards"]} aria-label="Jobs view">
+ *   <Toggle value="cards">Cards</Toggle><Toggle value="list">List</Toggle>
+ * </ToggleGroup>
  */
 export function ToggleGroup({
   size = "sm",

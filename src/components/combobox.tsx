@@ -16,6 +16,17 @@ export type ComboboxProps<Value = string, Item = Value> = Omit<BaseCombobox.Root
 /** Shares a controlled or uncontrolled single selection and filters predefined items as the user types.
  * Use when: choosing a company, city or skill from a long list. Avoid when: accepting free text; use SearchField.
  * Multiple selection with chips comes later.
+ *
+ * @example
+ * const companies = ["Cedar Labs", "Maple Studio", "Northstar"];
+ * <Field name="company">
+ *   <Combobox items={companies}>
+ *     <FieldLabel>Company</FieldLabel>
+ *     <ComboboxInput placeholder="Search companies" />
+ *     <ComboboxPopup>{(company: string) => <ComboboxItem key={company} value={company}>{company}</ComboboxItem>}</ComboboxPopup>
+ *   </Combobox>
+ *   <FieldError />
+ * </Field>
  */
 export function Combobox<Value, Item = Value>(props: ComboboxProps<Value, Item>) {
   const { locale } = useKumiko();

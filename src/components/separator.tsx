@@ -10,6 +10,9 @@ export interface SeparatorProps extends Omit<ComponentProps<"hr">, "children"> {
 
 /** A server-safe, accessible two-pixel divider in either orientation.
  * Use when: separating adjacent groups of content. Avoid when: spacing alone establishes the grouping.
+ *
+ * @example
+ * <section><h2>Saved jobs</h2><Separator /><p>Frontend engineer at Cedar Labs</p></section>
  */
 export function Separator({ orientation = "horizontal", className, ...props }: SeparatorProps) {
   return (

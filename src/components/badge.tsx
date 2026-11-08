@@ -10,6 +10,9 @@ export interface BadgeProps extends ComponentProps<"span"> {
 
 /** A noninteractive metadata pill, with optional leading SVG content sized to 14px.
  * Use when: showing short metadata such as Remote, Paid or New. Avoid when: offering an action; use Button.
+ *
+ * @example
+ * <Badge tone="success">Offer received</Badge>
  */
 export function Badge({ tone = "neutral", className, ...props }: BadgeProps) {
   return <span {...props} data-slot="badge" className={badgeStyles({ tone, className })} />;

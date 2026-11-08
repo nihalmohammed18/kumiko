@@ -17,6 +17,9 @@ export interface ProgressStepsProps extends Omit<ComponentProps<"ol">, "aria-lab
 /** A row of equal pill segments announcing each step's label and completion state.
  * Use when: showing position in a multi-step flow. Avoid when: steps need to be clickable navigation.
  * Server-safe: state words default to English. Client code passes useKumiko().labels through formatLabel.
+ *
+ * @example
+ * <ProgressSteps aria-label="Application steps" steps={["Profile", "Resume", "Review"]} current={1} />
  */
 export function ProgressSteps({
   steps,

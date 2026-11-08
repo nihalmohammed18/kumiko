@@ -9,6 +9,9 @@ export interface EmailCodeProps extends EmailPartProps<"code"> {}
 
 /** A large, spaced one-time code on the field colour with a visible border.
  * Use when: offering a code alongside a sign-in link. Avoid when: rendering source code or long identifiers.
+ *
+ * @example
+ * <EmailCode>482193</EmailCode>
  */
 export function EmailCode({ theme, dir, lang, ...props }: EmailCodeProps) {
   const colors = resolveEmailTheme(theme);

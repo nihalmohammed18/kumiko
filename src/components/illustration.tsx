@@ -224,6 +224,10 @@ const shapes = {
 /** A static object illustration recoloured by the product's palette.
  * Use when: adding decorative art to an empty state, including products that show no faces.
  * Avoid when: conveying an actual date or other essential information without text.
+ *
+ * @example
+ * <EmptyState art={<Illustration name="waiting-calendar" />} title="No interviews scheduled"
+ *   description="Keep applying; your next conversation is ahead." />
  */
 export function Illustration({ name, size = 180, title, ...props }: IllustrationProps) {
   return (

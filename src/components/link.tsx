@@ -13,6 +13,9 @@ export interface LinkProps extends Omit<ComponentProps<"a">, "className"> {
 /** An underlined navigation link for running text and standalone links.
  * Use when: linking within a sentence or offering a text link such as "View all".
  * Avoid when: presenting a primary call to action; use LinkButton.
+ *
+ * @example
+ * <p>Track your progress in <Link href="/applications">your applications</Link>.</p>
  */
 export function Link({ className, render, children, ...props }: LinkProps) {
   const classes = cn(
