@@ -94,26 +94,30 @@ export const FocusRingDoubled = fixture(["focus-ring"], () => (
   </>
 ));
 
-export const FocusRingCovered = fixture(["focus-ring"], () => (
-  <>
-    <style>{".ux-ring:focus-visible { outline: 3px solid rgb(20, 20, 25); outline-offset: 2px; }"}</style>
-    <div style={{ position: "relative", display: "inline-block" }}>
-      <button type="button" className="ux-face ux-ring">
-        Covered ring
-      </button>
-      <span
-        style={{
-          position: "absolute",
-          zIndex: 1,
-          insetInline: -8,
-          top: -8,
-          height: 6,
-          background: "rgb(235, 235, 240)",
-        }}
-      />
-    </div>
-  </>
-));
+export const FocusRingCovered: Story = {
+  ...fixture(["focus-ring"], () => (
+    <>
+      <style>{".ux-ring:focus-visible { outline: 3px solid rgb(20, 20, 25); outline-offset: 2px; }"}</style>
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <button type="button" className="ux-face ux-ring">
+          Covered ring
+        </button>
+        <span
+          style={{
+            position: "absolute",
+            zIndex: 1,
+            insetInline: -8,
+            top: -8,
+            height: 6,
+            background: "rgb(235, 235, 240)",
+          }}
+        />
+      </div>
+    </>
+  )),
+  // WebKit's nightly run skips the covered-ring comparison (see realFocus), so it can't prove this there.
+  tags: ["no-webkit"],
+};
 
 export const TargetSize = fixture(["target-size"], () => (
   <div style={{ display: "flex", gap: 4 }}>

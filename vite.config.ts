@@ -66,7 +66,9 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
       storybookTest({
         configDir: ".storybook",
         initialGlobals: globals,
-        tags: { exclude: mode === "light" ? [] : ["light-only"] },
+        tags: {
+          exclude: [...(mode === "light" ? [] : ["light-only"]), ...(browser === "webkit" ? ["no-webkit"] : [])],
+        },
       }),
     ],
     test: {
@@ -74,6 +76,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
       setupFiles: [".storybook/vitest.setup.ts"],
       provide: {
         mode,
+        engine: browser,
         vrt: process.env.KUMIKO_VRT === "1" ? vrt : "none",
         // Whether axe runs. Storybook's Vitest plugin reads this run config (its UI's accessibility toggle supplies it
         // there) and overwrites any a11y.manual global with it, so this is the only switch that works.

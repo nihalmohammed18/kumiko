@@ -23,6 +23,13 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec vitest run --project webkit
+      - run: pnpm exec vitest run --project webkit --reporter=default --reporter=json --outputFile.json=webkit-report.json
         env:
           KUMIKO_WEBKIT: "1"
+      # Vitest's console groups identical-looking failures; the JSON report keeps every message.
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: webkit-report
+          path: webkit-report.json
+          if-no-files-found: ignore
