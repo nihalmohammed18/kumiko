@@ -72,6 +72,24 @@ export {
   DialogTrigger,
   type DialogTriggerProps,
 } from "./components/dialog.tsx";
+export {
+  Drawer,
+  DrawerBody,
+  type DrawerBodyProps,
+  DrawerClose,
+  type DrawerCloseProps,
+  DrawerDescription,
+  type DrawerDescriptionProps,
+  DrawerFooter,
+  type DrawerFooterProps,
+  DrawerPopup,
+  type DrawerPopupProps,
+  type DrawerProps,
+  DrawerTitle,
+  type DrawerTitleProps,
+  DrawerTrigger,
+  type DrawerTriggerProps,
+} from "./components/drawer.tsx";
 export { EmptyState, type EmptyStateProps } from "./components/empty-state.tsx";
 export { FeedbackBanner, type FeedbackBannerProps } from "./components/feedback-banner.tsx";
 export {
