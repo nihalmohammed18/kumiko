@@ -1,0 +1,3 @@
+/* Its own stylesheet, not globals.css: see layout.tsx. */
+@import "tailwindcss";
+@import "kumiko-ui/styles.css";
