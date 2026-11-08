@@ -11,7 +11,8 @@ import { CLOSED_DEBTS, validateUxExcept } from "./ux-rules.ts";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const OVERLAY_FILES: ReadonlySet<string> = new Set();
-const SHELL_FILES: ReadonlySet<string> = new Set();
+// SidebarLayout is the app shell: its desktop column and phone trigger follow the viewport's lg breakpoint.
+const SHELL_FILES: ReadonlySet<string> = new Set(["src/components/sidebar.tsx"]);
 const UPPERCASE_FILES = new Set(["src/components/button-styles.ts", "src/components/badge-styles.ts"]);
 const OVERLAY_PATH = /^src\/components\/(dialog|alert-dialog|drawer|popover|sidebar|sheet)[^/]*$/;
 

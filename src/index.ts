@@ -36,6 +36,7 @@ export {
   CardTitle,
   type CardTitleProps,
 } from "./components/card.tsx";
+export { Celebration, type CelebrationProps } from "./components/celebration.tsx";
 export { Character, type CharacterProps } from "./components/character.tsx";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.tsx";
 export { CheckboxGroup, type CheckboxGroupProps } from "./components/checkbox-group.tsx";
@@ -61,6 +62,7 @@ export {
   type ComboboxProps,
 } from "./components/combobox.tsx";
 export { CountUp, type CountUpOptions, type CountUpProps, useCountUp } from "./components/count-up.tsx";
+export { DataTable, type DataTableFeatures, type DataTableProps } from "./components/data-table.tsx";
 export { DateInput, type DateInputProps } from "./components/date-input.tsx";
 export {
   Dialog,
@@ -195,6 +197,24 @@ export {
   type SelectValueProps,
 } from "./components/select.tsx";
 export { Separator, type SeparatorProps } from "./components/separator.tsx";
+export {
+  Sidebar,
+  SidebarContent,
+  type SidebarContentProps,
+  SidebarFooter,
+  type SidebarFooterProps,
+  SidebarGroup,
+  type SidebarGroupProps,
+  SidebarHeader,
+  type SidebarHeaderProps,
+  SidebarLayout,
+  type SidebarLayoutProps,
+  SidebarLink,
+  type SidebarLinkProps,
+  type SidebarProps,
+  SidebarTrigger,
+  type SidebarTriggerProps,
+} from "./components/sidebar.tsx";
 export { Skeleton, type SkeletonProps } from "./components/skeleton.tsx";
 export { Slider, type SliderProps, SliderValue, type SliderValueProps } from "./components/slider.tsx";
 export { Spinner, type SpinnerProps } from "./components/spinner.tsx";
@@ -231,6 +251,7 @@ export {
 } from "./components/tabs.tsx";
 export { Textarea, type TextareaProps } from "./components/textarea.tsx";
 export {
+  type ToastAchievementOptions,
   Toaster,
   type ToasterProps,
   type ToastOptions,
@@ -251,6 +272,9 @@ export {
   type TooltipTriggerProps,
 } from "./components/tooltip.tsx";
 export {
+  ArrowDownIcon,
+  ArrowUpDownIcon,
+  ArrowUpIcon,
   CheckIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -260,6 +284,7 @@ export {
   FileIcon,
   FlameIcon,
   InfoIcon,
+  MenuIcon,
   MinusIcon,
   PlusIcon,
   SearchIcon,

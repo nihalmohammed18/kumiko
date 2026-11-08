@@ -1,5 +1,7 @@
 import type { ToastManagerPromiseOptions } from "@base-ui/react/toast";
+import { createElement } from "react";
 import { expect, it, vi } from "vitest";
+import { Illustration } from "./illustration.tsx";
 import { toast } from "./toast.tsx";
 
 const manager = vi.hoisted(() => ({
@@ -10,6 +12,21 @@ const manager = vi.hoisted(() => ({
 }));
 
 vi.mock("@base-ui/react/toast", () => ({ Toast: { createToastManager: () => manager } }));
+
+it("raises achievements politely, with a trophy by default and optional replacement art", () => {
+  expect(toast.achievement("Goal reached", { id: "goal", timeout: 0 })).toBe("goal");
+  expect(manager.add.mock.calls.at(-1)?.[0]).toEqual({
+    id: "goal",
+    timeout: 0,
+    title: "Goal reached",
+    type: "achievement",
+    priority: "low",
+    data: { art: createElement(Illustration, { name: "trophy", size: 40 }) },
+  });
+  const art = createElement(Illustration, { name: "star" });
+  toast.achievement("A new milestone", { art });
+  expect(manager.add.mock.calls.at(-1)?.[0]).toMatchObject({ data: { art } });
+});
 
 it("turns promise messages into titles, preserves result options and makes failures urgent", async () => {
   const operation = Promise.resolve("Report ready");

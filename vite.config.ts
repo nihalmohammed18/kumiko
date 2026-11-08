@@ -38,14 +38,25 @@ interface Project {
   /** Screenshot comparisons: every story, only each component's States story, or none. */
   vrt?: "all" | "states" | "none";
   axe?: boolean;
+  /** The browser engine; the nightly WebKit run reuses a mode's conditions under its own project name. */
+  browser?: "chromium" | "webkit";
+  name?: string;
 }
 
 /**
- * Every story runs once per project, in real Chromium: play tests, axe, the UX rules (.storybook/ux) and, in CI,
+ * Every story runs once per project, in real Chromium (and nightly in WebKit): play tests, axe, the UX rules (.storybook/ux) and, in CI,
  * screenshot comparisons. Each project's conditions are asserted before its first story (see vitest.setup.ts).
  */
 const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfiguration => {
-  const { dir = "ltr", theme = "light", context, phone = false, vrt = "all", axe = true } = project;
+  const {
+    dir = "ltr",
+    theme = "light",
+    context,
+    phone = false,
+    vrt = "all",
+    axe = true,
+    browser = "chromium",
+  } = project;
   // Storybook's Vitest plugin resizes the page before every story: to a named viewport from globals.viewport, or
   // else to 1200×900. mobile1 is Storybook's built-in 320×568.
   const globals = { theme, dir, ...(phone && { viewport: { value: "mobile1" } }) };
@@ -59,7 +70,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
       }),
     ],
     test: {
-      name: mode,
+      name: project.name ?? mode,
       setupFiles: [".storybook/vitest.setup.ts"],
       provide: {
         mode,
@@ -72,7 +83,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
         enabled: true,
         headless: true,
         provider: playwright({ contextOptions: { reducedMotion: "reduce", ...context } }),
-        instances: [{ browser: "chromium" }],
+        instances: [{ browser }],
         viewport: phone ? { width: 320, height: 568 } : { width: 1200, height: 900 },
         commands: { uxForcedColors, uxMouse, uxWheel },
         expect: {
@@ -119,6 +130,10 @@ export default defineConfig({
       // It reads authored colours, so a story must not nest a data-theme section (the dark project covers dark).
       stories("forced", { context: { forcedColors: "active" }, vrt: "states" }),
       stories("motion", { context: { reducedMotion: "no-preference" }, vrt: "none", axe: false }),
+      // Nightly only (KUMIKO_WEBKIT=1): the light project's play tests, axe and UX rules in WebKit, without screenshots.
+      ...(process.env.KUMIKO_WEBKIT === "1"
+        ? [stories("light", { browser: "webkit", name: "webkit", vrt: "none" })]
+        : []),
     ],
   },
 });

@@ -6,6 +6,7 @@ const config: StorybookConfig = {
   stories: [
     "../src/*.stories.tsx",
     "../src/components/*.stories.tsx",
+    "../src/email/*.stories.tsx",
     "../src/recipes/*.stories.tsx",
     "./ux/fixtures.stories.tsx",
   ],
