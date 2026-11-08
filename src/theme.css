@@ -130,6 +130,12 @@
 @utility duration-sheet {
   transition-duration: var(--kumiko-duration-sheet);
 }
+@utility duration-count-up {
+  transition-duration: var(--kumiko-duration-count-up);
+}
+@utility duration-streak-pop {
+  transition-duration: var(--kumiko-duration-streak-pop);
+}
 @utility duration-skeleton {
   transition-duration: var(--kumiko-duration-skeleton);
 }

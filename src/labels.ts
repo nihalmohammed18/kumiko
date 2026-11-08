@@ -37,6 +37,9 @@ export const englishLabels = {
   fileSizeRejected: "This file is too large",
   filesAdded: { one: "{count} file added", other: "{count} files added" },
   fileCountRejected: { one: "You can add only {count} file", other: "You can add up to {count} files" },
+  streak: { one: "{count} day streak", other: "{count} day streak" },
+  done: "Done",
+  today: "Today",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -88,6 +91,15 @@ export const labels = {
       many: "يمكنك إضافة {count} ملفًا كحد أقصى",
       other: "يمكنك إضافة {count} ملف كحد أقصى",
     },
+    streak: {
+      one: "يوم واحد متتالٍ",
+      two: "يومان متتاليان",
+      few: "{count} أيام متتالية",
+      many: "{count} يومًا متتاليًا",
+      other: "{count} يوم متتالٍ",
+    },
+    done: "تم",
+    today: "اليوم",
   },
   ur: {
     close: "بند کریں",
@@ -118,6 +130,9 @@ export const labels = {
       one: "آپ صرف {count} فائل شامل کر سکتے ہیں",
       other: "آپ زیادہ سے زیادہ {count} فائلیں شامل کر سکتے ہیں",
     },
+    streak: { one: "{count} دن کا سلسلہ", other: "{count} دن کا سلسلہ" },
+    done: "مکمل",
+    today: "آج",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 

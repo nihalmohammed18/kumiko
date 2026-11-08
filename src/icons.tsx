@@ -13,6 +13,8 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import type { ComponentProps } from "react";
+import { cn } from "./lib/tv.ts";
 
 /** A decorative check mark with Kumiko's stroke weight.
  * Use when: marking a checked choice. Avoid when: an icon must provide its own accessible name.
@@ -96,4 +98,29 @@ export function UploadIcon(props: LucideProps) {
  */
 export function FileIcon(props: LucideProps) {
   return <File {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A small inline version of the flame illustration, using sun palette slots.
+ * Use when: decorating a streak counter. Avoid when: the icon must provide its own accessible name.
+ */
+export function FlameIcon({ className, ...props }: ComponentProps<"svg">) {
+  return (
+    <svg
+      {...props}
+      aria-hidden
+      focusable="false"
+      data-slot="icon"
+      viewBox="0 0 180 180"
+      width="24"
+      height="24"
+      className={cn("forced-colors:forced-color-adjust-none", className)}
+    >
+      <path
+        d="M94 23c9 32 39 43 40 72 2 36-18 59-46 59-31 0-54-21-49-51 3-20 19-32 30-49 0 24 9 22 12 9 4-14 3-26 13-40Z"
+        className="fill-sun"
+      />
+      <path d="M90 87c4 18 21 27 18 43-3 20-33 23-38 2-4-16 8-29 20-45Z" className="fill-sun-text" />
+      <ellipse cx="114" cy="94" rx="5" ry="17" transform="rotate(-22 114 94)" className="fill-sun-tint" />
+    </svg>
+  );
 }
