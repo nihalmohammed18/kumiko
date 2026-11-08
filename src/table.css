@@ -53,3 +53,24 @@
 [data-slot="table-footer"] {
   border-block-start: var(--kumiko-border) solid var(--kumiko-control-line);
 }
+
+/* Header controls keep their focus inside the table card's clipping boundary. */
+[data-slot="data-table-sort"] {
+  /* Inset, just inside the border forced colours draw, so the ring never paints over it. */
+  &:focus-visible {
+    outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+    outline-offset: calc(-1 * (var(--kumiko-border) + var(--kumiko-ring-width)));
+  }
+
+  &::after {
+    display: none;
+  }
+
+  @media (forced-colors: active) {
+    border-color: var(--kumiko-forced-ink);
+
+    &:focus-visible {
+      outline-color: var(--kumiko-forced-ink);
+    }
+  }
+}
