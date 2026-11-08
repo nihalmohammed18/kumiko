@@ -182,13 +182,25 @@
   --kumiko-duration-sheet: 300ms;
   --kumiko-duration-count-up: 600ms;
   --kumiko-duration-streak-pop: 240ms;
+  --kumiko-duration-celebration-anticipation: 120ms;
+  --kumiko-duration-celebration-rise: 240ms;
+  --kumiko-duration-celebration-fall: 240ms;
+  --kumiko-duration-celebration-landing: 100ms;
+  --kumiko-duration-celebration-settle: 140ms;
+  --kumiko-duration-celebration-progress: 300ms;
   --kumiko-duration-skeleton: 1400ms;
   --kumiko-ease-enter: cubic-bezier(0.23, 1, 0.32, 1);
   --kumiko-ease-move: cubic-bezier(0.65, 0, 0.35, 1);
   --kumiko-ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
   --kumiko-ease-pop: cubic-bezier(0.34, 1.3, 0.64, 1);
-  --kumiko-ease-rise: cubic-bezier(0.333, 0.667, 0.667, 1);
-  --kumiko-ease-fall: cubic-bezier(0.333, 0, 0.667, 0.333);
+  --kumiko-ease-rise: cubic-bezier(0.3333333333333333, 0.6666666666666666, 0.6666666666666666, 1);
+  --kumiko-ease-fall: cubic-bezier(0.3333333333333333, 0, 0.6666666666666666, 0.3333333333333333);
   --kumiko-scale-streak-peak: 1.15;
   --kumiko-scale-increment-from: 0.75;
+  --kumiko-scale-celebration-anticipation-x: 1.06;
+  --kumiko-scale-celebration-anticipation-y: 0.92;
+  --kumiko-scale-celebration-landing-x: 1.08;
+  --kumiko-scale-celebration-landing-y: 0.9;
+  --kumiko-scale-celebration-shadow: 0.6;
+  --kumiko-distance-celebration-hop: 24px;
 }

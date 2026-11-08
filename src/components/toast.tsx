@@ -7,9 +7,10 @@ import { formatLabel } from "../labels.ts";
 import { cn } from "../lib/tv.ts";
 import { useKumiko } from "../provider.tsx";
 import { buttonStyles } from "./button-styles.ts";
+import { Illustration } from "./illustration.tsx";
 import { Spinner } from "./spinner.tsx";
 
-const manager = /* @__PURE__ */ BaseToast.createToastManager();
+const manager = /* @__PURE__ */ BaseToast.createToastManager<{ art?: ReactNode }>();
 
 /** Supporting content, an undo action and lifetime for a toast; an existing id updates it in place.
  * Use when: customizing a notification. Avoid when: rendering persistent page context; use Alert.
@@ -20,6 +21,14 @@ export interface ToastOptions {
   /** Milliseconds before dismissal; defaults to 5000. Set 0 to keep the toast until dismissed. */
   timeout?: number;
   id?: string;
+}
+
+/** Toast options and a decorative illustration for an achievement.
+ * Use when: customizing a milestone notification. Avoid when: conveying essential information through art alone.
+ */
+export interface ToastAchievementOptions extends ToastOptions {
+  /** Replaces the trophy; rendered in a 40px slot and hidden from assistive technology. */
+  art?: ReactNode;
 }
 
 /** Changes to an existing toast's title, supporting content, action or lifetime.
@@ -76,6 +85,13 @@ export const toast = Object.assign((title: string, options?: ToastOptions) => ad
    * Use when: an action has useful supporting context. Avoid when: showing permanent guidance; use Alert.
    */
   info: (title: string, options?: ToastOptions) => add(title, options, "info"),
+  /** Celebrates a milestone politely with a trophy or the supplied art.
+   * Use when: recognizing an achievement. Avoid when: reporting routine saves; use toast.success.
+   */
+  achievement: (
+    title: string,
+    { art = <Illustration name="trophy" size={40} />, ...options }: ToastAchievementOptions = {},
+  ) => manager.add({ ...baseOptions(options), title, type: "achievement", priority: "low", data: { art } }),
   /** Tracks a promise with one toast, announces errors urgently and preserves the promise's result or rejection.
    * Use when: showing loading followed by success or failure. Avoid when: announcing the same operation elsewhere.
    */
@@ -122,6 +138,7 @@ const statuses = {
   },
   info: { band: "bg-info-tint text-info-text", icon: "text-info", Icon: InfoIcon, label: "statusInfo" },
   loading: { band: "bg-surface text-ink", icon: "text-ink-muted", Icon: InfoIcon, label: "loading" },
+  achievement: { band: "bg-sun-tint text-sun-text", icon: "text-sun-text", Icon: InfoIcon, label: undefined },
 } as const;
 
 /** Renders global notifications with pauseable timers, F6 navigation and swipe dismissal toward the inline end.
@@ -175,9 +192,16 @@ function ToastViewport({ className }: Pick<ToasterProps, "className">) {
                   className={cn(
                     "grid size-10 shrink-0 place-items-center rounded-pill border-2 border-transparent bg-surface forced-colors:border-forced-ink",
                     icon,
+                    item.type === "achievement" && "border-0 [&>*]:max-h-full [&>*]:max-w-full [&_svg]:size-10",
                   )}
                 >
-                  {item.type === "loading" ? <Spinner className="size-6" /> : <Icon className="size-6" />}
+                  {item.type === "achievement" ? (
+                    item.data?.art
+                  ) : item.type === "loading" ? (
+                    <Spinner className="size-6" />
+                  ) : (
+                    <Icon className="size-6" />
+                  )}
                 </span>
                 <div className="min-w-0 flex-1 wrap-anywhere">
                   <BaseToast.Title data-slot="toast-title" className="font-extrabold" />

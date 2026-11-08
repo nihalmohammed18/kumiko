@@ -136,6 +136,24 @@
 @utility duration-streak-pop {
   transition-duration: var(--kumiko-duration-streak-pop);
 }
+@utility duration-celebration-anticipation {
+  transition-duration: var(--kumiko-duration-celebration-anticipation);
+}
+@utility duration-celebration-rise {
+  transition-duration: var(--kumiko-duration-celebration-rise);
+}
+@utility duration-celebration-fall {
+  transition-duration: var(--kumiko-duration-celebration-fall);
+}
+@utility duration-celebration-landing {
+  transition-duration: var(--kumiko-duration-celebration-landing);
+}
+@utility duration-celebration-settle {
+  transition-duration: var(--kumiko-duration-celebration-settle);
+}
+@utility duration-celebration-progress {
+  transition-duration: var(--kumiko-duration-celebration-progress);
+}
 @utility duration-skeleton {
   transition-duration: var(--kumiko-duration-skeleton);
 }

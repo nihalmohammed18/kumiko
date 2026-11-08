@@ -138,6 +138,12 @@ describe.each(classCases)("$rule", ({ rule, bad, good }) => {
   });
 });
 
+it("allows viewport breakpoints in the sidebar app shell while rejecting them in ordinary components", () => {
+  const source = classes("lg:hidden");
+  expect(lintComponent(source, "src/components/sidebar.tsx", palette)).toEqual([]);
+  expect(lintComponent(source, component, palette)).toEqual([expect.objectContaining({ rule: "viewport-breakpoint" })]);
+});
+
 it("rejects Base UI internals and allows documented entry points", () => {
   expect(
     lintComponent(
