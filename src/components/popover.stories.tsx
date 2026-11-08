@@ -78,6 +78,8 @@ export const Default: Story = {
 };
 
 export const WithArrow: Story = {
+  // Four popovers held open at once: Base UI's focus guards call each other without end in WebKit (see Menu's Open).
+  tags: ["no-webkit"],
   name: "With arrow",
   parameters: { vrt: "page" },
   render: (args) => (
