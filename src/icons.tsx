@@ -24,6 +24,9 @@ import { cn } from "./lib/tv.ts";
 
 /** A decorative ascending-sort arrow with Kumiko's stroke weight.
  * Use when: identifying ascending table order. Avoid when: indicating inline navigation; use a directional chevron.
+ *
+ * @example
+ * <Button tone="ghost"><ArrowUpIcon />Salary: low to high</Button>
  */
 export function ArrowUpIcon(props: LucideProps) {
   return <ArrowUp {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;

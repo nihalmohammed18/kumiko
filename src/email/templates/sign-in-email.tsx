@@ -20,6 +20,9 @@ export interface SignInEmailProps extends BrandedEmailProps {
 
 /** A complete sign-in email with a link, optional one-time code and expiry notice.
  * Use when: sending a requested sign-in email. Avoid when: verifying an address; use VerifyEmail.
+ *
+ * @example
+ * <SignInEmail productName="Cedar Jobs" url="https://jobs.example.com/sign-in/token" code="482193" expiresInMinutes={15} />
  */
 export function SignInEmail({
   productName,

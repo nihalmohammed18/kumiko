@@ -35,6 +35,10 @@ const statuses = {
 /** A result band that announces its status and title when shown or changed.
  * Use when: confirming an answer or save and offering the next step. Keep the title plain text for announcements.
  * Avoid when: showing static page context; use Alert. The provider announces this band, so add no live-region role.
+ *
+ * @example
+ * <FeedbackBanner status="success" title="Application submitted" description="We saved a copy for you."
+ *   action={<LinkButton href="/applications">View applications</LinkButton>} />
  */
 export function FeedbackBanner({
   status = "success",

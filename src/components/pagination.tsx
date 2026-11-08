@@ -73,6 +73,9 @@ export type PaginationProps = Omit<ComponentProps<"nav">, "children"> & {
  * Use when: navigating a paginated collection. Avoid when: navigating a short hierarchy; use Breadcrumbs.
  * Server-safe: labels and locale default to English; client code passes useKumiko().labels and useKumiko().locale.
  * Link mode clones render onto each generated href. Its unavailable ends are native disabled buttons.
+ *
+ * @example
+ * <Pagination page={2} pageCount={8} href={(page) => "/applications?page=" + page} />
  */
 export function Pagination({
   page,

@@ -15,6 +15,13 @@ export interface RadioProps<Value = string> extends Omit<BaseRadio.Root.Props<Va
 
 /** A compact radio option with a dot mark and an optional wrapping label.
  * Use when: choosing one value in a RadioGroup. Avoid when: options can be selected together; use Checkbox.
+ *
+ * @example
+ * <Field name="employment">
+ *   <FieldLabel>Employment type</FieldLabel>
+ *   <RadioGroup defaultValue="full-time"><Radio value="full-time">Full time</Radio><Radio value="contract">Contract</Radio></RadioGroup>
+ *   <FieldError />
+ * </Field>
  */
 export function Radio<Value = string>({ children, className, id: idProp, render, ...props }: RadioProps<Value>) {
   const generatedId = useId();

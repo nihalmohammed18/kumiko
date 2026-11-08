@@ -23,6 +23,12 @@ const accents = {
 
 /** A tactile pill filter with a check mark when selected.
  * Use when: toggling a filter such as Remote or Paid. Avoid when: an on/off setting applies immediately; use Switch.
+ *
+ * @example
+ * <ChipGroup multiple defaultValue={["remote"]} aria-label="Job filters">
+ *   <Chip value="remote">Remote</Chip>
+ *   <Chip value="paid">Paid</Chip>
+ * </ChipGroup>
  */
 export function Chip({ accent = "brand", children, className, ...props }: ChipProps) {
   return (

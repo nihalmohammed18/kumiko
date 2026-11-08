@@ -44,6 +44,9 @@ export interface CelebrationProps extends Omit<ComponentProps<"section">, "title
 /** An interruptible Hop celebrating a completed action, with final accessible values throughout.
  * Use when: showing a rare achievement; place it in a Dialog or move focus to its heading (it never moves focus).
  * Avoid when: animating routine saves. Server rendering and hydration show the final frame without replaying.
+ *
+ * @example
+ * <Celebration title="First application sent!" description="One step closer to your next role." />
  */
 export function Celebration({
   title,

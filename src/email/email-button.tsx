@@ -13,6 +13,9 @@ export interface EmailButtonProps extends EmailPartProps<"a"> {
 
 /** A table-backed, plain text link with Kumiko's brand fill and darker bottom edge.
  * Use when: offering an email's primary destination. Avoid when: linking a phrase within a paragraph; use EmailLink.
+ *
+ * @example
+ * <EmailButton href="https://jobs.example.com/jobs/frontend">View frontend role</EmailButton>
  */
 export function EmailButton({ theme, dir, lang, children, ...props }: EmailButtonProps) {
   const colors = resolveEmailTheme(theme);

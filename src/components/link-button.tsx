@@ -16,6 +16,9 @@ export interface LinkButtonProps extends Omit<ComponentProps<"a">, "className"> 
 /** A real navigation link with Button's tactile appearance.
  * Use when: navigating should look like a button, such as "Browse jobs".
  * Avoid when: running an action or it can be unavailable; use Button.
+ *
+ * @example
+ * <LinkButton href="/jobs" tone="primary">Browse jobs</LinkButton>
  */
 export function LinkButton({
   tone = "secondary",

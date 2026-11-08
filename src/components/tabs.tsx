@@ -14,6 +14,13 @@ export interface TabsProps extends Omit<BaseTabs.Root.Props, "className" | "orie
 
 /** Groups horizontal tabs and their panels, with manual keyboard activation.
  * Use when: switching between related views on one page. Avoid when: choosing an option; use ToggleGroup.
+ *
+ * @example
+ * <Tabs defaultValue="applications">
+ *   <TabsList aria-label="Job search"><Tab value="applications">Applications</Tab><Tab value="saved">Saved jobs</Tab></TabsList>
+ *   <TabsPanel value="applications">Your submitted applications appear here.</TabsPanel>
+ *   <TabsPanel value="saved">Roles you want to revisit appear here.</TabsPanel>
+ * </Tabs>
  */
 export function Tabs({ className, ...props }: TabsProps) {
   return (

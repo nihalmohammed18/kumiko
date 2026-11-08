@@ -9,6 +9,13 @@ export interface CardProps extends ComponentProps<"div"> {}
 
 /** A container for a job, company or settings group, with a tactile edge when it contains CardLink.
  * Use when: grouping related content on a surface. Avoid when: presenting a modal; use Dialog.
+ *
+ * @example
+ * <Card>
+ *   <CardTitle><CardLink href="/jobs/frontend">Frontend engineer</CardLink></CardTitle>
+ *   <CardDescription>Cedar Labs · Remote</CardDescription>
+ *   <Badge>Full time</Badge>
+ * </Card>
  */
 export function Card({ className, ...props }: CardProps) {
   return (

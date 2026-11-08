@@ -28,6 +28,9 @@ const circumference = 2 * Math.PI * 45;
  * Use when: showing measurable progress towards a goal.
  * Avoid when: showing a multi-step flow (use ProgressSteps) or an unknown wait (use Spinner).
  * Custom centre content is decorative; describe it with aria-valuetext or getAriaValueText.
+ *
+ * @example
+ * <ProgressRing aria-label="Profile completeness" value={75} />
  */
 export function ProgressRing({
   value,

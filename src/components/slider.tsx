@@ -35,6 +35,11 @@ const renderThumb: Exclude<BaseSlider.Thumb.Props["render"], ReactElement | unde
 /** A slider with a tactile thumb, an optional label and a locale-formatted value; arrays create range thumbs.
  * Use when: adjusting an approximate value or range. Avoid when: an exact entry is easier; use NumberField.
  * Only horizontal sliders are styled; vertical orientation needs consumer styling for now.
+ *
+ * @example
+ * <Field name="minSalary">
+ *   <FieldLabel>Minimum annual salary</FieldLabel><Slider defaultValue={80000} min={30000} max={150000} step={5000} /><FieldError />
+ * </Field>
  */
 export function Slider<Value extends number | readonly number[]>({
   className,

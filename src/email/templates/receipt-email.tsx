@@ -20,6 +20,11 @@ export interface ReceiptEmailProps extends BrandedEmailProps {
 
 /** A complete receipt email with end-aligned amounts, a bold total and an optional receipt link.
  * Use when: confirming a payment. Avoid when: building an interactive invoice or collecting payment.
+ *
+ * @example
+ * <ReceiptEmail productName="Cedar Jobs" date="8 November 2026"
+ *   items={[{ label: "Featured job listing", amount: "USD 49.00" }]} total="USD 49.00"
+ *   receiptUrl="https://jobs.example.com/receipts/r1" />
  */
 export function ReceiptEmail({
   productName,

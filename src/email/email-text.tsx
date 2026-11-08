@@ -10,6 +10,9 @@ export interface EmailTextProps extends EmailPartProps<"p"> {
 
 /** Email body copy at 16px with a 24px line height, optionally muted.
  * Use when: explaining a sign-in link, receipt or digest. Avoid when: displaying a one-time code; use EmailCode.
+ *
+ * @example
+ * <EmailText muted>You received this because you saved a frontend job alert.</EmailText>
  */
 export function EmailText({ muted = false, theme, dir, ...props }: EmailTextProps) {
   const colors = resolveEmailTheme(theme);

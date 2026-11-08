@@ -17,6 +17,9 @@ export interface VerifyEmailProps extends BrandedEmailProps {
 
 /** A complete email address verification email with a code and optional link.
  * Use when: confirming an email address. Avoid when: signing in an existing user; use SignInEmail.
+ *
+ * @example
+ * <VerifyEmail productName="Cedar Jobs" code="482193" url="https://jobs.example.com/verify/token" />
  */
 export function VerifyEmail({
   productName,

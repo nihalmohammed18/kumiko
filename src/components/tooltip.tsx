@@ -24,6 +24,12 @@ export type TooltipProps<Payload = unknown> = BaseTooltip.Root.Props<Payload>;
 /** Shares a visual label's open state; Base UI does not open tooltips on touch input.
  * Use when: labeling an icon-only control for mouse and keyboard users; the control still needs its own accessible name.
  * Avoid when: text matters to understanding; use inline text or Popover with openOnHover.
+ *
+ * @example
+ * <Tooltip>
+ *   <TooltipTrigger render={<IconButton aria-label="Application actions" />}><MenuIcon /></TooltipTrigger>
+ *   <TooltipPopup>Application actions</TooltipPopup>
+ * </Tooltip>
  */
 export function Tooltip<Payload = unknown>(props: TooltipProps<Payload>) {
   return <BaseTooltip.Root {...props} />;

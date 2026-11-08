@@ -18,6 +18,9 @@ export interface ProgressProps extends Omit<BaseProgress.Root.Props, "value" | "
 /** Shows task completion with a rounded fill and a value formatted in the provider's locale.
  * Use when: the total is known; pass aria-label when there is no visible label.
  * Avoid when: the duration is unknown; use Spinner.
+ *
+ * @example
+ * <Progress label="Application completeness" value={60} />
  */
 export function Progress({ label, showValue = true, locale, className, ...props }: ProgressProps) {
   const settings = useKumiko();

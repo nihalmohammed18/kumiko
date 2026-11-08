@@ -115,6 +115,15 @@ export interface SidebarProps extends ComponentProps<"nav"> {}
 
 /** A named navigation landmark with a fixed header and footer around scrolling content.
  * Use when: containing SidebarHeader, SidebarContent and SidebarFooter. Avoid when: displaying a menu of actions.
+ *
+ * @example
+ * <SidebarLayout sidebar={<Sidebar aria-label="Job seeker navigation">
+ *   <SidebarHeader>Job seeker</SidebarHeader>
+ *   <SidebarContent><SidebarLink href="/applications" current>Applications</SidebarLink><SidebarLink href="/alerts">Job alerts</SidebarLink></SidebarContent>
+ *   <SidebarFooter><Link href="/settings">Settings</Link></SidebarFooter>
+ * </Sidebar>}>
+ *   <main><SidebarTrigger /><h1>Your applications</h1></main>
+ * </SidebarLayout>
  */
 export function Sidebar({ className, ...props }: SidebarProps) {
   const { labels, locale } = useKumiko();
