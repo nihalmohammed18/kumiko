@@ -1,8 +1,8 @@
+import type { BrandedEmailProps } from "../email.tsx";
 import { EmailButton } from "../email-button.tsx";
 import { EmailCode } from "../email-code.tsx";
 import { EmailSection } from "../email-section.tsx";
-import { EmailText } from "../email-text.tsx";
-import { type BrandedEmailProps, EmailTemplate } from "./email-template.tsx";
+import { EmailTemplate } from "./email-template.tsx";
 
 /** An address verification code, optional destination and replaceable English copy.
  * Use when: typing VerifyEmail. Avoid when: requesting a sign-in; use SignInEmailProps.
@@ -11,8 +11,11 @@ export interface VerifyEmailProps extends BrandedEmailProps {
   productName: string;
   code: string;
   url?: string;
+  /** Legacy hero copy; subline takes precedence when both are provided. */
   codeLabel?: string;
   buttonLabel?: string;
+  expiresInMinutes?: number;
+  expiryText?: string;
 }
 
 /** A complete email address verification email with a code and optional link.
@@ -28,21 +31,25 @@ export function VerifyEmail({
   dir = "ltr",
   lang = "en",
   theme,
-  heading = `Verify your email for ${productName}`,
-  codeLabel = "Enter this code to confirm your email address:",
+  heading = "Confirm your email",
+  codeLabel,
+  subline = codeLabel ?? `Enter this code in ${productName} to finish setting up your account.`,
   buttonLabel = "Verify email address",
+  expiresInMinutes = 15,
+  expiryText = `Expires in ${new Intl.NumberFormat(lang).format(expiresInMinutes)} ${expiresInMinutes === 1 ? "minute" : "minutes"}`,
   ...props
 }: VerifyEmailProps) {
   const parts = { dir, lang, theme };
   return (
-    <EmailTemplate {...props} {...parts} heading={heading}>
+    <EmailTemplate {...props} {...parts} productName={productName} heading={heading} subline={subline} tone="leaf">
       <EmailSection dir={dir} lang={lang}>
-        <EmailText {...parts}>{codeLabel}</EmailText>
-        <EmailCode {...parts}>{code}</EmailCode>
+        <EmailCode {...parts} note={expiryText}>
+          {code}
+        </EmailCode>
       </EmailSection>
       {url !== undefined && (
         <EmailSection dir={dir} lang={lang}>
-          <EmailButton {...parts} href={url}>
+          <EmailButton {...parts} href={url} align="center">
             {buttonLabel}
           </EmailButton>
         </EmailSection>

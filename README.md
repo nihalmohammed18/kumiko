@@ -175,24 +175,39 @@ The [form guide](docs/forms.md) explains validation and focus wiring.
 
 ## Email kit
 
-Import email components from `kumiko-ui/email`. The [building blocks](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-building-blocks--docs)
-include Email, EmailHeading, EmailText, EmailButton, EmailLink, EmailLogo, EmailSection, EmailCard, EmailCode and
-EmailDivider. The [Email/Templates](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-templates--docs) page
-contains SignInEmail, VerifyEmail, JobAlertDigestEmail, ReceiptEmail and PlainEmail.
+`kumiko-ui/email` renders static HTML emails with the Playground look: a header, a tinted hero with Pip, Mori,
+Tuck or an object, a rounded headline, a button on a darker edge, and a footer. See the
+[templates](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-templates--docs) and the
+[building blocks](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-building-blocks--docs).
 
 ```tsx
-import { renderEmail, SignInEmail } from "kumiko-ui/email";
+import { emailArt, renderEmail, SignInEmail } from "kumiko-ui/email";
 
 function signInHtml(url: string) {
   return renderEmail(
-    <SignInEmail productName="First Jobby" url={url} expiresInMinutes={10} />,
+    <SignInEmail
+      productName="First Jobby"
+      url={url}
+      expiresInMinutes={10}
+      art={emailArt("pip-waving", "https://example.com/email-art")}
+    />,
   );
 }
 ```
 
-`renderEmail` returns static HTML with a doctype. Emails use table layouts and inline styles, and need no web CSS
-or KumikoProvider. Pass literal colour values through `theme`; set `dir`, `lang` and translated copy explicitly.
-When composing building blocks, pass the same theme to each coloured part.
+- `renderEmail` returns HTML with a doctype. The layout uses tables and inline styles, so it holds up in Gmail,
+  Outlook and Apple Mail, and it needs no provider or web CSS.
+- The templates are SignInEmail, VerifyEmail, ReceiptEmail and JobAlertDigestEmail, plus PlainEmail, which looks
+  like a note typed by hand. Every English string can be replaced; set `dir` and `lang` for Arabic or Urdu.
+- **Images:** mail clients can't show SVG, so the kit ships 13 PNGs of the characters and objects at 2× in
+  `node_modules/kumiko-ui/dist/email/art/`. Copy them to your public folder or CDN and pass that base URL to
+  `emailArt(name, baseUrl)`. They use Kumiko's default colours; for your own brand, pass any image to `art`.
+- **Fonts:** Gmail and Outlook ignore web fonts and use the fallbacks; Apple devices get Arial Rounded. To load
+  Fredoka and Nunito where a client allows it, pass `fontHref` (Google Fonts or your own CSS). It's off by default
+  because a remote font lets its host see when an email is opened.
+- **Your own layouts:** compose `Email`, `EmailCard` with a `hero`, `EmailHero`, `EmailText`, `EmailButton`
+  (primary or secondary), `EmailCode`, `EmailChip`, `EmailDivider` and `EmailFooter`. Pass the same `theme` to each
+  coloured part.
 
 ## For coding agents
 

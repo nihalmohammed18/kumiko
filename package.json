@@ -44,6 +44,7 @@
       "types": "./dist/email/index.d.ts",
       "default": "./dist/email/index.js"
     },
+    "./email/art/*": "./dist/email/art/*",
     "./styles.css": "./dist/styles.css",
     "./fonts.css": "./dist/fonts.css",
     "./package.json": "./package.json"
@@ -51,6 +52,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
     "tokens": "node scripts/build-tokens.ts",
+    "email:art": "node scripts/email-art.ts",
     "build": "node scripts/build-tokens.ts && rm -rf dist && tsc -p tsconfig.build.json && node scripts/copy-css.ts && node scripts/check.ts --dist && node scripts/agent-docs.ts",
     "size": "node scripts/size.ts",
     "build:storybook": "storybook build -o storybook-static --quiet",

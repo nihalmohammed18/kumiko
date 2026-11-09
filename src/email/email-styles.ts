@@ -1,21 +1,26 @@
-import { text } from "../tokens.ts";
+import { email } from "../tokens.ts";
 
-/** Email font stacks: Kumiko's faces by their installed names, then fonts every mail client has. Email can't load
- * Kumiko's web fonts, so the web stacks' variable-font names would only ever fall through.
+/** Email font stacks with rounded system fallbacks when optional web fonts are unavailable.
  * Use when: styling email text. Avoid when: styling browser UI; use the theme's font utilities.
  */
 export const emailFonts = {
-  display: "Fredoka, Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  display: "Fredoka, 'Arial Rounded MT Bold', Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
   body: "Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-  code: "ui-monospace, 'SF Mono', Menlo, Consolas, 'Courier New', monospace",
+  plain: "Arial, Helvetica, sans-serif",
 } as const;
 
-/** Converts token type sizes to pixels at the email kit's 16px root.
- * Use when: styling email text without rem support. Avoid when: sizing browser UI text.
+/** Resolves email typography, converting token sizes to pixels at a 16px root.
+ * Use when: styling email text with its rounded or body stack. Avoid when: styling browser UI text.
  */
-export function emailTypeStyle(role: keyof typeof text) {
+export function emailTypeStyle(role: keyof typeof email.text) {
   const pixels = (value: string) => `${Number.parseFloat(value) * (value.endsWith("rem") ? 16 : 1)}px`;
-  return { fontSize: pixels(text[role][0]), lineHeight: pixels(text[role][1]) };
+  const body = role === "body" || role === "subline" || role === "chip" || role === "footer";
+  return {
+    fontFamily: role === "plain" ? emailFonts.plain : body ? emailFonts.body : emailFonts.display,
+    fontSize: pixels(email.text[role][0]),
+    lineHeight: pixels(email.text[role][1]),
+    fontWeight: body || role === "plain" ? undefined : 700,
+  };
 }
 
 /** Chooses a legacy email alignment, inheriting the document's direction when omitted.

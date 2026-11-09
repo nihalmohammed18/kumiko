@@ -12,6 +12,7 @@ const config: StorybookConfig = {
     "./ux/fixtures.stories.tsx",
   ],
   addons: ["@storybook/addon-docs", "@storybook/addon-a11y", "@storybook/addon-vitest"],
+  staticDirs: [{ from: "../src/email/art", to: "/email-art" }],
   framework: { name: "@storybook/react-vite", options: {} },
   core: { disableTelemetry: true },
 };
