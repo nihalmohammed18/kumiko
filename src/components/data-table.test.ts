@@ -127,6 +127,18 @@ it("keeps server rows readable while refreshing and uses skeletons only for the 
   expect(firstLoad.match(/data-slot="skeleton"/g)).toHaveLength(6);
 });
 
+it("reserves a single updating status in manual mode and reveals it only while refreshing existing rows", () => {
+  const status = (html: string) => /<div[^>]*data-slot="data-table-updating"[^>]*>[\s\S]*?<\/div>/.exec(html)?.[0];
+  const updating = status(render({ manual: true, loading: true }));
+  expect(updating).toContain('role="status"');
+  expect(updating).toContain("Updating results…");
+  expect(updating).toContain('data-slot="spinner"');
+  expect(updating).not.toContain("invisible");
+  expect(status(render({ manual: true }))).toContain("invisible");
+  expect(status(render({ manual: true, loading: true, data: [] }))).toContain("invisible");
+  expect(status(render({ loading: true }))).toBeUndefined();
+});
+
 it("bounds the initial DOM for ten thousand rows while exposing the full row count and logical row indexes", () => {
   const html = render({
     virtualize: true,
