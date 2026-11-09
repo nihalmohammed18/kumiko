@@ -120,12 +120,13 @@ export const Failure: Story = {
 export const ObjectsOnly: Story = {
   name: "Objects only",
   args: { art: <Illustration name="envelope" /> },
+  render: (args) => <EmptyStatePreview {...args} scenario="emptyStateFirstRun" />,
 };
 
 export const Narrow: Story = {
   render: (args) => (
     <div className="w-80 max-w-full">
-      <EmptyState {...args} />
+      <EmptyStatePreview {...args} scenario="emptyStateFirstRun" />
     </div>
   ),
 };
@@ -137,7 +138,7 @@ export const States: Story = {
         <EmptyStatePreview {...args} headingLevel={2} scenario="emptyStateFirstRun" />
         <EmptyStatePreview {...args} {...NoResults.args} scenario="emptyStateNoResults" />
         <EmptyStatePreview {...args} {...Failure.args} scenario="emptyStateFailure" />
-        <EmptyState {...args} {...ObjectsOnly.args} />
+        <EmptyStatePreview {...args} {...ObjectsOnly.args} scenario="emptyStateFirstRun" />
       </div>
     </div>
   ),
