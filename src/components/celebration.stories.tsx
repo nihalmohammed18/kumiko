@@ -176,6 +176,8 @@ export const WithoutFaces: Story = {
 };
 
 export const Interrupted: Story = {
+  // The same earned day as Hop, cut short: the final frame still shows the +1.
+  args: { streak: { ...meta.args.streak, gained: true } },
   play: async ({ args, canvas, globals, userEvent }) => {
     args.onContinue?.mockClear();
     await userEvent.click(
