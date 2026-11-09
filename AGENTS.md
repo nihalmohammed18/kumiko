@@ -15,6 +15,7 @@ The owner's bar: the small details must be right everywhere. A disabled button n
 | `pnpm size` | Gzipped size of each entry; fails when one grows more than 10% over `size-baseline.json`. |
 | `pnpm tokens` | Regenerates `src/tokens.css` and `src/theme.css` after editing `src/tokens.ts`. |
 | `pnpm vrt:docker --update` | Makes screenshot baselines locally in CI's Linux image. Run `colima start` first. |
+| `pnpm email:art` | Re-renders the email PNGs in `src/email/art/` from Character and Illustration. Run it after changing their art. |
 
 ## Who does what
 

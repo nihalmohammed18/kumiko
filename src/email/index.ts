@@ -21,7 +21,7 @@
  * Copy the default palette PNGs from node_modules/kumiko-ui/dist/email/art/ into your public folder or CDN,
  * then pass that absolute base URL to emailArt(name, baseUrl). It returns src, alt and 160×160 display dimensions.
  * EmailArtName lists the thirteen shipped images; the ./email/art/* package export exposes the files.
- * Products with another brand can export recoloured PNGs later; theme overrides do not recolour these images.
+ * The PNGs use Kumiko's default colours and theme overrides do not recolour them; pass any image to art instead.
  *
  * Optional fontHref accepts Google Fonts' Fredoka 600/700 and Nunito 400/700/800 CSS URL or self-hosted CSS,
  * and defaults off because remote font requests can disclose recipient activity.

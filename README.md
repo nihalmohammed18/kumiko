@@ -165,10 +165,10 @@ The [form guide](docs/forms.md) explains validation and focus wiring.
 
 ## Email kit
 
-Import email components from `kumiko-ui/email`. The [building blocks](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-building-blocks--docs)
-include Email, EmailHero, EmailHeading, EmailText, EmailButton, EmailLink, EmailLogo, EmailImage, EmailChip,
-EmailSection, EmailCard, EmailCode, EmailDivider and EmailFooter. The [Email/Templates](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-templates--docs) page
-contains SignInEmail, VerifyEmail, JobAlertDigestEmail, ReceiptEmail and PlainEmail.
+`kumiko-ui/email` renders static HTML emails with the Playground look: a header, a tinted hero with Pip, Mori,
+Tuck or an object, a rounded headline, a button on a darker edge, and a footer. See the
+[templates](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-templates--docs) and the
+[building blocks](https://nihalmohammed18.github.io/kumiko/?path=/docs/email-building-blocks--docs).
 
 ```tsx
 import { emailArt, renderEmail, SignInEmail } from "kumiko-ui/email";
@@ -185,39 +185,19 @@ function signInHtml(url: string) {
 }
 ```
 
-`renderEmail` returns static HTML with a doctype. Emails use table layouts and inline styles, and need no web CSS
-or KumikoProvider. Pass literal colour values through `theme`; set `dir`, `lang` and translated copy explicitly.
-When composing building blocks, pass the same theme to each coloured part.
-
-The branded templates put the product header above a rounded hero card and a muted footer below it. They accept
-optional `art`, `subline` and `footer` props, and every English string is replaceable. Sign-in and verification
-codes remain exactly as supplied; pass Arabic-Indic digits yourself when needed.
-
-Copy the **default palette** PNGs from `node_modules/kumiko-ui/dist/email/art/` to your public folder or CDN and
-pass that absolute base URL to `emailArt(name, baseUrl)`. The typed `EmailArtName` covers thirteen characters and
-objects; the helper returns `src`, English `alt` and 160×160 display dimensions for the 320×320 PNGs. Override
-`alt` for translated copy. Package files are also exposed by `kumiko-ui/email/art/*`. Products with another
-brand can export recoloured PNGs later; colour theme overrides do not recolour the default palette art.
-
-`Email` and branded templates accept optional `fontHref` for
-`https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@400;700;800&display=swap`
-or self-hosted CSS, and default it off because remote font requests can disclose recipient activity.
-Gmail and classic Outlook use the fallback fonts; Apple Mail can use Fredoka or Arial Rounded MT Bold.
-Outlook may square corners and simplify the lower edge, while button cells keep their background and padding fallback.
-
-For custom emails, pass `EmailHero` through `EmailCard.hero` so the hero fills the top and the body keeps its
-32px padding (24px on mobile). `EmailButton` supports `variant="primary" | "secondary"`,
-`align="center" | "start"` and `fullWidth`; `EmailCode.note` adds a chip and `EmailDivider.label` splits a line
-around text. `EmailChip` supports neutral, brand, sun, leaf, coral and tide tones. `EmailFooter` takes `reason`,
-`links: { label, href }[]` and extra children, with no postal address by default.
-
-`ReceiptEmail` accepts `paymentMethod`, `paidText` and `questionsText`; `VerifyEmail` accepts
-`expiresInMinutes` and `expiryText`. Digest jobs accept `logo` image metadata and `tags`; `viewAllUrl` falls
-back to `manageUrl`, and the manage/stop link stays in the footer even with custom footer links.
-`PlainEmail` is a white, start-aligned Arial 15px/22px note with native HTML children and underlined ink links.
-
-Contributors generate the art with `pnpm email:art`; the build copies generated PNGs into `dist/email/art/`.
-Storybook serves them at `/email-art` and injects local Fontsource Fredoka/Nunito faces only into previews.
+- `renderEmail` returns HTML with a doctype. The layout uses tables and inline styles, so it holds up in Gmail,
+  Outlook and Apple Mail, and it needs no provider or web CSS.
+- The templates are SignInEmail, VerifyEmail, ReceiptEmail and JobAlertDigestEmail, plus PlainEmail, which looks
+  like a note typed by hand. Every English string can be replaced; set `dir` and `lang` for Arabic or Urdu.
+- **Images:** mail clients can't show SVG, so the kit ships 13 PNGs of the characters and objects at 2× in
+  `node_modules/kumiko-ui/dist/email/art/`. Copy them to your public folder or CDN and pass that base URL to
+  `emailArt(name, baseUrl)`. They use Kumiko's default colours; for your own brand, pass any image to `art`.
+- **Fonts:** Gmail and Outlook ignore web fonts and use the fallbacks; Apple devices get Arial Rounded. To load
+  Fredoka and Nunito where a client allows it, pass `fontHref` (Google Fonts or your own CSS). It's off by default
+  because a remote font lets its host see when an email is opened.
+- **Your own layouts:** compose `Email`, `EmailCard` with a `hero`, `EmailHero`, `EmailText`, `EmailButton`
+  (primary or secondary), `EmailCode`, `EmailChip`, `EmailDivider` and `EmailFooter`. Pass the same `theme` to each
+  coloured part.
 
 ## For coding agents
 
