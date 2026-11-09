@@ -379,15 +379,16 @@ const chosenSkills = skills.slice(0, 3);
 
 function SkillsField({
   label = "Skills",
+  placeholder = "Search skills",
   invalid,
   disabled,
   ...props
-}: ComboboxProps<string, true> & { label?: string; invalid?: boolean }) {
+}: ComboboxProps<string, true> & { label?: string; placeholder?: string; invalid?: boolean }) {
   return (
     <Field name="skills" disabled={disabled} invalid={invalid} className="w-full max-w-xs">
       <FieldLabel>{label}</FieldLabel>
       <Combobox {...props} items={skills} multiple>
-        <ComboboxChips placeholder="Search skills" />
+        <ComboboxChips placeholder={placeholder} />
         <ComboboxPopup>
           {(skill: string) => (
             <ComboboxItem key={skill} value={skill}>
@@ -505,5 +506,5 @@ export const MultipleStates: Story = {
 export const MultipleRtl: Story = {
   name: "Multiple right to left",
   globals: { dir: "rtl" },
-  render: () => <SkillsField label="المهارات" defaultValue={chosenSkills} />,
+  render: () => <SkillsField label="المهارات" placeholder="ابحث عن مهارة" defaultValue={chosenSkills} />,
 };
