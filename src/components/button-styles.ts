@@ -9,7 +9,7 @@ import { tv, type VariantProps } from "../lib/tv.ts";
  */
 export const buttonStyles = tv({
   base: [
-    "press inline-flex shrink-0 select-none items-center justify-center gap-2 font-body font-extrabold",
+    "press inline-flex max-w-full shrink-0 select-none items-center justify-center gap-2 font-body font-extrabold",
     "uppercase tracking-[0.06em] arabic:normal-case arabic:tracking-normal text-balance",
     "[&_svg]:size-(--icon-size) [&_svg]:shrink-0",
   ],

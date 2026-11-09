@@ -8,6 +8,7 @@ import { formatLabel, labels } from "../labels.ts";
 import { useKumiko } from "../provider.tsx";
 import { Badge } from "./badge.tsx";
 import { Button } from "./button.tsx";
+import { Character } from "./character.tsx";
 import { DataTable, type DataTableFeatures, type DataTableProps } from "./data-table.tsx";
 
 type Application = {
@@ -252,8 +253,8 @@ export const Empty: Story = {
 
 export const NoMatches: Story = {
   name: "No matches",
-  args: { defaultGlobalFilter: "unobtainium" },
-  play: async ({ canvas, globals }) => {
+  args: { defaultGlobalFilter: "unobtainium", emptyArt: <Character name="mori" pose="thinking" /> },
+  play: async ({ canvas, globals, userEvent }) => {
     await waitFor(() =>
       expect(
         canvas.getByRole("heading", {
@@ -261,6 +262,18 @@ export const NoMatches: Story = {
         }),
       ).toBeVisible(),
     );
+    const catalog = globals.dir === "rtl" ? labels.ar : labels.en;
+    const input = canvas.getByRole("searchbox", { name: catalog.filterRows });
+    await userEvent.click(canvas.getByRole("button", { name: catalog.clearFilter }));
+    await waitFor(() => {
+      expect(input).toHaveValue("");
+      expect(input).toHaveFocus();
+      expect(canvas.getByRole("table").querySelectorAll("tbody tr")).toHaveLength(10);
+      expect(canvas.queryByRole("button", { name: catalog.clearFilter })).not.toBeInTheDocument();
+    });
+    // Restore the no-matches view for its screenshot.
+    await userEvent.type(input, "unobtainium");
+    await waitFor(() => expect(canvas.getByRole("button", { name: catalog.clearFilter })).toBeVisible());
   },
 };
 

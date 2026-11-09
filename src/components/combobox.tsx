@@ -1,6 +1,7 @@
 "use client";
 
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
+import type { ReactNode } from "react";
 import { CheckIcon, ChevronDownIcon, XIcon } from "../icons.tsx";
 import { formatLabel } from "../labels.ts";
 import { cn } from "../lib/tv.ts";
@@ -93,13 +94,15 @@ export function ComboboxInput({ size, className, ...props }: ComboboxInputProps)
 export interface ComboboxPopupProps extends Omit<BaseCombobox.Popup.Props, "className" | "children"> {
   className?: string;
   children?: BaseCombobox.List.Props["children"];
+  /** Replaces the default no-matches text inside the polite announcement. */
+  emptyContent?: ReactNode;
 }
 
 /** Places a shared popup, a polite empty announcement and a filtered list below the input group.
  * Use when: rendering ComboboxItem or groups from the root's items with a function child.
  * Avoid when: showing arbitrary floating content; use Popover.
  */
-export function ComboboxPopup({ className, children, ...props }: ComboboxPopupProps) {
+export function ComboboxPopup({ className, children, emptyContent, ...props }: ComboboxPopupProps) {
   const { labels, locale } = useKumiko();
   return (
     <BaseCombobox.Portal data-slot="combobox-portal">
@@ -117,7 +120,7 @@ export function ComboboxPopup({ className, children, ...props }: ComboboxPopupPr
         >
           <BaseCombobox.Empty data-slot="combobox-empty">
             <div className="min-w-0 wrap-anywhere px-3 py-2 text-ink-muted">
-              {formatLabel(labels.noMatches, locale)}
+              {emptyContent ?? formatLabel(labels.noMatches, locale)}
             </div>
           </BaseCombobox.Empty>
           <BaseCombobox.List data-slot="combobox-list">{children}</BaseCombobox.List>

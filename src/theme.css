@@ -24,6 +24,8 @@
   --color-sun-fg: var(--kumiko-sun-fg);
   --color-sun-tint: var(--kumiko-sun-tint);
   --color-sun-text: var(--kumiko-sun-text);
+  --color-streak-pending: var(--kumiko-streak-pending);
+  --color-streak-zero: var(--kumiko-streak-zero);
   --color-leaf: var(--kumiko-leaf);
   --color-leaf-fg: var(--kumiko-leaf-fg);
   --color-leaf-tint: var(--kumiko-leaf-tint);
