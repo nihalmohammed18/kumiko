@@ -15,13 +15,26 @@ import { Input } from "../components/input.tsx";
 
 type SignUpValues = { name: string; email: string };
 
-async function createAccount(values: SignUpValues, fail: boolean): Promise<NonNullable<FormProps["errors"]>> {
-  await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+async function createAccount(
+  values: SignUpValues,
+  fail: boolean,
+  hang: boolean,
+): Promise<NonNullable<FormProps["errors"]>> {
+  // hang leaves the request in flight, so the Pending story rests on the loading state.
+  await new Promise<void>((resolve) => !hang && setTimeout(resolve, 1000));
   if (fail) throw new Error("Something went wrong on our side");
   return values.email.toLowerCase() === "taken@example.com" ? { email: "That email already has an account" } : {};
 }
 
-function AsyncSignUp({ fail = false, onRequest }: { fail?: boolean; onRequest: (values: SignUpValues) => void }) {
+function AsyncSignUp({
+  fail = false,
+  hang = false,
+  onRequest,
+}: {
+  fail?: boolean;
+  hang?: boolean;
+  onRequest: (values: SignUpValues) => void;
+}) {
   const [errors, setErrors] = useState<FormProps["errors"]>({});
   const [pending, setPending] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -48,7 +61,7 @@ function AsyncSignUp({ fail = false, onRequest }: { fail?: boolean; onRequest: (
           const account = { name: String(values.name), email: String(values.email) };
           try {
             onRequest(account);
-            const serverErrors = await createAccount(account, fail);
+            const serverErrors = await createAccount(account, fail, hang);
             setErrors(serverErrors);
             if (!serverErrors.email) {
               form.current?.reset();
@@ -135,6 +148,24 @@ async function fillAccount({ canvas, userEvent }: Parameters<NonNullable<Story["
  * Use when: checking duplicate-request prevention. Avoid when: leaving a request unresolved.
  */
 export const Pending: Story = {
+  args: { hang: true },
+  play: async (context) => {
+    const { canvas, userEvent } = context;
+    await fillAccount(context, "nihal@example.com");
+    const submit = canvas.getByRole("button", { name: "Create account" });
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(submit).toHaveAttribute("aria-busy", "true");
+      expect(submit).toHaveAccessibleName("Creating your account…");
+    });
+  },
+};
+
+/** Ignores pointer and implicit keyboard resubmission while pending, then succeeds once.
+ * Use when: checking duplicate-request prevention. Avoid when: previewing the loading state at rest.
+ */
+export const NoDuplicateSubmits: Story = {
+  name: "No duplicate submits",
   play: async (context) => {
     const { args, canvas, userEvent } = context;
     await fillAccount(context, "nihal@example.com");
