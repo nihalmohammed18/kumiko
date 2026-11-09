@@ -27,6 +27,8 @@
   --kumiko-sun-fg: #26203C;
   --kumiko-sun-tint: #FFE298;
   --kumiko-sun-text: #6C4200;
+  --kumiko-streak-pending: #8A7454;
+  --kumiko-streak-zero: #717174;
   --kumiko-leaf: #73CE8F;
   --kumiko-leaf-fg: #26203C;
   --kumiko-leaf-tint: #C5EED0;
@@ -84,6 +86,8 @@
   --kumiko-sun-fg: #151828;
   --kumiko-sun-tint: #514322;
   --kumiko-sun-text: #FFE5A2;
+  --kumiko-streak-pending: #B5A181;
+  --kumiko-streak-zero: #ADB0BC;
   --kumiko-leaf: #80CEA0;
   --kumiko-leaf-fg: #151828;
   --kumiko-leaf-tint: #254631;

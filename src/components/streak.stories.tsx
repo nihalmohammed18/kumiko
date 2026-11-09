@@ -53,13 +53,28 @@ export const Increment: Story = {
   },
 };
 
+export const Zero: Story = {
+  args: { count: 0, done: [] },
+};
+
+export const Pending: Story = {};
+
+export const Done: Story = {
+  args: { done: [...meta.args.done, meta.args.today] },
+};
+
+export const DoneWithGoal: Story = {
+  name: "Done with goal",
+  args: { ...Done.args, goal: 14 },
+};
+
 export const States: Story = {
   render: (args) => (
     <div className="flex min-w-0 flex-wrap items-start gap-6">
       <Streak {...args} count={0} done={[]} />
-      <Streak {...args} count={1} done={[args.today]} />
       <Streak {...args} />
-      <Streak {...args} increment />
+      <Streak {...args} done={[...args.done, args.today]} />
+      <Streak {...args} done={[...args.done, args.today]} goal={14} />
     </div>
   ),
 };

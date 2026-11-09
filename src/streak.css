@@ -2,6 +2,18 @@
   scale: 1;
   transition: scale calc(var(--kumiko-duration-streak-pop) / 2) var(--kumiko-ease-enter);
 
+  :where([data-slot="streak"][data-state="pending"]) & {
+    --kumiko-sun: var(--kumiko-streak-pending);
+    --kumiko-sun-text: var(--kumiko-ink);
+    --kumiko-sun-tint: var(--kumiko-field);
+  }
+
+  :where([data-slot="streak"][data-state="zero"]) & {
+    --kumiko-sun: var(--kumiko-streak-zero);
+    --kumiko-sun-text: var(--kumiko-ink);
+    --kumiko-sun-tint: var(--kumiko-field);
+  }
+
   &[data-popping] {
     scale: var(--kumiko-scale-streak-peak);
   }

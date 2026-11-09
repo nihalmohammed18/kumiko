@@ -20,6 +20,10 @@ export interface StreakProps extends Omit<ComponentProps<"div">, "children"> {
   increment?: boolean;
   /** Replaces the decorative number display; count remains the final accessible value. */
   countDisplay?: ReactNode;
+  /** Replaces the localized next-step hint; false hides the hint and goal line. */
+  hint?: ReactNode;
+  /** Shows the localized number of days remaining while count is below this goal. */
+  goal?: number;
 }
 
 /** A localized streak counter and calendar week with checked completed days.
@@ -28,8 +32,21 @@ export interface StreakProps extends Omit<ComponentProps<"div">, "children"> {
  * @example
  * <Streak count={3} today="2026-11-08" done={["2026-11-06", "2026-11-07", "2026-11-08"]} />
  */
-export function Streak({ count, today, done, increment = false, countDisplay, className, ...props }: StreakProps) {
+export function Streak({
+  count,
+  today,
+  done,
+  increment = false,
+  countDisplay,
+  hint,
+  goal,
+  className,
+  ...props
+}: StreakProps) {
   const { locale, labels } = useKumiko();
+  const state = done.includes(today) ? "done" : count === 0 ? "zero" : "pending";
+  const defaultHint =
+    state === "zero" ? labels.streakZeroHint : state === "pending" ? labels.streakPendingHint : labels.streakDoneHint;
   const [popping, setPopping] = useState(false);
   useEffect(() => {
     setPopping(false);
@@ -64,7 +81,12 @@ export function Streak({ count, today, done, increment = false, countDisplay, cl
   const placeholder = template.indexOf("{count}");
 
   return (
-    <div {...props} data-slot="streak" className={cn("@container grid min-w-0 gap-4 text-ink", className)}>
+    <div
+      {...props}
+      data-slot="streak"
+      data-state={state}
+      className={cn("@container grid min-w-0 gap-4 text-ink", className)}
+    >
       <div className="flex min-w-0 flex-wrap items-center gap-3">
         <span
           data-slot="streak-flame"
@@ -110,8 +132,21 @@ export function Streak({ count, today, done, increment = false, countDisplay, cl
               aria-current={current ? "date" : undefined}
               className="flex shrink-0 flex-col items-center gap-1"
             >
-              <span aria-hidden className={cn("text-caption font-bold text-ink-muted", current && "text-brand-text")}>
+              <span
+                aria-hidden
+                className={cn(
+                  "flex flex-col items-center gap-1 text-caption font-bold text-ink-muted",
+                  current && "text-brand-text",
+                )}
+              >
                 {narrow.format(date)}
+                <span
+                  data-slot="streak-today-marker"
+                  className={cn(
+                    "size-1 rounded-full bg-brand-text forced-colors:bg-forced-ink",
+                    !current && "invisible",
+                  )}
+                />
               </span>
               <span
                 aria-hidden
@@ -121,7 +156,8 @@ export function Streak({ count, today, done, increment = false, countDisplay, cl
                   completed &&
                     "border-sun bg-sun text-sun-fg forced-colors:forced-color-adjust-none forced-colors:bg-forced-fill forced-colors:text-forced-fg",
                   current &&
-                    "ring-2 ring-brand forced-colors:outline-solid forced-colors:outline-2 forced-colors:outline-forced-ink",
+                    state === "pending" &&
+                    "ring-2 ring-inset ring-brand-text forced-colors:outline-solid forced-colors:outline-2 forced-colors:-outline-offset-2 forced-colors:outline-forced-ink",
                 )}
               >
                 {completed && <CheckIcon className="size-4" />}
@@ -135,6 +171,21 @@ export function Streak({ count, today, done, increment = false, countDisplay, cl
           );
         })}
       </ul>
+      {hint !== false && (
+        <p data-slot="streak-hint" className="min-w-0 wrap-anywhere text-body-sm text-ink-muted">
+          {hint ?? formatLabel(defaultHint, locale)}
+          {goal !== undefined && count < goal && (
+            <>
+              {" "}
+              <span data-slot="streak-goal">
+                {formatLabel(labels.streakGoal, locale, goal - count, {
+                  goal: new Intl.NumberFormat(locale).format(goal),
+                })}
+              </span>
+            </>
+          )}
+        </p>
+      )}
     </div>
   );
 }
