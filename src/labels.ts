@@ -65,6 +65,7 @@ export const englishLabels = {
   streakDoneHint: "Done for today. See you tomorrow!",
   streakGoal: { one: "{count} more day to {goal}", other: "{count} more days to {goal}" },
   clearFilter: "Clear filter",
+  updatingResults: "Updating results…",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -168,6 +169,7 @@ export const labels = {
       other: "{count} يوم آخر للوصول إلى {goal}",
     },
     clearFilter: "مسح التصفية",
+    updatingResults: "جارٍ تحديث النتائج…",
   },
   ur: {
     close: "بند کریں",
@@ -226,6 +228,7 @@ export const labels = {
     streakDoneHint: "آج کی مشق مکمل۔ کل ملتے ہیں!",
     streakGoal: { one: "{goal} تک پہنچنے کے لیے مزید {count} دن", other: "{goal} تک پہنچنے کے لیے مزید {count} دن" },
     clearFilter: "فلٹر صاف کریں",
+    updatingResults: "نتائج اپ ڈیٹ ہو رہے ہیں…",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 

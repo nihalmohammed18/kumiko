@@ -45,6 +45,7 @@
   border-block-end: 1px solid var(--kumiko-line);
 }
 
+[data-slot="table-row"][data-selected],
 [data-slot="table-row"][data-selected] > :is(th, td) {
   background-color: color-mix(in oklab, var(--kumiko-brand) 15%, var(--kumiko-surface));
 }
@@ -122,8 +123,9 @@
       display: block;
     }
 
-    > [data-slot="table-header"] {
-      /* Keep column headings available to assistive technology in the card layout. */
+    > [data-slot="table-header"],
+    [data-slot="table-cell"][data-card="hidden"] {
+      /* Keep headings and hidden values available to assistive technology in cards. */
       position: absolute;
       inset-block-start: auto;
       inline-size: 1px;
@@ -132,10 +134,12 @@
       overflow: hidden;
       clip-path: inset(50%);
       white-space: nowrap;
+      padding: 0;
+      border: 0;
+    }
 
-      :is([data-slot="data-table-sort"], [data-slot="checkbox"]) {
-        display: none;
-      }
+    > [data-slot="table-header"] :is([data-slot="data-table-sort"], [data-slot="checkbox"]) {
+      display: none;
     }
 
     > [data-slot="table-body"] {
@@ -151,7 +155,7 @@
         border: var(--kumiko-border) solid var(--kumiko-line);
         border-radius: var(--kumiko-radius-control);
 
-        > [data-slot="table-cell"]:last-child {
+        > [data-slot="table-cell"]:is(:last-child, :has(+ [data-card="hidden"])) {
           border-block-end: 0;
         }
       }
