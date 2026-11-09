@@ -71,6 +71,12 @@ export const englishLabels = {
   chipRemoval: "Press Backspace or Delete to remove.",
   chipNavigation: "From the start of the input, use the arrow keys to reach selected values.",
   updatingResults: "Updating results…",
+  rating: "Rated {value} out of {max}",
+  ratingCount: {
+    one: "Rated {value} out of {max} from {count} rating",
+    other: "Rated {value} out of {max} from {count} ratings",
+  },
+  noRatings: "No ratings yet",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -180,6 +186,15 @@ export const labels = {
     chipRemoval: "اضغط على مفتاح Backspace أو Delete للإزالة.",
     chipNavigation: "من بداية حقل الإدخال، استخدم مفاتيح الأسهم للوصول إلى القيم المحددة.",
     updatingResults: "جارٍ تحديث النتائج…",
+    rating: "التقييم {value} من {max}",
+    ratingCount: {
+      one: "التقييم {value} من {max} بناءً على تقييم واحد",
+      two: "التقييم {value} من {max} بناءً على تقييمين",
+      few: "التقييم {value} من {max} بناءً على {count} تقييمات",
+      many: "التقييم {value} من {max} بناءً على {count} تقييمًا",
+      other: "التقييم {value} من {max} بناءً على {count} تقييم",
+    },
+    noRatings: "لا توجد تقييمات بعد",
   },
   ur: {
     close: "بند کریں",
@@ -244,6 +259,12 @@ export const labels = {
     chipRemoval: "ہٹانے کے لیے Backspace یا Delete دبائیں۔",
     chipNavigation: "ان پٹ کے شروع سے، منتخب اقدار تک پہنچنے کے لیے تیر والے بٹن استعمال کریں۔",
     updatingResults: "نتائج اپ ڈیٹ ہو رہے ہیں…",
+    rating: "درجہ بندی {max} میں سے {value}",
+    ratingCount: {
+      one: "درجہ بندی {max} میں سے {value}، {count} درجہ بندی کی بنیاد پر",
+      other: "درجہ بندی {max} میں سے {value}، {count} درجہ بندیوں کی بنیاد پر",
+    },
+    noRatings: "ابھی کوئی درجہ بندی نہیں",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 
