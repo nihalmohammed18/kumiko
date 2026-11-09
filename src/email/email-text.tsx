@@ -1,4 +1,4 @@
-import { emailAlignment, emailFonts, emailTypeStyle } from "./email-styles.ts";
+import { emailAlignment, emailTypeStyle } from "./email-styles.ts";
 import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
 
 /** Native paragraph props and a muted colour variant.
@@ -6,6 +6,7 @@ import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
  */
 export interface EmailTextProps extends EmailPartProps<"p"> {
   muted?: boolean;
+  align?: "center" | "start";
 }
 
 /** Email body copy at 16px with a 24px line height, optionally muted.
@@ -14,7 +15,7 @@ export interface EmailTextProps extends EmailPartProps<"p"> {
  * @example
  * <EmailText muted>You received this because you saved a frontend job alert.</EmailText>
  */
-export function EmailText({ muted = false, theme, dir, ...props }: EmailTextProps) {
+export function EmailText({ muted = false, align = "start", theme, dir, ...props }: EmailTextProps) {
   const colors = resolveEmailTheme(theme);
   return (
     <p
@@ -23,10 +24,9 @@ export function EmailText({ muted = false, theme, dir, ...props }: EmailTextProp
       data-slot="email-text"
       style={{
         margin: "0 0 16px",
-        fontFamily: emailFonts.body,
         ...emailTypeStyle("body"),
         color: muted ? colors["ink-muted"] : colors.ink,
-        textAlign: emailAlignment(dir),
+        textAlign: align === "center" ? "center" : emailAlignment(dir),
         overflowWrap: "anywhere",
       }}
     />

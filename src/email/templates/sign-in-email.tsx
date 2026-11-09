@@ -1,8 +1,9 @@
+import type { BrandedEmailProps } from "../email.tsx";
 import { EmailButton } from "../email-button.tsx";
 import { EmailCode } from "../email-code.tsx";
+import { EmailDivider } from "../email-divider.tsx";
 import { EmailSection } from "../email-section.tsx";
-import { EmailText } from "../email-text.tsx";
-import { type BrandedEmailProps, EmailTemplate } from "./email-template.tsx";
+import { EmailTemplate } from "./email-template.tsx";
 
 /** Sign-in destination, optional code, expiry and replaceable English copy.
  * Use when: typing SignInEmail. Avoid when: confirming an address; use VerifyEmailProps.
@@ -14,6 +15,7 @@ export interface SignInEmailProps extends BrandedEmailProps {
   expiresInMinutes: number;
   buttonLabel?: string;
   codeLabel?: string;
+  /** Legacy hero copy; subline takes precedence when both are provided. */
   expiryText?: string;
   ignoreText?: string;
 }
@@ -34,35 +36,35 @@ export function SignInEmail({
   theme,
   heading = `Sign in to ${productName}`,
   buttonLabel = "Sign in",
-  codeLabel = "Or enter this one-time code:",
-  expiryText = `Expires in ${new Intl.NumberFormat(lang).format(expiresInMinutes)} ${expiresInMinutes === 1 ? "minute" : "minutes"}.`,
-  ignoreText = "If you didn't ask for this email, you can ignore it.",
+  codeLabel = "or enter this code",
+  expiryText,
+  subline = expiryText ??
+    `Tap the button to sign in. The link and code expire in ${new Intl.NumberFormat(lang).format(expiresInMinutes)} ${expiresInMinutes === 1 ? "minute" : "minutes"}.`,
+  ignoreText = "If you didn't ask to sign in, you can ignore this email.",
+  footer,
   ...props
 }: SignInEmailProps) {
   const parts = { dir, lang, theme };
   return (
-    <EmailTemplate {...props} {...parts} heading={heading}>
+    <EmailTemplate
+      {...props}
+      {...parts}
+      productName={productName}
+      heading={heading}
+      subline={subline}
+      footer={{ reason: ignoreText, ...footer }}
+    >
       <EmailSection dir={dir} lang={lang}>
-        <EmailButton {...parts} href={url}>
+        <EmailButton {...parts} href={url} align="center">
           {buttonLabel}
         </EmailButton>
       </EmailSection>
       {code !== undefined && (
         <EmailSection dir={dir} lang={lang}>
-          <EmailText {...parts} muted>
-            {codeLabel}
-          </EmailText>
+          <EmailDivider {...parts} label={codeLabel} />
           <EmailCode {...parts}>{code}</EmailCode>
         </EmailSection>
       )}
-      <EmailSection dir={dir} lang={lang}>
-        <EmailText {...parts} muted>
-          {expiryText}
-        </EmailText>
-        <EmailText {...parts} muted>
-          {ignoreText}
-        </EmailText>
-      </EmailSection>
     </EmailTemplate>
   );
 }

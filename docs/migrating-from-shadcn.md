@@ -218,7 +218,9 @@ synchronously, replacing React Email's render call. Keep the app's mail transpor
 | Heading, Text | EmailHeading, EmailText |
 | Button, Link | EmailButton, EmailLink; both use `href` |
 | Img used for the logo | EmailLogo, with required `src`, numeric `width` and `height`, and `alt` |
+| Hero art and status pills | EmailHero and EmailImage with hosted 2× PNGs from emailArt; EmailChip for text pills |
 | Section, a custom card, a divider, a one-time code | EmailSection, EmailCard, EmailDivider, EmailCode |
+| Delivery reason and unsubscribe links | EmailFooter with optional `reason`, `links` and extra children |
 
 The complete templates are SignInEmail, VerifyEmail, JobAlertDigestEmail, ReceiptEmail and PlainEmail, all from
 `kumiko-ui/email` and documented under Storybook's Email/Templates group. Use SignInEmail for First Jobby's

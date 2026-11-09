@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
-import { Email, type EmailProps } from "../email.tsx";
-import { EmailText } from "../email-text.tsx";
+import { Children, type CSSProperties, cloneElement, isValidElement, type ReactNode } from "react";
+import { EmailDocument, type EmailProps } from "../email.tsx";
 import { defaultEmailTheme } from "../email-theme.ts";
 
 /** A personal note's body, signature and optional translated document metadata.
@@ -13,7 +12,23 @@ export interface PlainEmailProps extends Omit<EmailProps, "children" | "title" |
   preview?: string;
 }
 
-/** A complete personal note with underlined ink links and an optional signature.
+function plainContent(content: ReactNode, ink: string): ReactNode {
+  return Children.map(content, (node) => {
+    if (!isValidElement<{ children?: ReactNode; style?: CSSProperties }>(node)) return node;
+    const style =
+      node.type === "a"
+        ? { color: ink, textDecoration: "underline" }
+        : node.type === "p"
+          ? { margin: "0 0 16px" }
+          : undefined;
+    return cloneElement(node, {
+      ...(style && { style: { ...node.props.style, ...style } }),
+      children: plainContent(node.props.children, ink),
+    });
+  });
+}
+
+/** A personally written Arial note with inline underlined ink links and an optional signature.
  * Use when: sending body text without template decoration. Avoid when: needing branding; only theme.ink is used.
  *
  * @example
@@ -29,21 +44,14 @@ export function PlainEmail({
   dir = "ltr",
   lang = "en",
   theme,
+  fontHref,
 }: PlainEmailProps) {
   const ink = theme?.ink ?? defaultEmailTheme.ink;
   const plainTheme = { ink, canvas: defaultEmailTheme.surface, surface: defaultEmailTheme.surface };
   return (
-    <Email dir={dir} lang={lang} theme={plainTheme} title={title} preview={preview}>
-      {/* React hoists this stylesheet to the head, where mail clients expect it. */}
-      <style href="kumiko-plain-email" precedence="email">
-        {`a{color:${ink}!important;text-decoration:underline!important}`}
-      </style>
-      {children}
-      {signature !== undefined && (
-        <EmailText dir={dir} lang={lang} theme={plainTheme}>
-          {signature}
-        </EmailText>
-      )}
-    </Email>
+    <EmailDocument dir={dir} lang={lang} theme={plainTheme} title={title} preview={preview} fontHref={fontHref} plain>
+      {plainContent(children, ink)}
+      {signature !== undefined && <p style={{ margin: "0 0 16px" }}>{signature}</p>}
+    </EmailDocument>
   );
 }

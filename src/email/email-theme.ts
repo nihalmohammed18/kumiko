@@ -7,29 +7,53 @@ import { emailColors } from "../tokens.ts";
 export interface EmailTheme {
   brand: string;
   "brand-fg": string;
+  "brand-tint": string;
+  "brand-text": string;
   edge: string;
+  "edge-neutral": string;
   ink: string;
   "ink-muted": string;
   canvas: string;
   surface: string;
   line: string;
   field: string;
+  "sun-tint": string;
+  "sun-text": string;
+  "leaf-tint": string;
+  "leaf-text": string;
+  "coral-tint": string;
+  "coral-text": string;
+  "tide-tint": string;
+  "tide-text": string;
 }
 
 /** Kumiko's light email palette, with the darker brand text token as the press edge.
  * Use when: extending the default email colours. Avoid when: expecting automatic email client dark mode.
  */
 export const defaultEmailTheme: Readonly<EmailTheme> = {
-  brand: emailColors.brand,
-  "brand-fg": emailColors["brand-fg"],
+  ...emailColors,
   edge: emailColors["brand-text"],
-  ink: emailColors.ink,
-  "ink-muted": emailColors["ink-muted"],
-  canvas: emailColors.canvas,
-  surface: emailColors.surface,
-  line: emailColors.line,
-  field: emailColors.field,
 };
+
+/** The five default accent families used by email art panels and avatars.
+ * Use when: selecting a stable email accent. Avoid when: treating these names as literal colours.
+ */
+export const emailTones = ["brand", "sun", "leaf", "coral", "tide"] as const;
+
+/** An email accent family.
+ * Use when: typing hero and chip tones. Avoid when: specifying a custom colour; use EmailTheme.
+ */
+export type EmailTone = (typeof emailTones)[number];
+
+/** Resolves a tint and readable text pair from an explicit email theme.
+ * Use when: styling chips, heroes or company initials. Avoid when: choosing a primary button's solid fill.
+ */
+export function emailTintStyle(colors: EmailTheme, tone: EmailTone | "neutral") {
+  return {
+    backgroundColor: tone === "neutral" ? colors.field : colors[`${tone}-tint`],
+    color: tone === "neutral" ? colors["ink-muted"] : colors[`${tone}-text`],
+  };
+}
 
 /** Native email part props with an explicit colour theme and guaranteed inline styling.
  * Use when: defining an email part's props. Avoid when: relying on a parent Email to propagate its theme.

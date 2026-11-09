@@ -1,17 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
+import { EmailFrame } from "../../.storybook/email-preview.tsx";
+import { emailTypeStyle } from "./email-styles.ts";
+import { EmailTable } from "./email-table.tsx";
 import {
+  defaultEmailTheme,
   Email,
   EmailButton,
   EmailCard,
+  EmailChip,
   EmailCode,
   EmailDivider,
+  EmailFooter,
   EmailHeading,
+  EmailHero,
+  EmailImage,
   EmailLink,
   EmailLogo,
   EmailSection,
   EmailText,
-  renderEmail,
+  emailArt,
 } from "./index.ts";
 
 const logo =
@@ -31,6 +39,8 @@ const copy = {
     viewReceipt: "View your receipt",
     ignore: "If you didn't ask for this email, you can ignore it.",
     help: "Need help? Contact us.",
+    expiry: "Expires in 15 minutes",
+    chipLabels: ["Account", "Expires soon", "Paid", "New", "Remote", "Receipt"],
   },
   rtl: {
     title: "رابط تسجيل الدخول إلى كوميكو",
@@ -45,6 +55,8 @@ const copy = {
     viewReceipt: "عرض الإيصال",
     ignore: "إذا لم تطلب هذه الرسالة، يمكنك تجاهلها.",
     help: "تحتاج إلى مساعدة؟ تواصل معنا.",
+    expiry: "تنتهي الصلاحية خلال ١٥ دقيقة",
+    chipLabels: ["الحساب", "تنتهي قريبًا", "مدفوع", "جديد", "عن بُعد", "الإيصال"],
   },
 };
 
@@ -52,29 +64,68 @@ function EmailPreview({ dir }: { dir: "ltr" | "rtl" }) {
   const content = copy[dir];
   const lang = dir === "rtl" ? "ar" : "en";
   const direction = { dir, lang };
-  const html = renderEmail(
+  const email = (
     <Email {...direction} title={content.title} preview={content.preview}>
-      <EmailSection {...direction}>
-        <EmailLogo {...direction} src={logo} width={48} height={48} alt="Kumiko" />
-      </EmailSection>
-      <EmailSection {...direction}>
-        <EmailHeading {...direction}>{content.welcome}</EmailHeading>
-        <EmailText {...direction}>{content.body}</EmailText>
-      </EmailSection>
-      <EmailSection {...direction}>
-        <EmailButton {...direction} href="https://example.com/sign-in">
-          {content.signIn}
-        </EmailButton>
-      </EmailSection>
-      <EmailSection {...direction}>
-        <EmailText {...direction} muted>
-          {content.codeIntro}
-        </EmailText>
-        <EmailCode {...direction}>{new Intl.NumberFormat(lang, { useGrouping: false }).format(482019)}</EmailCode>
-      </EmailSection>
-      <EmailDivider />
-      <EmailSection {...direction}>
-        <EmailCard {...direction}>
+      <table role="presentation" width="100%" cellPadding="0" cellSpacing="0" {...direction}>
+        <tbody>
+          <tr>
+            <td align="center" style={{ paddingBottom: 24 }}>
+              <EmailTable
+                {...direction}
+                width="40"
+                align="center"
+                style={{ width: 40, marginInlineStart: "auto", marginInlineEnd: "auto" }}
+              >
+                <EmailLogo {...direction} src={logo} width={40} height={40} alt={dir === "rtl" ? "كوميكو" : "Kumiko"} />
+              </EmailTable>
+              <p
+                style={{
+                  margin: "8px 0 0",
+                  ...emailTypeStyle("header"),
+                  color: defaultEmailTheme.ink,
+                }}
+              >
+                {dir === "rtl" ? "كوميكو" : "Kumiko"}
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <EmailCard
+        {...direction}
+        hero={
+          <EmailHero
+            {...direction}
+            tone="coral"
+            heading={content.welcome}
+            subline={content.body}
+            art={{
+              ...emailArt("pip-waving", "/email-art"),
+              alt: dir === "rtl" ? "بيب يلوّح مرحبًا" : "Pip waving hello",
+            }}
+          />
+        }
+      >
+        <EmailSection {...direction}>
+          <EmailButton {...direction} href="https://example.com/sign-in" align="center">
+            {content.signIn}
+          </EmailButton>
+        </EmailSection>
+        <EmailSection {...direction}>
+          <EmailDivider {...direction} label={content.codeIntro} />
+          <EmailCode {...direction} note={content.expiry}>
+            {dir === "rtl" ? "٤٨٢٠١٩" : "482019"}
+          </EmailCode>
+        </EmailSection>
+        <EmailDivider {...direction} />
+        <EmailSection {...direction}>
+          <EmailImage
+            {...emailArt("sealed-envelope", "/email-art")}
+            {...direction}
+            width={80}
+            height={80}
+            alt={dir === "rtl" ? "ظرف مختوم بنجمة" : "An envelope sealed with a star"}
+          />
           <EmailHeading {...direction} level={2}>
             {content.receipt}
           </EmailHeading>
@@ -83,32 +134,33 @@ function EmailPreview({ dir }: { dir: "ltr" | "rtl" }) {
             {content.paid}
             {new Intl.NumberFormat(lang, { style: "currency", currency: "USD" }).format(12)}
           </EmailText>
-          <EmailLink {...direction} href="https://example.com/receipt">
+          <EmailButton {...direction} href="https://example.com/receipt" variant="secondary" fullWidth>
             {content.viewReceipt}
-          </EmailLink>
-        </EmailCard>
-      </EmailSection>
-      <EmailSection {...direction}>
-        <EmailText {...direction} muted>
-          {content.ignore}
-        </EmailText>
-        <EmailText {...direction} muted>
-          <EmailLink {...direction} href="https://example.com/help">
-            {content.help}
-          </EmailLink>
-        </EmailText>
-      </EmailSection>
-    </Email>,
+          </EmailButton>
+        </EmailSection>
+        <EmailSection {...direction}>
+          {(["brand", "sun", "leaf", "coral", "tide", "neutral"] as const).map((tone, index) => (
+            <span key={tone} style={{ display: "inline-block", marginInlineEnd: 6, marginBlockEnd: 6 }}>
+              <EmailChip {...direction} tone={tone}>
+                {content.chipLabels[index]}
+              </EmailChip>
+            </span>
+          ))}
+          <EmailText {...direction} muted>
+            <EmailLink {...direction} href="https://example.com/help">
+              {content.help}
+            </EmailLink>
+          </EmailText>
+        </EmailSection>
+      </EmailCard>
+      <EmailFooter
+        {...direction}
+        reason={content.ignore}
+        links={[{ label: content.help, href: "https://example.com/help" }]}
+      />
+    </Email>
   );
-  return (
-    <iframe
-      title={content.title}
-      srcDoc={html}
-      sandbox="allow-same-origin"
-      tabIndex={-1}
-      style={{ display: "block", width: 600, maxWidth: "100%", height: 1200, border: 0 }}
-    />
-  );
+  return <EmailFrame title={content.title} email={email} height={1400} />;
 }
 
 const meta = {
@@ -119,6 +171,7 @@ const meta = {
     const frame = canvas.getByTitle(copy[args.dir].title) as HTMLIFrameElement;
     await waitFor(() => {
       const document = frame.contentDocument;
+      expect(frame.dataset.emailReady).toBe("true");
       expect(document?.readyState).toBe("complete");
       expect(document?.documentElement.dir).toBe(args.dir);
       expect(document?.querySelector('[data-slot="email-card"]')).toBeTruthy();

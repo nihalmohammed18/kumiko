@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import { emailAlignment } from "./email-styles.ts";
+import { EmailTable } from "./email-table.tsx";
 
 /** Native cell props for a vertically spaced email section.
  * Use when: typing EmailSection. Avoid when: styling a bordered content group; use EmailCardProps.
@@ -12,22 +13,18 @@ export interface EmailSectionProps extends Omit<ComponentProps<"td">, "className
  * @example
  * <EmailSection><EmailHeading>New jobs for you</EmailHeading><EmailText>Your saved alert has a match.</EmailText></EmailSection>
  */
-export function EmailSection({ children, dir, ...props }: EmailSectionProps) {
+export function EmailSection({ children, dir, lang, ...props }: EmailSectionProps) {
   return (
-    <table role="presentation" width="100%" cellPadding="0" cellSpacing="0" dir={dir} style={{ tableLayout: "fixed" }}>
-      <tbody>
-        <tr>
-          <td
-            {...props}
-            dir={dir}
-            align={emailAlignment(dir)}
-            data-slot="email-section"
-            style={{ padding: "12px 0", textAlign: emailAlignment(dir) }}
-          >
-            {children}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <EmailTable
+      dir={dir}
+      lang={lang}
+      cell={{
+        ...props,
+        "data-slot": "email-section",
+        style: { padding: "12px 0", textAlign: emailAlignment(dir) },
+      }}
+    >
+      {children}
+    </EmailTable>
   );
 }

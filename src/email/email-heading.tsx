@@ -1,4 +1,4 @@
-import { emailAlignment, emailFonts, emailTypeStyle } from "./email-styles.ts";
+import { emailAlignment, emailTypeStyle } from "./email-styles.ts";
 import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
 
 /** Native heading props and the email heading's level.
@@ -6,6 +6,7 @@ import { type EmailPartProps, resolveEmailTheme } from "./email-theme.ts";
  */
 export interface EmailHeadingProps extends EmailPartProps<"h1"> {
   level?: 1 | 2;
+  align?: "center" | "start";
 }
 
 /** A Fredoka-first heading with email-safe fallback fonts and token type sizes.
@@ -14,7 +15,7 @@ export interface EmailHeadingProps extends EmailPartProps<"h1"> {
  * @example
  * <EmailHeading level={2}>New frontend roles this week</EmailHeading>
  */
-export function EmailHeading({ level = 1, theme, dir, ...props }: EmailHeadingProps) {
+export function EmailHeading({ level = 1, align = "start", theme, dir, ...props }: EmailHeadingProps) {
   const Heading = level === 1 ? "h1" : "h2";
   const colors = resolveEmailTheme(theme);
   return (
@@ -24,11 +25,9 @@ export function EmailHeading({ level = 1, theme, dir, ...props }: EmailHeadingPr
       data-slot="email-heading"
       style={{
         margin: "0 0 12px",
-        fontFamily: emailFonts.display,
         ...emailTypeStyle(level === 1 ? "headline" : "title"),
-        fontWeight: 700,
         color: colors.ink,
-        textAlign: emailAlignment(dir),
+        textAlign: align === "center" ? "center" : emailAlignment(dir),
         overflowWrap: "anywhere",
       }}
     />

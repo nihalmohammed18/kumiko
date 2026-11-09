@@ -20,7 +20,17 @@ export const emailColors = {
   "ink-muted": "#665B79",
   brand: "#4F46E5",
   "brand-fg": "#FFFFFF",
+  "brand-tint": "#C8C2FF",
   "brand-text": "#392DB2",
+  "edge-neutral": "#6E6094",
+  "sun-tint": "#FFE298",
+  "sun-text": "#6C4200",
+  "leaf-tint": "#C5EED0",
+  "leaf-text": "#195D32",
+  "coral-tint": "#FFD0C5",
+  "coral-text": "#963520",
+  "tide-tint": "#B7E8FB",
+  "tide-text": "#075879",
 } as const;
 
 /** Colour roles for light and dark mode.
@@ -33,7 +43,7 @@ export const colors = {
     field: emailColors.field,
     line: emailColors.line,
     "skeleton-highlight": "#FFFFFF",
-    "control-line": "#6E6094",
+    "control-line": emailColors["edge-neutral"],
     ink: emailColors.ink,
     "ink-muted": emailColors["ink-muted"],
     strong: "#26203C",
@@ -46,24 +56,24 @@ export const colors = {
     "disabled-line": "#8A809F",
     brand: emailColors.brand,
     "brand-fg": emailColors["brand-fg"],
-    "brand-tint": "#C8C2FF",
+    "brand-tint": emailColors["brand-tint"],
     "brand-text": emailColors["brand-text"],
     sun: "#FFC844",
     "sun-fg": "#26203C",
-    "sun-tint": "#FFE298",
-    "sun-text": "#6C4200",
+    "sun-tint": emailColors["sun-tint"],
+    "sun-text": emailColors["sun-text"],
     leaf: "#73CE8F",
     "leaf-fg": "#26203C",
-    "leaf-tint": "#C5EED0",
-    "leaf-text": "#195D32",
+    "leaf-tint": emailColors["leaf-tint"],
+    "leaf-text": emailColors["leaf-text"],
     coral: "#FF896F",
     "coral-fg": "#26203C",
-    "coral-tint": "#FFD0C5",
-    "coral-text": "#963520",
+    "coral-tint": emailColors["coral-tint"],
+    "coral-text": emailColors["coral-text"],
     tide: "#62C9F2",
     "tide-fg": "#26203C",
-    "tide-tint": "#B7E8FB",
-    "tide-text": "#075879",
+    "tide-tint": emailColors["tide-tint"],
+    "tide-text": emailColors["tide-text"],
     success: "#267444",
     "success-fg": "#FFFFFF",
     "success-tint": "#C5EED0",
@@ -208,6 +218,27 @@ export const border = "2px";
  * Use when: building the shared press recipe. Avoid when: adding elevation shadows.
  */
 export const edge = "4px";
+
+/** Email-only type, corners and tactile edges, without changing the browser recipes.
+ * Use when: drawing static Playground emails. Avoid when: styling browser components; use the web scales.
+ */
+export const email = {
+  radii: { card: radii.overlay, control: "16px", pill: "999px" },
+  edges: { card: "6px", button: "5px", job: edge },
+  text: {
+    header: ["20px", "28px"],
+    headline: text.headline,
+    title: text.title,
+    subline: ["17px", "26px"],
+    body: text.body,
+    button: text["title-sm"],
+    code: ["40px", "48px"],
+    chip: text.label,
+    footer: ["13px", "20px"],
+    job: ["19px", "24px"],
+    plain: ["15px", "22px"],
+  },
+} as const;
 
 /** Keyboard focus ring width and gap.
  * Use when: drawing visible keyboard focus. Avoid when: showing a ring after a pointer click.
