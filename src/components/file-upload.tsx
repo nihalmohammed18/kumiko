@@ -189,7 +189,6 @@ export function FileUpload({
     if (result.accepted.length) {
       changeFiles(result.files);
       setRejection(null);
-      announce(formatLabel(labels.filesAdded, locale, result.accepted.length));
     } else {
       // Nothing was added, but a rejected pick left the browser's own selection in the input. Once this event is
       // over (Field validates during it), put the listed files back and let Field validate those.
@@ -204,6 +203,22 @@ export function FileUpload({
       setRejection(result.rejections[0]!.reason);
       onReject?.(result.rejections);
     }
+    const messages = result.accepted.length ? [formatLabel(labels.filesAdded, locale, result.accepted.length)] : [];
+    for (const { file, reason } of result.rejections) {
+      const reasonLabel =
+        reason === "type"
+          ? labels.fileTypeRejected
+          : reason === "size"
+            ? labels.fileSizeRejected
+            : labels.fileCountRejected;
+      messages.push(
+        formatLabel(labels.fileRejected, locale, undefined, {
+          name: file.name,
+          reason: formatLabel(reasonLabel, locale, reason === "count" ? limit : undefined),
+        }),
+      );
+    }
+    if (messages.length) announce(messages.join(". "));
     return result.files;
   }
   function clearDragging() {

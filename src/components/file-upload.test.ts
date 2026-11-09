@@ -1,5 +1,13 @@
-import { expect, it } from "vitest";
-import { fileMatchesAccept, validateFiles } from "./file-upload.tsx";
+import { Field as BaseField } from "@base-ui/react/field";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { expect, it, vi } from "vitest";
+import { labels } from "../labels.ts";
+import { FileUpload, fileMatchesAccept, validateFiles } from "./file-upload.tsx";
+
+const announce = vi.hoisted(() => vi.fn());
+vi.mock("../provider.tsx", () => ({ useKumiko: () => ({ labels: labels.en, locale: "en", announce }) }));
+vi.mock("@base-ui/react/field", () => ({ Field: { Control: vi.fn(() => null) } }));
 
 const pdf = (name = "resume.pdf", size = 1) => new File(["x".repeat(size)], name, { type: "application/pdf" });
 
@@ -53,4 +61,15 @@ it("replaces the previous file in single mode and rejects extra files", () => {
     accepted: [replacement],
     rejections: [{ file: extra, reason: "count" }],
   });
+});
+
+it("announces a mixed batch once with the accepted count and named rejection reason", () => {
+  renderToStaticMarkup(createElement(FileUpload, { accept: ".pdf", multiple: true }));
+  const onChange = vi.mocked(BaseField.Control).mock.calls.at(-1)![0].onChange!;
+  onChange({
+    currentTarget: { files: [pdf(), new File(["x"], "setup.exe", { type: "application/octet-stream" })] },
+  } as unknown as Parameters<typeof onChange>[0]);
+  expect(announce).toHaveBeenCalledExactlyOnceWith(
+    "1 file added. setup.exe wasn't added: This file type isn't accepted",
+  );
 });

@@ -31,7 +31,8 @@ function scene() {
 
 it("cues the pose, stats, streak and announcement at their specified times and finishes by 1300ms", () => {
   const options = scene();
-  const finish = playCelebration(options);
+  const finish = playCelebration({ ...options, streakGained: true });
+  expect(options.animate.mock.calls.at(-1)?.[1]).toMatchObject({ delay: 980, duration: 240 });
   vi.advanceTimersByTime(119);
   expect(options.onStep).not.toHaveBeenCalled();
   vi.advanceTimersByTime(1);
@@ -49,6 +50,18 @@ it("cues the pose, stats, streak and announcement at their specified times and f
   finish();
   expect(options.announce).toHaveBeenCalledOnce();
   expect(vi.getTimerCount()).toBe(0);
+});
+
+it("keeps the Hop timeline and announcement without a flame pop when no streak day was gained", () => {
+  const options = scene();
+  playCelebration(options);
+  expect(options.animate).toHaveBeenCalledTimes(2);
+  expect(options.animate.mock.calls.every(([, timing]) => (timing.delay ?? 0) < 980)).toBe(true);
+  vi.advanceTimersByTime(1100);
+  expect(options.announce).toHaveBeenCalledOnce();
+  vi.advanceTimersByTime(200);
+  expect(options.onStep).toHaveBeenLastCalledWith(1300);
+  expect(options.announce).toHaveBeenCalledOnce();
 });
 
 it("Continue can finish from zero, clears every animation and timer, and announces only once", () => {

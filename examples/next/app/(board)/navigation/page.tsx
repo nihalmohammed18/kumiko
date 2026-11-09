@@ -6,10 +6,13 @@ import { JobView } from "./job-view";
 export default async function NavigationPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string | string[] }>;
+  searchParams: Promise<{ page?: string | string[]; remote?: string | string[] }>;
 }) {
   const params = await searchParams;
-  const page = Math.min(5, Math.max(1, Math.trunc(Number(params.page)) || 1));
+  const remote = params.remote === "1";
+  const filteredJobs = remote ? jobs.filter((job) => job.location === "Remote") : jobs;
+  const pageCount = Math.max(1, Math.ceil(filteredJobs.length / 10));
+  const page = Math.min(pageCount, Math.max(1, Math.trunc(Number(params.page)) || 1));
   return (
     <>
       <Breadcrumbs>
@@ -24,11 +27,11 @@ export default async function NavigationPage({
           <Tab value="applications">Applications</Tab>
         </TabsList>
         <TabsPanel value="open">
-          <JobView jobs={jobs.slice((page - 1) * 10, page * 10)} />
+          <JobView jobs={filteredJobs.slice((page - 1) * 10, page * 10)} remote={remote} />
           <Pagination
             page={page}
-            pageCount={5}
-            href={(target) => `/navigation?page=${target}`}
+            pageCount={pageCount}
+            href={(target) => `/navigation?page=${target}${remote ? "&remote=1" : ""}`}
             render={<NextLink href="/navigation" />}
             className="mt-4"
           />
