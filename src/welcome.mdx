@@ -1,0 +1,51 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "./components/button.tsx";
+import { Character } from "./components/character.tsx";
+
+<Meta title="Welcome" />
+
+# Kumiko
+
+A playful React component library in the spirit of Duolingo. Buttons press down onto a darker edge, type is round
+and chunky, colours are bright, and three characters, Pip, Mori and Tuck, cheer people on when they finish
+something. It's built on Base UI and Tailwind CSS v4, it's accessible, and it works in dark mode and right to left.
+
+<div className="flex flex-wrap items-end gap-8 py-6">
+  <Character name="pip" pose="waving" size={128} title="Pip waving" />
+  <Character name="mori" pose="cheering" size={128} title="Mori cheering" />
+  <Character name="tuck" pose="thinking" size={128} title="Tuck thinking" />
+</div>
+
+Press one of these to feel the edge:
+
+<div className="flex flex-wrap gap-3 pb-6">
+  <Button tone="primary">Continue</Button>
+  <Button tone="secondary">Not now</Button>
+  <Button tone="strong">Save</Button>
+</div>
+
+## Where to start
+
+<ul>
+  <li><a href="./?path=/story/actions-button--states" target="_top">Button states</a>: the press, hover, focus, loading and disabled looks.</li>
+  <li><a href="./?path=/story/delight-character--states" target="_top">The cast</a>: Pip, Mori and Tuck in all six poses. Pip takes your brand colour, Mori leaf green and Tuck coral.</li>
+  <li><a href="./?path=/story/delight-celebration--hop" target="_top">Celebration</a>: the moment after someone finishes something, with a streak and stats.</li>
+  <li><a href="./?path=/story/delight-streak--states" target="_top">Streak</a>: the week row and the flame.</li>
+  <li><a href="./?path=/story/forms-form--sign-up" target="_top">A sign-up form</a>: fields, validation and server errors.</li>
+  <li><a href="./?path=/story/data-datatable--default" target="_top">DataTable</a>: sorting, filtering, selection and cards on phones.</li>
+  <li><a href="./?path=/story/email-templates--sign-in" target="_top">Email templates</a>: sign-in, verification, receipts and job alerts.</li>
+  <li><a href="./?path=/story/theming-playground--playground" target="_top">Theme playground</a>: pick your brand colours, check contrast and copy the CSS.</li>
+</ul>
+
+Use the toolbar above a story to switch between light and dark, and between left-to-right and right-to-left.
+
+## Install
+
+```sh
+npm install kumiko-ui
+```
+
+Then follow the [setup steps in the README](https://github.com/nihalmohammed18/kumiko#install-and-set-up).
+Coding agents can read `node_modules/kumiko-ui/llms.txt`.
+
+Kumiko isn't affiliated with Duolingo.

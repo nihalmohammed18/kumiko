@@ -1,7 +1,17 @@
 # Kumiko
 
-Kumiko (`kumiko-ui`) is a React 19 component library built on Base UI and Tailwind CSS v4.
-Its controls have a visible lower edge and support dark themes and right-to-left layouts.
+Kumiko (`kumiko-ui`) is a playful React component library in the spirit of Duolingo. Buttons press down onto a
+darker edge, type is round and chunky, colours are bright, and three characters, Pip, Mori and Tuck, cheer people on
+when they finish something. It's built on Base UI and Tailwind CSS v4, it's accessible, and it works in dark mode and
+right to left.
+
+![Pip, Mori and Tuck, each idle, waving, cheering, thinking, sleepy and oops](docs/images/cast.png)
+
+Try every component, the press feel and the theme playground in [Storybook](https://nihalmohammed18.github.io/kumiko/).
+
+<img src="docs/images/celebration.png" alt="A celebration card: Pip cheering, Application sent!, two stat tiles, a weekly goal bar and a five-day streak" width="320">
+
+Kumiko isn't affiliated with Duolingo.
 
 ## Install and set up
 

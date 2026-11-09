@@ -64,6 +64,27 @@ const preview: Preview = {
   },
   initialGlobals: { theme: "light", dir: "ltr" },
   parameters: {
+    // The welcome page first, then the parts that show the Playground look, so a newcomer meets the cast early.
+    options: {
+      storySort: {
+        order: [
+          "Welcome",
+          "Actions",
+          "Delight",
+          "Forms",
+          "Feedback",
+          "Display",
+          "Overlays",
+          "Navigation",
+          "Data",
+          "Email",
+          "Theming",
+          "Recipes",
+          "Foundation",
+          "Internal",
+        ],
+      },
+    },
     layout: "padded",
     controls: { expanded: true },
     // Accessibility violations fail the story's test in every mode.
