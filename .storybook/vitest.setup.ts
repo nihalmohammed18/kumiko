@@ -77,9 +77,12 @@ afterEach(async ({ task }) => {
   const width = mode === "touch" ? 320 : 1200;
   if (innerWidth !== width) throw new Error(`The ${mode} project should be ${width}px wide, but it is ${innerWidth}px`);
   const story = document.querySelector<HTMLElement>("[data-kumiko-story]");
-  expect(document.documentElement.dir).toBe(mode === "rtl" ? "rtl" : "ltr");
-  expect(document.documentElement.lang).toBe(mode === "rtl" ? "ar" : "en");
-  expect(story?.dataset.kumikoLocale).toBe(mode === "rtl" ? "ar-u-nu-arab" : "en");
+  // A story may set its own language or direction (globals: { dir: "rtl" }); every other story must match its project.
+  if (!window.__kumikoOwnLocale) {
+    expect(document.documentElement.dir).toBe(mode === "rtl" ? "rtl" : "ltr");
+    expect(document.documentElement.lang).toBe(mode === "rtl" ? "ar" : "en");
+    expect(story?.dataset.kumikoLocale).toBe(mode === "rtl" ? "ar-u-nu-arab" : "en");
+  }
   const vrt = inject("vrt");
   if (!window.__kumikoSkipVrt && (vrt === "all" || (vrt === "states" && task.name === "States"))) {
     await document.fonts.ready;

@@ -505,6 +505,6 @@ export const MultipleStates: Story = {
 
 export const MultipleRtl: Story = {
   name: "Multiple right to left",
-  globals: { dir: "rtl" },
+  globals: { locale: "ar" },
   render: () => <SkillsField label="المهارات" placeholder="ابحث عن مهارة" defaultValue={chosenSkills} />,
 };
