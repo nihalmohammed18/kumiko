@@ -1,6 +1,7 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 import { Button } from "./components/button.tsx";
 import { Character } from "./components/character.tsx";
+import { OnboardingFlow } from "./recipes/onboarding.stories.tsx";
 
 <Meta title="Welcome" />
 
@@ -22,6 +23,14 @@ Press one of these to feel the edge:
   <Button tone="primary">Continue</Button>
   <Button tone="secondary">Not now</Button>
   <Button tone="strong">Save</Button>
+</div>
+
+## Try it
+
+Choose your goal, make a little time, and let Pip cheer you on.
+
+<div className="py-6">
+  <OnboardingFlow />
 </div>
 
 ## Where to start

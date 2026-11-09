@@ -54,6 +54,22 @@ The schema owns required validation, so the controls use `aria-required`. Form a
 before calling `onFormSubmit`. The full recipe uses `BaseField.Validity` to give an email `typeMismatch` the same
 format message as the schema.
 
+## Async submission
+
+Open **Recipes / Async form** in Storybook (`src/recipes/async-form.stories.tsx`) for pending, server field errors,
+request failure with retry, and success with a reset. Await the server in `onFormSubmit` and pass its field errors to `setErrors`.
+Guard submissions with a ref while pending; use Button's `loading` and `loadingLabel` to keep its width and announce once.
+Clear just the edited field's error on change, then clear old errors synchronously before the next submit so Base UI
+can validate again. Import `useState` from React and `flushSync` from React DOM:
+
+```tsx
+const [errors, setErrors] = useState<FormProps["errors"]>({});
+const clearEmailError = () => setErrors(({ email: _email, ...remaining } = {}) => remaining);
+<Form errors={errors} onSubmitCapture={() => flushSync(() => setErrors({}))} onFormSubmit={submit}>
+  <Field name="email"><FieldLabel>Email</FieldLabel><Input type="email" onChange={clearEmailError} /><FieldError /></Field>
+</Form>;
+```
+
 ## React Hook Form with Zod
 
 The [full recipe](../src/recipes/react-hook-form.stories.tsx) uses `register` for the email input and `Controller`
