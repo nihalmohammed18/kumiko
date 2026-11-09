@@ -29,6 +29,7 @@ const sourceModules = [
 ];
 
 interface Project {
+  locale?: "en" | "ar" | "ur";
   dir?: "ltr" | "rtl";
   theme?: "light" | "dark";
   /** Playwright context options on top of reduced motion. */
@@ -49,6 +50,7 @@ interface Project {
  */
 const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfiguration => {
   const {
+    locale = "en",
     dir = "ltr",
     theme = "light",
     context,
@@ -59,7 +61,7 @@ const stories = (mode: Mode, project: Project = {}): TestProjectInlineConfigurat
   } = project;
   // Storybook's Vitest plugin resizes the page before every story: to a named viewport from globals.viewport, or
   // else to 1200×900. mobile1 is Storybook's built-in 320×568.
-  const globals = { theme, dir, ...(phone && { viewport: { value: "mobile1" } }) };
+  const globals = { theme, locale, dir, ...(phone && { viewport: { value: "mobile1" } }) };
   return {
     extends: true,
     plugins: [
@@ -122,7 +124,7 @@ export default defineConfig({
       },
       stories("light"),
       stories("dark", { theme: "dark" }),
-      stories("rtl", { dir: "rtl" }),
+      stories("rtl", { locale: "ar", dir: "rtl" }),
       stories("touch", {
         context: { hasTouch: true },
         phone: true,

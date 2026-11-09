@@ -1,6 +1,10 @@
+"use client";
+
 import type { Decorator, Preview } from "@storybook/react-vite";
-import { KumikoProvider } from "../src/provider.tsx";
+import type { ReactNode } from "react";
+import { KumikoProvider, useKumiko } from "../src/provider.tsx";
 import { mirrorDemoStates } from "./demo-states.ts";
+import { storySettings } from "./story-copy.ts";
 import type { UxParameters } from "./ux/harness.ts";
 import "../src/fonts.css";
 import "./preview.css";
@@ -13,23 +17,32 @@ declare global {
   }
 }
 
-/** Applies the toolbar's theme and direction the way an app would: a class and `dir` on <html>. */
+function StoryFrame({ children }: { children: ReactNode }) {
+  const { locale } = useKumiko();
+  // The screenshot target; the padding keeps focus rings inside the picture.
+  return (
+    <div data-kumiko-story data-kumiko-locale={locale} className="p-3">
+      {children}
+    </div>
+  );
+}
+
+/** Applies the toolbar's theme, language and direction the way an app would, including the provider's locale. */
 const withKumiko: Decorator = (Story, { globals, parameters }) => {
   mirrorDemoStates();
-  const dir = globals.dir === "rtl" ? "rtl" : "ltr";
+  const { language, locale, dir } = storySettings(globals);
   const root = document.documentElement;
   root.classList.toggle("dark", globals.theme === "dark");
   root.dir = dir;
-  root.lang = dir === "rtl" ? "ar" : "en";
+  root.lang = language;
   window.__kumikoSkipVrt = parameters.vrt === false;
   window.__kumikoVrtPage = parameters.vrt === "page";
   window.__kumikoUx = parameters.ux;
   return (
-    <KumikoProvider direction={dir} locale={dir === "rtl" ? "ar-u-nu-arab" : "en"}>
-      {/* The screenshot target; the padding keeps focus rings inside the picture. */}
-      <div data-kumiko-story className="p-3">
+    <KumikoProvider direction={dir} locale={locale}>
+      <StoryFrame>
         <Story />
-      </div>
+      </StoryFrame>
     </KumikoProvider>
   );
 };
@@ -49,12 +62,26 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    locale: {
+      description: "Language for copy, labels, dates and numbers",
+      toolbar: {
+        title: "Language",
+        icon: "globe",
+        items: [
+          { value: "en", title: "English" },
+          { value: "ar", title: "Arabic (العربية)" },
+          { value: "ur", title: "Urdu (اردو)" },
+        ],
+        dynamicTitle: true,
+      },
+    },
     dir: {
-      description: "Reading direction",
+      description: "Automatic direction from language, or a forced reading direction",
       toolbar: {
         title: "Direction",
         icon: "transfer",
         items: [
+          { value: "auto", title: "Auto" },
           { value: "ltr", title: "Left to right" },
           { value: "rtl", title: "Right to left" },
         ],
@@ -62,7 +89,7 @@ const preview: Preview = {
       },
     },
   },
-  initialGlobals: { theme: "light", dir: "ltr" },
+  initialGlobals: { theme: "light", locale: "en", dir: "auto" },
   parameters: {
     // The welcome page first, then the parts that show the Playground look, so a newcomer meets the cast early.
     options: {

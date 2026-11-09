@@ -70,6 +70,7 @@ export const englishLabels = {
   selectedChips: "Selected values",
   chipRemoval: "Press Backspace or Delete to remove.",
   chipNavigation: "From the start of the input, use the arrow keys to reach selected values.",
+  updatingResults: "Updating results…",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -178,6 +179,7 @@ export const labels = {
     selectedChips: "القيم المحددة",
     chipRemoval: "اضغط على مفتاح Backspace أو Delete للإزالة.",
     chipNavigation: "من بداية حقل الإدخال، استخدم مفاتيح الأسهم للوصول إلى القيم المحددة.",
+    updatingResults: "جارٍ تحديث النتائج…",
   },
   ur: {
     close: "بند کریں",
@@ -241,6 +243,7 @@ export const labels = {
     selectedChips: "منتخب اقدار",
     chipRemoval: "ہٹانے کے لیے Backspace یا Delete دبائیں۔",
     chipNavigation: "ان پٹ کے شروع سے، منتخب اقدار تک پہنچنے کے لیے تیر والے بٹن استعمال کریں۔",
+    updatingResults: "نتائج اپ ڈیٹ ہو رہے ہیں…",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 
