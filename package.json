@@ -1,7 +1,7 @@
 {
   "name": "kumiko-ui",
   "version": "0.0.0-development",
-  "description": "Accessible React components on Base UI and Tailwind CSS, with dark mode and right-to-left built in.",
+  "description": "Playful React components in the spirit of Duolingo: tactile buttons, characters and celebrations. Built on Base UI and Tailwind CSS, accessible, with dark mode and right-to-left support.",
   "license": "MIT",
   "author": "Nihal Mohammed",
   "type": "module",
@@ -17,6 +17,10 @@
     "base-ui",
     "tailwindcss",
     "design-system",
+    "duolingo-style",
+    "playful",
+    "gamification",
+    "characters",
     "rtl",
     "dark-mode"
   ],
