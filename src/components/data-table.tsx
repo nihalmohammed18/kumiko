@@ -41,6 +41,7 @@ import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from "../icons.tsx";
 import { formatLabel } from "../labels.ts";
 import { useTableVirtualizer } from "../lib/use-table-virtualizer.ts";
 import { useKumiko } from "../provider.tsx";
+import { Button } from "./button.tsx";
 import { Checkbox } from "./checkbox.tsx";
 import { EmptyState } from "./empty-state.tsx";
 import { Field, FieldLabel } from "./field.tsx";
@@ -111,6 +112,10 @@ export type DataTableProps<TData extends RowData> = Omit<TableProps, "children" 
   bulkActions?: (selectedRows: TData[]) => ReactNode;
   emptyTitle?: ReactNode;
   emptyDescription?: ReactNode;
+  /** Decorative empty-state art; products choose whether to use the cast or objects. */
+  emptyArt?: ReactNode;
+  /** Replaces empty-state actions, including the default clear-filter action. */
+  emptyActions?: ReactNode;
   loading?: boolean;
   /** Trust supplied rows and report sorting, filtering and pagination to the server. */
   manual?: boolean;
@@ -252,6 +257,8 @@ export function DataTable<TData extends RowData>({
   bulkActions,
   emptyTitle,
   emptyDescription,
+  emptyArt,
+  emptyActions,
   loading = false,
   manual = false,
   rowCount,
@@ -270,6 +277,7 @@ export function DataTable<TData extends RowData>({
   );
   const [selection, changeSelection] = useDataTableState(rowSelection, defaultRowSelection, onRowSelectionChange);
   const [filterInput, setFilterInput] = useState(query);
+  const filterRef = useRef<HTMLInputElement>(null);
   useEffect(() => setFilterInput(query), [query]);
   const reportFilter = useCallback(
     (next: string) => {
@@ -405,7 +413,11 @@ export function DataTable<TData extends RowData>({
       {filter && (
         <Field>
           <FieldLabel>{filterLabel ?? formatLabel(labels.filterRows, locale)}</FieldLabel>
-          <SearchField value={manual ? filterInput : query} onValueChange={manual ? setFilterInput : changeFilter} />
+          <SearchField
+            ref={filterRef}
+            value={manual ? filterInput : query}
+            onValueChange={manual ? setFilterInput : changeFilter}
+          />
         </Field>
       )}
       {selectedCount > 0 && (
@@ -569,6 +581,22 @@ export function DataTable<TData extends RowData>({
                 <EmptyState
                   title={emptyTitle ?? formatLabel(query ? labels.noMatchingRows : labels.noRows, locale)}
                   description={emptyDescription}
+                  art={emptyArt}
+                  actions={
+                    emptyActions ??
+                    (query ? (
+                      <Button
+                        tone="secondary"
+                        onClick={() => {
+                          setFilterInput("");
+                          reportFilter("");
+                          filterRef.current?.focus();
+                        }}
+                      >
+                        {formatLabel(labels.clearFilter, locale)}
+                      </Button>
+                    ) : undefined)
+                  }
                   className="px-3 py-8"
                 />
               </TableCell>

@@ -58,6 +58,11 @@ export const englishLabels = {
   nextPage: "Next page",
   page: { one: "Page {count}", other: "Page {count}" },
   breadcrumbs: "Breadcrumbs",
+  streakZeroHint: "Start a streak today",
+  streakPendingHint: "Practise today to keep your streak",
+  streakDoneHint: "Done for today. See you tomorrow!",
+  streakGoal: { one: "{count} more day to {goal}", other: "{count} more days to {goal}" },
+  clearFilter: "Clear filter",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -148,6 +153,17 @@ export const labels = {
       other: "الصفحة {count}",
     },
     breadcrumbs: "مسار التنقل",
+    streakZeroHint: "ابدأ سلسلة أيام متتالية اليوم",
+    streakPendingHint: "تدرّب اليوم للحفاظ على سلسلة أيامك المتتالية",
+    streakDoneHint: "أنجزت تدريب اليوم. نراك غدًا!",
+    streakGoal: {
+      one: "يوم آخر للوصول إلى {goal}",
+      two: "يومان آخران للوصول إلى {goal}",
+      few: "{count} أيام أخرى للوصول إلى {goal}",
+      many: "{count} يومًا آخر للوصول إلى {goal}",
+      other: "{count} يوم آخر للوصول إلى {goal}",
+    },
+    clearFilter: "مسح التصفية",
   },
   ur: {
     close: "بند کریں",
@@ -199,6 +215,11 @@ export const labels = {
     nextPage: "اگلا صفحہ",
     page: { one: "صفحہ {count}", other: "صفحہ {count}" },
     breadcrumbs: "راستہ",
+    streakZeroHint: "آج اپنا سلسلہ شروع کریں",
+    streakPendingHint: "اپنا سلسلہ برقرار رکھنے کے لیے آج مشق کریں",
+    streakDoneHint: "آج کی مشق مکمل۔ کل ملتے ہیں!",
+    streakGoal: { one: "{goal} تک پہنچنے کے لیے مزید {count} دن", other: "{goal} تک پہنچنے کے لیے مزید {count} دن" },
+    clearFilter: "فلٹر صاف کریں",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 

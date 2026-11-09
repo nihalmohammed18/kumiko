@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { expect, fn, waitFor, within } from "storybook/test";
 import { labels } from "../labels.ts";
 import { Button } from "./button.tsx";
@@ -35,6 +35,7 @@ interface CityFieldProps extends ComboboxProps<string> {
   invalid?: boolean;
   disabledItem?: string;
   highlighted?: string;
+  emptyContent?: ReactNode;
 }
 
 function CityField({
@@ -45,6 +46,7 @@ function CityField({
   disabledItem,
   highlighted,
   disabled,
+  emptyContent,
   ...props
 }: CityFieldProps) {
   return (
@@ -59,7 +61,7 @@ function CityField({
             if (input && demo) input.parentElement?.setAttribute("data-demo", demo);
           }}
         />
-        <ComboboxPopup>
+        <ComboboxPopup emptyContent={emptyContent}>
           {(city: string) => (
             <ComboboxItem
               key={city}
@@ -150,6 +152,24 @@ export const NoMatches: Story = {
       expect(body.getByText(strings.noMatches)).toBeVisible();
       expect(body.queryAllByRole("option")).toHaveLength(0);
       expect(document.querySelector("[data-slot=combobox-empty]")).toBe(empty);
+      expect(empty).toHaveAttribute("role", "status");
+      expect(empty).toHaveAttribute("aria-live", "polite");
+      expect(empty).toHaveAttribute("aria-atomic", "true");
+    });
+  },
+};
+
+export const CustomEmptyContent: Story = {
+  name: "Custom empty content",
+  args: { open: true },
+  parameters: { vrt: "page" },
+  render: (args) => <CityField {...args} emptyContent={<span>Try another city or check the spelling.</span>} />,
+  play: async ({ canvas, canvasElement, userEvent }) => {
+    await userEvent.type(canvas.getByRole("combobox", { name: "City" }), "zzz");
+    await waitFor(() => {
+      const empty = canvasElement.ownerDocument.querySelector("[data-slot=combobox-empty]");
+      expect(empty).toHaveTextContent("Try another city or check the spelling.");
+      expect(empty).toBeVisible();
       expect(empty).toHaveAttribute("role", "status");
       expect(empty).toHaveAttribute("aria-live", "polite");
       expect(empty).toHaveAttribute("aria-atomic", "true");

@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Copy, Plus } from "lucide-react";
+import { useState } from "react";
 import { expect, fn, waitFor, within } from "storybook/test";
 import { labels } from "../labels.ts";
-import { Button, IconButton } from "./button.tsx";
+import { Button, type ButtonProps, IconButton } from "./button.tsx";
 
 const meta = {
   title: "Actions/Button",
@@ -99,6 +100,9 @@ export const States: Story = {
             <Button {...args} tone={tone} loading>
               Loading
             </Button>
+            <Button {...args} tone={tone} loading loadingLabel="Sending…">
+              Send application
+            </Button>
           </div>
         </div>
       ))}
@@ -131,6 +135,39 @@ export const Loading: Story = {
     await waitFor(() =>
       expect(within(canvasElement.ownerDocument.body).getByRole("status")).toHaveTextContent(loadingLabel),
     );
+  },
+};
+
+function LabelledLoadingButton(props: ButtonProps) {
+  const [loading, setLoading] = useState(props.loading ?? false);
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button {...props} loading={loading} />
+      <Button onClick={() => setLoading((current) => !current)}>Toggle loading</Button>
+    </div>
+  );
+}
+
+export const LoadingWithLabel: Story = {
+  name: "Loading with label",
+  args: { tone: "primary", children: "Send application", loadingLabel: "Sending your application…" },
+  render: (args) => <LabelledLoadingButton {...args} />,
+  play: async ({ canvas, canvasElement, userEvent }) => {
+    const button = canvas.getByRole("button", { name: "Send application" });
+    const loadingContent = button.querySelector("[data-slot=button-loading-label]");
+    await waitFor(() => expect(loadingContent).not.toBeVisible());
+    const width = button.getBoundingClientRect().width;
+    await userEvent.click(canvas.getByRole("button", { name: "Toggle loading" }));
+    await waitFor(() => {
+      expect(button).toHaveAttribute("aria-busy", "true");
+      expect(loadingContent).toBeVisible();
+      expect(button.querySelector("[data-slot=button-label]")).not.toBeVisible();
+      expect(button).toHaveAccessibleName("Sending your application…");
+      expect(within(canvasElement.ownerDocument.body).getByRole("status")).toHaveTextContent(
+        "Sending your application…",
+      );
+      expect(button.getBoundingClientRect().width).toBe(width);
+    });
   },
 };
 

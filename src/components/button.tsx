@@ -1,7 +1,7 @@
 "use client";
 
 import { Button as BaseButton } from "@base-ui/react/button";
-import { useEffect, useId, useRef } from "react";
+import { type ReactNode, useEffect, useId, useRef } from "react";
 import { formatLabel } from "../labels.ts";
 import { cn } from "../lib/tv.ts";
 import { useKumiko } from "../provider.tsx";
@@ -16,17 +16,20 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className"> {
   size?: "sm" | "md" | "lg";
   /** Shows a spinner, keeps the button focusable and its width, and announces the loading label once. */
   loading?: boolean;
+  /** Shows beside the spinner while loading; reserves its width at rest and announces strings once. */
+  loadingLabel?: ReactNode;
   className?: string;
 }
 
-function useLoadingAnnouncement(loading: boolean) {
+function useLoadingAnnouncement(loading: boolean, loadingLabel?: ReactNode) {
   const { announce, labels, locale } = useKumiko();
+  const message = typeof loadingLabel === "string" ? loadingLabel : formatLabel(labels.loading, locale);
   const wasLoading = useRef(false);
   useEffect(() => {
     // Provider cleanup cancels frames during effect replay; announce after that replay finishes.
-    if (loading && !wasLoading.current) queueMicrotask(() => announce(formatLabel(labels.loading, locale)));
+    if (loading && !wasLoading.current) queueMicrotask(() => announce(message));
     wasLoading.current = loading;
-  }, [loading, announce, labels.loading, locale]);
+  }, [loading, announce, message]);
 }
 
 /**
@@ -44,13 +47,14 @@ export function Button({
   tone = "secondary",
   size = "md",
   loading = false,
+  loadingLabel,
   disabled,
   className,
   children,
   ...props
 }: ButtonProps) {
   const labelId = useId();
-  useLoadingAnnouncement(loading);
+  useLoadingAnnouncement(loading, loadingLabel);
   return (
     <BaseButton
       {...props}
@@ -67,7 +71,8 @@ export function Button({
       <span className="grid min-w-0">
         <span
           data-slot="button-label"
-          id={labelId}
+          id={loading && loadingLabel != null ? undefined : labelId}
+          aria-hidden={loading && loadingLabel != null ? true : undefined}
           className={cn(
             "col-start-1 row-start-1 inline-flex min-w-0 items-center justify-center gap-2",
             loading && "invisible",
@@ -75,7 +80,22 @@ export function Button({
         >
           {children}
         </span>
-        {loading && <Spinner className="col-start-1 row-start-1 place-self-center" />}
+        {loadingLabel != null ? (
+          <span
+            data-slot="button-loading-label"
+            id={loading ? labelId : undefined}
+            aria-hidden={!loading}
+            className={cn(
+              "col-start-1 row-start-1 inline-flex min-w-0 items-center justify-center gap-2",
+              !loading && "invisible",
+            )}
+          >
+            <Spinner />
+            {loadingLabel}
+          </span>
+        ) : loading ? (
+          <Spinner className="col-start-1 row-start-1 place-self-center" />
+        ) : null}
       </span>
     </BaseButton>
   );
@@ -84,7 +104,7 @@ export function Button({
 /** Props for an icon-only action button, including its required accessible name.
  * Use when: typing IconButton. Avoid when: the action needs a visible label; use ButtonProps.
  */
-export interface IconButtonProps extends ButtonProps {
+export interface IconButtonProps extends Omit<ButtonProps, "loadingLabel"> {
   /** Required: an icon alone tells screen reader users nothing. */
   "aria-label": string;
 }
