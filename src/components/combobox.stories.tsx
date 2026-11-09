@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ReactNode, useState } from "react";
-import { expect, fn, waitFor, within } from "storybook/test";
-import { labels } from "../labels.ts";
+import { expect, fn, screen, waitFor, within } from "storybook/test";
+import { formatLabel, labels } from "../labels.ts";
 import { Button } from "./button.tsx";
 import {
   Combobox,
+  ComboboxChips,
   ComboboxGroup,
   ComboboxGroupLabel,
   ComboboxInput,
@@ -83,7 +84,7 @@ function CityField({
 const meta = {
   title: "Forms/Combobox",
   component: Combobox,
-  subcomponents: { ComboboxInput, ComboboxPopup, ComboboxItem, ComboboxGroup, ComboboxGroupLabel },
+  subcomponents: { ComboboxInput, ComboboxChips, ComboboxPopup, ComboboxItem, ComboboxGroup, ComboboxGroupLabel },
   args: { items: cities, onValueChange: fn(), onInputValueChange: fn(), onOpenChange: fn() },
   render: (args) => <CityField {...args} />,
 } satisfies Meta<ComboboxProps<string>>;
@@ -371,4 +372,138 @@ export const States: Story = {
       <CityField {...args} label="Selected" defaultValue="Paris" />
     </div>
   ),
+};
+
+const skills = ["TypeScript", "CSS", "Git", "React", "Accessibility", "Interaction design", "User research"];
+const chosenSkills = skills.slice(0, 3);
+
+function SkillsField({
+  label = "Skills",
+  invalid,
+  disabled,
+  ...props
+}: ComboboxProps<string, true> & { label?: string; invalid?: boolean }) {
+  return (
+    <Field name="skills" disabled={disabled} invalid={invalid} className="w-full max-w-xs">
+      <FieldLabel>{label}</FieldLabel>
+      <Combobox {...props} items={skills} multiple>
+        <ComboboxChips placeholder="Search skills" />
+        <ComboboxPopup>
+          {(skill: string) => (
+            <ComboboxItem key={skill} value={skill}>
+              {skill}
+            </ComboboxItem>
+          )}
+        </ComboboxPopup>
+      </Combobox>
+      <FieldError match={invalid}>Choose at least one skill.</FieldError>
+    </Field>
+  );
+}
+
+function MultipleSkills() {
+  const [value, setValue] = useState(chosenSkills);
+  const [submitted, setSubmitted] = useState<FormDataEntryValue[]>([]);
+  return (
+    <Form
+      className="w-full max-w-xs"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).getAll("skills"));
+      }}
+    >
+      <SkillsField value={value} onValueChange={setValue} />
+      <Button type="submit" className="justify-self-start">
+        Save skills
+      </Button>
+      <p data-testid="submitted-skills" className="wrap-anywhere text-body-sm">
+        {submitted.join(", ")}
+      </p>
+    </Form>
+  );
+}
+
+export const Multiple: Story = {
+  render: () => <MultipleSkills />,
+  play: async ({ canvas, canvasElement, globals, userEvent }) => {
+    const input = canvas.getByRole("combobox", { name: "Skills" });
+    const body = within(canvasElement.ownerDocument.body);
+    const strings = labels[globals.dir === "rtl" ? "ar" : "en"];
+    const locale = globals.dir === "rtl" ? "ar" : "en";
+    const form = canvasElement.querySelector("form")!;
+    for (const skill of ["React", "Accessibility"]) {
+      await userEvent.type(input, skill);
+      await waitFor(() => expect(body.getByRole("option", { name: skill })).toBeVisible());
+      await userEvent.click(body.getByRole("option", { name: skill }));
+      await waitFor(() => {
+        expect(input).toHaveValue("");
+        expect(body.queryByRole("listbox")).not.toBeInTheDocument();
+        expect(
+          canvas.getByRole("button", { name: formatLabel(strings.removeChip, locale, undefined, { label: skill }) }),
+        ).toBeVisible();
+      });
+    }
+    await expect(new FormData(form).getAll("skills")).toEqual([...chosenSkills, "React", "Accessibility"]);
+    await userEvent.click(
+      canvas.getByRole("button", { name: formatLabel(strings.removeChip, locale, undefined, { label: "React" }) }),
+    );
+    await waitFor(() => {
+      expect(new FormData(form).getAll("skills")).toEqual([...chosenSkills, "Accessibility"]);
+      expect(screen.getByRole("status")).toHaveTextContent(
+        formatLabel(strings.removedChip, locale, undefined, { label: "React" }),
+      );
+    });
+    await userEvent.keyboard(globals.dir === "rtl" ? "{ArrowRight}" : "{ArrowLeft}");
+    await waitFor(() => expect(canvasElement.querySelector('[data-slot="combobox-chip"]:last-of-type')).toHaveFocus());
+    await userEvent.keyboard(globals.dir === "rtl" ? "{ArrowLeft}" : "{ArrowRight}");
+    await waitFor(() => expect(input).toHaveFocus());
+    await userEvent.keyboard("{Backspace}");
+    await waitFor(() => {
+      expect(new FormData(form).getAll("skills")).toEqual(chosenSkills);
+      expect(screen.getByRole("status")).toHaveTextContent(
+        formatLabel(strings.removedChip, locale, undefined, { label: "Accessibility" }),
+      );
+    });
+    await userEvent.click(canvas.getByRole("button", { name: "Save skills" }));
+    await waitFor(() => expect(canvas.getByTestId("submitted-skills")).toHaveTextContent(chosenSkills.join(", ")));
+  },
+};
+
+export const MultipleStates: Story = {
+  name: "Multiple states",
+  render: () => (
+    <div className="grid w-full max-w-4xl grid-cols-[repeat(auto-fit,minmax(min(100%,16rem),1fr))] items-start gap-8">
+      <SkillsField label="Empty" />
+      <SkillsField label="Wrapping" defaultValue={["React", "CSS", "Accessibility"]} />
+      <SkillsField label="Disabled skills" defaultValue={chosenSkills} disabled />
+      <SkillsField label="Invalid skills" invalid required />
+    </div>
+  ),
+  play: async ({ canvas, canvasElement, userEvent }) => {
+    const disabled = canvas.getByRole("combobox", { name: "Disabled skills" });
+    const field = disabled.closest('[data-slot="field"]')!;
+    const remove = within(field as HTMLElement).getAllByRole("button")[0]!;
+    await userEvent.click(remove);
+    await waitFor(() => {
+      expect(disabled).toBeDisabled();
+      expect(remove).toBeDisabled();
+      expect(field.querySelectorAll('[data-slot="combobox-chip"]')).toHaveLength(3);
+      expect(canvas.getByRole("combobox", { name: "Invalid skills" })).toHaveAttribute("aria-invalid", "true");
+      expect(canvas.getByText("Choose at least one skill.")).toBeVisible();
+    });
+    const wrapping = canvas.getByRole("combobox", { name: "Wrapping" }).closest('[data-slot="combobox-chips"]')!;
+    await waitFor(() => {
+      const chips = [...wrapping.querySelectorAll('[data-slot="combobox-chip"]')];
+      expect(new Set(chips.map((chip) => chip.getBoundingClientRect().top)).size).toBe(2);
+    });
+    await userEvent.click(canvas.getByRole("combobox", { name: "Empty" }));
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(within(canvasElement.ownerDocument.body).queryByRole("listbox")).toBeNull());
+  },
+};
+
+export const MultipleRtl: Story = {
+  name: "Multiple right to left",
+  globals: { dir: "rtl" },
+  render: () => <SkillsField label="المهارات" defaultValue={chosenSkills} />,
 };

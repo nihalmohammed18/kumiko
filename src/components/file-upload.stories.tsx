@@ -81,7 +81,7 @@ export const Default: Story = {
       maximumFractionDigits: 1,
     }).format(1);
     await waitFor(() => {
-      expect(canvas.getByText(file.name)).toBeVisible();
+      expect(canvas.getByRole("button", { name: file.name })).toBeVisible();
       expect(canvas.getByText(size)).toBeVisible();
       expect(
         new FormData(form)
@@ -92,9 +92,10 @@ export const Default: Story = {
     });
     const submitted = new FormData(form).get("resume") as File;
     await expect(submitted.text()).resolves.toBe(await file.text());
-    const remove = canvas.getByRole("button", { name: message(globals, "remove") });
-    await expect(remove).toHaveAccessibleDescription(file.name);
+    const remove = canvas.getByRole("button", { name: `${message(globals, "remove")} resume.pdf` });
+    await expect(remove).toHaveAccessibleName(`${message(globals, "remove")} ${file.name}`);
     input.focus();
+    await userEvent.tab();
     await userEvent.tab();
     await waitFor(() => expect(remove).toHaveFocus());
     await userEvent.keyboard("{Enter}");
@@ -119,12 +120,15 @@ export const Multiple: Story = {
     await expect(input).toHaveAccessibleName(`Resume ${message(globals, "chooseFiles")}`);
     input.focus();
     await userEvent.tab();
-    const firstRemove = within(canvas.getAllByRole("listitem")[0]!).getByRole("button");
+    await userEvent.tab();
+    const firstRemove = within(canvas.getAllByRole("listitem")[0]!).getByRole("button", {
+      name: `${message(globals, "remove")} first.pdf`,
+    });
     await waitFor(() => expect(firstRemove).toHaveFocus());
     await userEvent.keyboard("{Enter}");
     await waitFor(() => {
       expect(canvas.getAllByRole("listitem")).toHaveLength(1);
-      expect(canvas.getByRole("button", { name: message(globals, "remove") })).toHaveFocus();
+      expect(canvas.getByRole("button", { name: `${message(globals, "remove")} second.pdf` })).toHaveFocus();
       expect(input.files?.[0]?.name).toBe("second.pdf");
     });
   },
@@ -168,7 +172,7 @@ export const Dragging: Story = {
     drag(dropzone, "drop", transfer);
     await waitFor(() => {
       expect(dropzone).not.toHaveAttribute("data-dragging");
-      expect(canvas.getByText("resume.pdf")).toBeVisible();
+      expect(canvas.getByRole("button", { name: "resume.pdf" })).toBeVisible();
       expect(canvasElement.querySelector('[data-slot="field"]')).toHaveAttribute("data-filled");
     });
     drag(dropzone, "dragenter", transfer);
@@ -220,7 +224,7 @@ export const Invalid: Story = {
     });
     await pickFiles(input, [pdf()]);
     await waitFor(() => expect(canvas.queryByText("Choose a resume.")).not.toBeInTheDocument());
-    await userEvent.click(canvas.getByRole("button", { name: message(globals, "remove") }));
+    await userEvent.click(canvas.getByRole("button", { name: `${message(globals, "remove")} resume.pdf` }));
     await waitFor(() => {
       expect(canvas.getByText("Choose a resume.")).toBeVisible();
       expect(input).toHaveAttribute("aria-invalid", "true");
@@ -247,14 +251,63 @@ export const Controlled: Story = {
     const input = canvasElement.querySelector<HTMLInputElement>('input[type="file"]')!;
     await pickFiles(input, [pdf()]);
     await waitFor(() => {
-      expect(canvas.getByText("resume.pdf")).toBeVisible();
+      expect(canvas.getByRole("button", { name: "resume.pdf" })).toBeVisible();
       expect(input.files).toHaveLength(1);
     });
-    await userEvent.click(canvas.getByRole("button", { name: message(globals, "remove") }));
+    await userEvent.click(canvas.getByRole("button", { name: `${message(globals, "remove")} resume.pdf` }));
     await waitFor(() => {
       expect(canvas.queryByRole("list")).not.toBeInTheDocument();
       expect(input.files).toHaveLength(0);
       expect(input).toHaveFocus();
+    });
+  },
+};
+
+const longFilename = `${"very-long-resume-name-with-skills-and-experience-".repeat(8)}.pdf`;
+
+export const LongFilename: Story = {
+  name: "Long filename",
+  args: { defaultFiles: [pdf(longFilename)] },
+  play: async ({ canvas, canvasElement }) => {
+    const name = canvas.getByRole("button", { name: longFilename });
+    const base = canvasElement.querySelector('[data-slot="file-upload-name-base"]')!;
+    const extension = canvasElement.querySelector('[data-slot="file-upload-name-extension"]')!;
+    await waitFor(() => {
+      expect(name).toHaveAttribute("aria-expanded", "false");
+      expect(extension).toHaveTextContent(".pdf");
+      expect(extension).toBeVisible();
+      expect(getComputedStyle(base).webkitLineClamp).toBe("2");
+      expect(base.getBoundingClientRect().height).toBeLessThanOrEqual(
+        2 * parseFloat(getComputedStyle(base).lineHeight),
+      );
+      expect(extension.getBoundingClientRect().width).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const FilenameDisclosure: Story = {
+  name: "Filename disclosure",
+  args: LongFilename.args,
+  play: async ({ canvas, canvasElement, globals, userEvent }) => {
+    const name = canvas.getByRole("button", { name: longFilename });
+    const remove = canvas.getByRole("button", { name: `${message(globals, "remove")} ${longFilename}` });
+    const row = canvas.getByRole("listitem");
+    await userEvent.tab();
+    await userEvent.tab();
+    await waitFor(() => expect(name).toHaveFocus());
+    await userEvent.keyboard("{Enter}");
+    await waitFor(() => {
+      expect(name).toHaveAttribute("aria-expanded", "true");
+      expect(canvasElement.querySelector('[data-slot="file-upload-full-name"]')).toHaveTextContent(longFilename);
+      expect(canvasElement.querySelector('[data-slot="file-upload-full-name"]')).toBeVisible();
+      expect(remove).toHaveAccessibleName(`${message(globals, "remove")} ${longFilename}`);
+      expect(remove.getBoundingClientRect().top).toBe(row.getBoundingClientRect().top);
+    });
+    await userEvent.click(name);
+    await waitFor(() => {
+      expect(name).toHaveAttribute("aria-expanded", "false");
+      expect(canvasElement.querySelector('[data-slot="file-upload-full-name"]')).not.toBeInTheDocument();
+      expect(canvasElement.querySelector('[data-slot="file-upload-name-extension"]')).toBeVisible();
     });
   },
 };
@@ -271,10 +324,7 @@ export const States: Story = {
             invalid={state === "Invalid" || undefined}
           >
             <FieldLabel>{state}</FieldLabel>
-            <FileUpload
-              {...args}
-              defaultFiles={state === "Selected" ? [pdf(`${"very-long-resume-name-".repeat(8)}.pdf`)] : []}
-            />
+            <FileUpload {...args} defaultFiles={state === "Selected" ? [pdf(longFilename)] : []} />
             {state === "Invalid" && <FieldError match>Choose a resume.</FieldError>}
           </Field>
         ))}

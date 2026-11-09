@@ -49,6 +49,8 @@ export {
 } from "./components/choice-tile.tsx";
 export {
   Combobox,
+  ComboboxChips,
+  type ComboboxChipsProps,
   ComboboxGroup,
   ComboboxGroupLabel,
   type ComboboxGroupLabelProps,

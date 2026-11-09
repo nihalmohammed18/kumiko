@@ -1,5 +1,6 @@
 "use client";
 
+import { Button as BaseButton } from "@base-ui/react/button";
 import { Field as BaseField } from "@base-ui/react/field";
 import { type ComponentProps, useCallback, useId, useLayoutEffect, useRef, useState } from "react";
 import { FileIcon, UploadIcon, XIcon } from "../icons.tsx";
@@ -95,7 +96,47 @@ function syncInputFiles(input: HTMLInputElement | null, files: File[]) {
   input.files = transfer.files;
 }
 
-/** A native file picker and dropzone with a removable list, localized feedback and Field validation.
+function FileUploadName({ name, id }: { name: string; id: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const dot = name.lastIndexOf(".");
+  const hasExtension = dot > 0 && dot < name.length - 1;
+  const base = hasExtension ? name.slice(0, dot) : name;
+  const extension = hasExtension ? name.slice(dot) : "";
+  return (
+    <BaseButton
+      data-slot="file-upload-name"
+      id={id}
+      type="button"
+      aria-label={name}
+      aria-expanded={expanded}
+      className={buttonStyles({
+        tone: "ghost",
+        size: "sm",
+        className: "w-full min-w-0 justify-start p-0 text-start text-body font-normal normal-case tracking-normal",
+      })}
+      onClick={() => setExpanded(!expanded)}
+    >
+      {expanded ? (
+        <bdi data-slot="file-upload-full-name" className="min-w-0 wrap-anywhere">
+          {name}
+        </bdi>
+      ) : (
+        <span dir="auto" className="flex min-w-0 items-end">
+          <bdi data-slot="file-upload-name-base" className="min-w-0 line-clamp-2 wrap-anywhere">
+            {base}
+          </bdi>
+          {extension && (
+            <bdi data-slot="file-upload-name-extension" dir="ltr" className="max-w-1/2 shrink-0 wrap-anywhere">
+              {extension}
+            </bdi>
+          )}
+        </span>
+      )}
+    </BaseButton>
+  );
+}
+
+/** A native file picker and dropzone with removable files, expandable names, localized feedback and Field validation.
  * Use when: choosing a resume or several attachments; submit the listed files with FormData.
  * Avoid when: starting a server upload automatically; handle that separately with onFilesChange.
  *
@@ -316,12 +357,10 @@ export function FileUpload({
             const fileId = `${inputId}-file-${fileKeys.current.get(file)}-${occurrence}`;
             const megabytes = file.size >= 1024 * 1024;
             return (
-              <li key={fileId} className="flex min-w-0 items-center gap-3">
-                <FileIcon className="size-5 shrink-0 text-ink-muted" />
+              <li key={fileId} className="flex min-w-0 items-start gap-3">
+                <FileIcon className="mt-2 size-5 shrink-0 text-ink-muted" />
                 <div className="min-w-0 flex-1 text-start">
-                  <p id={fileId} className="min-w-0 wrap-anywhere text-body text-ink">
-                    {file.name}
-                  </p>
+                  <FileUploadName name={file.name} id={fileId} />
                   <p className="min-w-0 wrap-anywhere text-body-sm text-ink-muted tabular-nums">
                     {new Intl.NumberFormat(locale, {
                       style: "unit",
@@ -339,8 +378,7 @@ export function FileUpload({
                   tone="ghost"
                   size="sm"
                   disabled={disabled}
-                  aria-label={formatLabel(labels.remove, locale)}
-                  aria-describedby={fileId}
+                  aria-label={`${formatLabel(labels.remove, locale)} ${file.name}`}
                   onClick={() => {
                     if (disabled) return;
                     focusIndex.current = index;
