@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, waitFor } from "storybook/test";
+import { pickStoryCopy, storyCopy } from "../../.storybook/story-copy.ts";
 import { Button } from "./button.tsx";
 import { Field, FieldError, FieldLabel } from "./field.tsx";
 import { Fieldset, FieldsetLegend } from "./fieldset.tsx";
@@ -19,42 +20,59 @@ type Story = StoryObj<typeof meta>;
 
 export const SignUp: Story = {
   name: "Sign up",
-  render: (args) => (
-    <Form {...args} className="w-full max-w-sm">
-      <Fieldset>
-        <FieldsetLegend>Create your account</FieldsetLegend>
-        <Field name="name">
-          <FieldLabel>Name</FieldLabel>
-          <Input required autoComplete="name" />
-          <FieldError match="valueMissing">Enter your name.</FieldError>
-        </Field>
-        <Field name="email">
-          <FieldLabel>Email</FieldLabel>
-          <Input type="email" required autoComplete="email" />
-          <FieldError match="valueMissing">Enter your email.</FieldError>
-          <FieldError match="typeMismatch">Enter a valid email address.</FieldError>
-        </Field>
-        <Field name="country">
-          <FieldLabel>Country</FieldLabel>
-          <NativeSelect defaultValue="" required autoComplete="country">
-            <option value="">Choose a country</option>
-            <option value="in">India</option>
-            <option value="gb">United Kingdom</option>
-            <option value="us">United States</option>
-          </NativeSelect>
-          <FieldError match="valueMissing">Choose a country.</FieldError>
-        </Field>
-      </Fieldset>
-      <Button type="submit" tone="primary" className="justify-self-start">
-        Sign up
-      </Button>
-    </Form>
-  ),
-  play: async ({ args, canvas, userEvent }) => {
-    await userEvent.type(canvas.getByRole("textbox", { name: "Name" }), "Nihal");
-    await userEvent.type(canvas.getByRole("textbox", { name: "Email" }), "nihal@example.com");
-    await userEvent.selectOptions(canvas.getByRole("combobox", { name: "Country" }), "gb");
-    await userEvent.click(canvas.getByRole("button", { name: "Sign up" }));
+  render: (args, { globals }) => {
+    const copy = pickStoryCopy(storyCopy.formSignUp, globals.locale);
+    return (
+      <Form {...args} className="w-full max-w-sm">
+        <Fieldset>
+          <FieldsetLegend>{copy.title}</FieldsetLegend>
+          <Field name="name">
+            <FieldLabel>{copy.name}</FieldLabel>
+            <Input required autoComplete="name" />
+            <FieldError match="valueMissing">{copy.nameRequired}</FieldError>
+          </Field>
+          <Field name="email">
+            <FieldLabel>{copy.email}</FieldLabel>
+            <Input type="email" required autoComplete="email" />
+            <FieldError match="valueMissing">{copy.emailRequired}</FieldError>
+            <FieldError match="typeMismatch">{copy.emailInvalid}</FieldError>
+          </Field>
+          <Field name="country">
+            <FieldLabel>{copy.country}</FieldLabel>
+            <NativeSelect defaultValue="" required autoComplete="country">
+              <option value="">{copy.chooseCountry}</option>
+              <option value="in">{copy.india}</option>
+              <option value="gb">{copy.uk}</option>
+              <option value="us">{copy.us}</option>
+            </NativeSelect>
+            <FieldError match="valueMissing">{copy.countryRequired}</FieldError>
+          </Field>
+        </Fieldset>
+        <Button type="submit" tone="primary" className="justify-self-start">
+          {copy.submit}
+        </Button>
+      </Form>
+    );
+  },
+  play: async ({ args, canvas, globals, userEvent }) => {
+    const copy = pickStoryCopy(storyCopy.formSignUp, globals.locale);
+    const submit = canvas.getByRole("button", { name: copy.submit });
+    const email = canvas.getByRole("textbox", { name: copy.email });
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(canvas.getByText(copy.nameRequired)).toBeVisible();
+      expect(canvas.getByText(copy.emailRequired)).toBeVisible();
+      expect(canvas.getByText(copy.countryRequired)).toBeVisible();
+      expect(args.onFormSubmit).not.toHaveBeenCalled();
+    });
+    await userEvent.type(canvas.getByRole("textbox", { name: copy.name }), "Nihal");
+    await userEvent.type(email, "invalid");
+    await userEvent.selectOptions(canvas.getByRole("combobox", { name: copy.country }), "gb");
+    await userEvent.click(submit);
+    await waitFor(() => expect(email).toHaveAccessibleDescription(copy.emailInvalid));
+    await userEvent.clear(email);
+    await userEvent.type(email, "nihal@example.com");
+    await userEvent.click(submit);
     await waitFor(() =>
       expect(args.onFormSubmit).toHaveBeenCalledWith(
         { name: "Nihal", email: "nihal@example.com", country: "gb" },

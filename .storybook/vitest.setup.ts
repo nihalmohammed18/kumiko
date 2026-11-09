@@ -76,11 +76,14 @@ afterEach(async ({ task }) => {
   // Checked per story: Storybook resizes the page before each one (see vite.config.ts).
   const width = mode === "touch" ? 320 : 1200;
   if (innerWidth !== width) throw new Error(`The ${mode} project should be ${width}px wide, but it is ${innerWidth}px`);
+  const story = document.querySelector<HTMLElement>("[data-kumiko-story]");
+  expect(document.documentElement.dir).toBe(mode === "rtl" ? "rtl" : "ltr");
+  expect(document.documentElement.lang).toBe(mode === "rtl" ? "ar" : "en");
+  expect(story?.dataset.kumikoLocale).toBe(mode === "rtl" ? "ar-u-nu-arab" : "en");
   const vrt = inject("vrt");
   if (!window.__kumikoSkipVrt && (vrt === "all" || (vrt === "states" && task.name === "States"))) {
     await document.fonts.ready;
     // Just the story, unless it opens something outside it (dialogs, menus, toasts): those set parameters.vrt = "page".
-    const story = document.querySelector<HTMLElement>("[data-kumiko-story]");
     const target = window.__kumikoVrtPage || !story ? document.body : story;
     // Chromium paints only the part of the test frame inside its viewport, so a taller target came out blank below
     // the fold: grow the frame to fit it, then restore the height for the UX checks.
