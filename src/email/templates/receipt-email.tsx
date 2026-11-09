@@ -94,7 +94,7 @@ export function ReceiptEmail({
                 </td>
               </tr>
             ))}
-            <tr style={{ fontFamily: emailFonts.display, fontWeight: 700, ...emailTypeStyle("title") }}>
+            <tr style={{ ...emailTypeStyle("title"), fontFamily: emailFonts.display, fontWeight: 700 }}>
               <td align={emailAlignment(dir)} style={{ padding: "12px 0", paddingInlineEnd: 16, textAlign: "start" }}>
                 {totalLabel}
               </td>
