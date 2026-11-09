@@ -65,6 +65,11 @@ export const englishLabels = {
   streakDoneHint: "Done for today. See you tomorrow!",
   streakGoal: { one: "{count} more day to {goal}", other: "{count} more days to {goal}" },
   clearFilter: "Clear filter",
+  removeChip: "Remove {label}",
+  removedChip: "{label} removed",
+  selectedChips: "Selected values",
+  chipRemoval: "Press Backspace or Delete to remove.",
+  chipNavigation: "From the start of the input, use the arrow keys to reach selected values.",
   updatingResults: "Updating results…",
 } satisfies Record<string, Label>;
 
@@ -169,6 +174,11 @@ export const labels = {
       other: "{count} يوم آخر للوصول إلى {goal}",
     },
     clearFilter: "مسح التصفية",
+    removeChip: "إزالة {label}",
+    removedChip: "تمت إزالة {label}",
+    selectedChips: "القيم المحددة",
+    chipRemoval: "اضغط على مفتاح Backspace أو Delete للإزالة.",
+    chipNavigation: "من بداية حقل الإدخال، استخدم مفاتيح الأسهم للوصول إلى القيم المحددة.",
     updatingResults: "جارٍ تحديث النتائج…",
   },
   ur: {
@@ -228,6 +238,11 @@ export const labels = {
     streakDoneHint: "آج کی مشق مکمل۔ کل ملتے ہیں!",
     streakGoal: { one: "{goal} تک پہنچنے کے لیے مزید {count} دن", other: "{goal} تک پہنچنے کے لیے مزید {count} دن" },
     clearFilter: "فلٹر صاف کریں",
+    removeChip: "{label} ہٹائیں",
+    removedChip: "{label} ہٹا دیا گیا",
+    selectedChips: "منتخب اقدار",
+    chipRemoval: "ہٹانے کے لیے Backspace یا Delete دبائیں۔",
+    chipNavigation: "ان پٹ کے شروع سے، منتخب اقدار تک پہنچنے کے لیے تیر والے بٹن استعمال کریں۔",
     updatingResults: "نتائج اپ ڈیٹ ہو رہے ہیں…",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;

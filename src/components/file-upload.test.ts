@@ -73,3 +73,10 @@ it("announces a mixed batch once with the accepted count and named rejection rea
     "1 file added. setup.exe wasn't added: This file type isn't accepted",
   );
 });
+
+it("keeps a leading dot in an extensionless filename", () => {
+  const markup = renderToStaticMarkup(createElement(FileUpload, { defaultFiles: [pdf(".profile")] }));
+  expect(markup).toContain('data-slot="file-upload-name-base"');
+  expect(markup).toContain(">.profile</bdi>");
+  expect(markup).not.toContain('data-slot="file-upload-name-extension"');
+});

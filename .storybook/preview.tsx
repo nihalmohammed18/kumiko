@@ -14,6 +14,8 @@ declare global {
     __kumikoSkipVrt?: boolean;
     __kumikoVrtPage?: boolean;
     __kumikoUx?: UxParameters;
+    /** A story that sets its own language or direction, which the per-story project check then allows. */
+    __kumikoOwnLocale?: boolean;
   }
 }
 
@@ -28,7 +30,7 @@ function StoryFrame({ children }: { children: ReactNode }) {
 }
 
 /** Applies the toolbar's theme, language and direction the way an app would, including the provider's locale. */
-const withKumiko: Decorator = (Story, { globals, parameters }) => {
+const withKumiko: Decorator = (Story, { globals, storyGlobals, parameters }) => {
   mirrorDemoStates();
   const { language, locale, dir } = storySettings(globals);
   const root = document.documentElement;
@@ -38,6 +40,7 @@ const withKumiko: Decorator = (Story, { globals, parameters }) => {
   window.__kumikoSkipVrt = parameters.vrt === false;
   window.__kumikoVrtPage = parameters.vrt === "page";
   window.__kumikoUx = parameters.ux;
+  window.__kumikoOwnLocale = storyGlobals.locale !== undefined || storyGlobals.dir !== undefined;
   return (
     <KumikoProvider direction={dir} locale={locale}>
       <StoryFrame>
