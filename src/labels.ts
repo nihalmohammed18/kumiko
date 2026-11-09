@@ -27,7 +27,7 @@ export const englishLabels = {
   sortAscending: "{label}, ascending",
   sortDescending: "{label}, descending",
   sortNone: "Default order",
-  selectAllRows: "Select all rows",
+  selectAllRows: "Select all rows on this page",
   selectRow: "Select {label}",
   selectedCount: { one: "{count} selected", other: "{count} selected" },
   noRows: "Nothing here yet",
@@ -58,6 +58,8 @@ export const englishLabels = {
   nextPage: "Next page",
   page: { one: "Page {count}", other: "Page {count}" },
   breadcrumbs: "Breadcrumbs",
+  stepOf: "Step {current} of {total}",
+  fileRejected: "{name} wasn't added: {reason}",
 } satisfies Record<string, Label>;
 
 /** Kumiko's built-in English, Arabic and Urdu labels, with matching keys in every language.
@@ -81,7 +83,7 @@ export const labels = {
     sortAscending: "{label}، تصاعديًا",
     sortDescending: "{label}، تنازليًا",
     sortNone: "الترتيب الافتراضي",
-    selectAllRows: "تحديد كل الصفوف",
+    selectAllRows: "تحديد كل الصفوف في هذه الصفحة",
     selectRow: "تحديد {label}",
     selectedCount: {
       one: "صف واحد محدد",
@@ -148,6 +150,8 @@ export const labels = {
       other: "الصفحة {count}",
     },
     breadcrumbs: "مسار التنقل",
+    stepOf: "الخطوة {current} من {total}",
+    fileRejected: "لم تتم إضافة {name}: {reason}",
   },
   ur: {
     close: "بند کریں",
@@ -165,7 +169,7 @@ export const labels = {
     sortAscending: "{label}، صعودی",
     sortDescending: "{label}، نزولی",
     sortNone: "طے شدہ ترتیب",
-    selectAllRows: "تمام قطاریں منتخب کریں",
+    selectAllRows: "اس صفحے کی تمام قطاریں منتخب کریں",
     selectRow: "{label} منتخب کریں",
     selectedCount: { one: "{count} منتخب", other: "{count} منتخب" },
     noRows: "ابھی یہاں کچھ نہیں",
@@ -199,6 +203,8 @@ export const labels = {
     nextPage: "اگلا صفحہ",
     page: { one: "صفحہ {count}", other: "صفحہ {count}" },
     breadcrumbs: "راستہ",
+    stepOf: "مرحلہ {current} از {total}",
+    fileRejected: "{name} شامل نہیں کی گئی: {reason}",
   },
 } satisfies Record<"en" | "ar" | "ur", Record<keyof typeof englishLabels, Label>>;
 

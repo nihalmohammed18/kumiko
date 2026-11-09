@@ -77,7 +77,7 @@ it("names mixed page selection and keeps a disabled checkbox focusable with its 
     pageSize: 0,
   });
   const locked = /<button\b[^>]*aria-label="Select Engineer"[^>]*>/.exec(html)?.[0];
-  const header = /<button\b[^>]*aria-label="Select all rows"[^>]*>/.exec(html)?.[0];
+  const header = /<button\b[^>]*aria-label="Select all rows on this page"[^>]*>/.exec(html)?.[0];
   expect(header).toContain('aria-checked="mixed"');
   expect(locked).toContain('aria-disabled="true"');
   expect(locked).toContain('tabindex="0"');

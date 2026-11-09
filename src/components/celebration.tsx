@@ -34,7 +34,8 @@ export interface CelebrationProps extends Omit<ComponentProps<"section">, "title
   art?: ReactNode;
   stats?: readonly { label: string; value: number; from?: number; format?: Intl.NumberFormatOptions }[];
   progress?: { label: string; value: number; from?: number };
-  streak?: Pick<StreakProps, "count" | "today" | "done">;
+  /** Set gained only when this achievement earned a streak day; defaults to false. */
+  streak?: Pick<StreakProps, "count" | "today" | "done"> & { gained?: boolean };
   onContinue?: () => void;
   continueLabel?: string;
   /** Preview-only timing multiplier; 4 plays at quarter speed. Remount to replay; leave at 1 in products. */
@@ -44,9 +45,10 @@ export interface CelebrationProps extends Omit<ComponentProps<"section">, "title
 /** An interruptible Hop celebrating a completed action, with final accessible values throughout.
  * Use when: showing a rare achievement; place it in a Dialog or move focus to its heading (it never moves focus).
  * Avoid when: animating routine saves. Server rendering and hydration show the final frame without replaying.
+ * A streak only counts up, pops and announces +1 when streak.gained is true.
  *
  * @example
- * <Celebration title="First application sent!" description="One step closer to your next role." />
+ * <Celebration title="First application sent!" streak={{ count: 1, today: "2026-11-08", done: ["2026-11-08"], gained: true }} />
  */
 export function Celebration({
   title,
@@ -70,12 +72,14 @@ export function Celebration({
   const [initial] = useState(() => ({
     client,
     reducedMotion,
+    streakGained: streak?.gained === true,
     timeScale: Number.isFinite(timeScale) && timeScale > 0 ? timeScale : 1,
   }));
   const [step, setStep] = useState(initial.client ? 0 : celebrationTimeline.end);
   const root = useRef<HTMLDivElement>(null);
   const finishRef = useRef<ReturnType<typeof playCelebration> | undefined>(undefined);
-  const message = streak ? `${title} ${formatLabel(labels.streak, locale, streak.count)}` : title;
+  const gain = streak?.gained ? ` +${new Intl.NumberFormat(locale).format(1)}` : "";
+  const message = streak ? `${title} ${formatLabel(labels.streak, locale, streak.count)}${gain}` : title;
   const announcement = useRef({ announce, message });
   useEffect(() => {
     announcement.current = { announce, message };
@@ -88,6 +92,7 @@ export function Celebration({
       root: element,
       timeScale: initial.timeScale,
       reducedMotion: initial.reducedMotion,
+      streakGained: initial.streakGained,
       onStep: (time) => {
         if (mounted) setStep(time);
       },
@@ -195,19 +200,21 @@ export function Celebration({
         )}
         {streak && (
           <Streak
-            {...streak}
+            count={streak.count}
+            today={streak.today}
+            done={streak.done}
             className={cn(
               "w-full [&>div]:grid [&>div]:grid-cols-[2.5rem_minmax(0,1fr)_3rem] [&_[data-slot=streak-week]]:justify-center",
               "[&_[data-slot=streak-flame]]:transition-none [&_[data-slot=streak-flame][data-popping]]:scale-100 [&_[data-slot=streak-increment]]:duration-move",
               finished && "[&_[data-slot=streak-increment]]:transition-none",
             )}
-            increment={step >= celebrationTimeline.increment}
+            increment={streak.gained === true && step >= celebrationTimeline.increment}
             countDisplay={
               <CelebrationNumber
                 value={streak.count}
-                from={Math.max(0, streak.count - 1)}
-                active={streakCounting}
-                duration={streakDuration}
+                from={streak.gained ? Math.max(0, streak.count - 1) : streak.count}
+                active={!streak.gained || streakCounting}
+                duration={streak.gained ? streakDuration : 0}
                 locale={locale}
               />
             }

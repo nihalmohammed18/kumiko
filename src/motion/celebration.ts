@@ -75,6 +75,8 @@ export interface CelebrationPlayerOptions {
   onStep: (time: number) => void;
   announce: () => void;
   reducedMotion?: boolean;
+  /** Enables the flame track only for an earned streak day. */
+  streakGained?: boolean;
   timeScale?: number;
 }
 
@@ -87,6 +89,7 @@ export function playCelebration({
   onStep,
   announce,
   reducedMotion = false,
+  streakGained = false,
   timeScale = 1,
 }: CelebrationPlayerOptions) {
   const document = root.ownerDocument;
@@ -122,6 +125,7 @@ export function playCelebration({
   }
   if (!reducedMotion && !document.hidden) {
     for (const { slot, keyframes, duration, delay } of celebrationTimeline.tracks) {
+      if (slot === "streak-flame" && !streakGained) continue;
       const animation = root.querySelector(`[data-slot="${slot}"]`)?.animate(keyframes, { duration, delay });
       if (animation) {
         animation.playbackRate = 1 / timeScale;

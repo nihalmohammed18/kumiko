@@ -13,7 +13,7 @@ it("server-renders a named section in its final frame, with localized values and
       character: "pip",
       stats: [{ label: "Applications", value: 12, from: 11 }],
       progress: { label: "Weekly goal", value: 60, from: 40 },
-      streak: { count: 5, today: "2026-11-08", done: ["2026-11-08"] },
+      streak: { count: 5, today: "2026-11-08", done: ["2026-11-08"], gained: true },
       onContinue: vi.fn(),
     }),
   };
@@ -29,4 +29,16 @@ it("server-renders a named section in its final frame, with localized values and
   expect(html).toContain('data-slot="streak-increment"');
   expect(html).toContain("متابعة");
   expect(html).toMatch(/role="status" aria-live="polite" aria-atomic="true"><\/div>/);
+});
+
+it("shows the final zero streak without claiming a gain by default", () => {
+  const html = renderToStaticMarkup(
+    createElement(Celebration, {
+      title: "Profile complete!",
+      streak: { count: 0, today: "2026-11-08", done: [] },
+    }),
+  );
+  expect(html).toMatch(/data-slot="count-up-value"[^>]*>0<\/span>/);
+  expect(html).not.toContain('data-slot="streak-increment"');
+  expect(html).not.toMatch(/<span[^>]*data-popping=/);
 });

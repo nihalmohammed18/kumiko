@@ -3,7 +3,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, fn, waitFor, within } from "storybook/test";
-import { labels } from "../labels.ts";
+import { formatLabel, labels } from "../labels.ts";
 import { Button } from "./button.tsx";
 import { Celebration, type CelebrationProps } from "./celebration.tsx";
 import { Illustration } from "./illustration.tsx";
@@ -79,6 +79,7 @@ function finalValues(root: HTMLElement, args: CelebrationProps, locale: string) 
 }
 
 export const Hop: Story = {
+  args: { streak: { ...meta.args.streak, gained: true } },
   render: (args) => <HopPreview {...args} />,
   play: async ({ args, canvas, canvasElement, globals, userEvent }) => {
     args.onContinue?.mockClear();
@@ -112,7 +113,38 @@ export const Hop: Story = {
         expect(scene()).toHaveAttribute("data-finished");
         finalValues(scene(), args, locale);
         expect(scene().querySelector('[data-slot="streak-increment"]')).toBeVisible();
-        expect(within(canvasElement.ownerDocument.body).getByRole("status")).toHaveTextContent(args.title);
+        expect(within(canvasElement.ownerDocument.body).getByRole("status")).toHaveTextContent(
+          `${args.title} ${formatLabel(labels[globals.dir === "rtl" ? "ar" : "en"].streak, locale, args.streak!.count)} +${new Intl.NumberFormat(locale).format(1)}`,
+        );
+      },
+      { timeout: 1600 },
+    );
+  },
+};
+
+export const SameDayAchievement: Story = {
+  name: "Same-day achievement",
+  args: { streak: { ...meta.args.streak, gained: false } },
+  render: (args) => <HopPreview {...args} />,
+  play: async ({ args, canvas, canvasElement, globals }) => {
+    const root = canvas.getByRole("region", { name: args.title });
+    const locale = globals.dir === "rtl" ? "ar-u-nu-arab" : "en";
+    const streak = root.querySelector('[data-slot="streak"]')!;
+    await waitFor(() => {
+      expect(streak.querySelector('[data-slot="count-up-value"]')).toHaveTextContent(
+        new Intl.NumberFormat(locale).format(args.streak!.count),
+      );
+      expect(streak.querySelector('[data-slot="streak-increment"]')).toBeNull();
+      expect(streak.querySelector('[data-slot="streak-flame"]')!.getAnimations()).toHaveLength(0);
+    });
+    await waitFor(
+      () => {
+        expect(root).toHaveAttribute("data-finished");
+        finalValues(root, args, locale);
+        expect(streak.querySelector('[data-slot="streak-increment"]')).toBeNull();
+        expect(within(canvasElement.ownerDocument.body).getByRole("status").textContent).toBe(
+          `${args.title} ${formatLabel(labels[globals.dir === "rtl" ? "ar" : "en"].streak, locale, args.streak!.count)}`,
+        );
       },
       { timeout: 1600 },
     );
