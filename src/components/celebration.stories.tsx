@@ -3,7 +3,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, fn, waitFor, within } from "storybook/test";
+import { pickStoryCopy, storyCopy, storySettings } from "../../.storybook/story-copy.ts";
 import { formatLabel, labels } from "../labels.ts";
+import { useKumiko } from "../provider.tsx";
 import { Button } from "./button.tsx";
 import { Celebration, type CelebrationProps } from "./celebration.tsx";
 import { Illustration } from "./illustration.tsx";
@@ -34,13 +36,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function HopPreview(args: CelebrationProps) {
+function HopPreview({
+  copy = storyCopy.celebrationHop.en,
+  ...args
+}: CelebrationProps & { copy?: typeof storyCopy.celebrationHop.en }) {
   const [replay, setReplay] = useState(0);
   const [slow, setSlow] = useState(false);
   return (
     <div className="grid w-full min-w-0 max-w-md gap-6">
       <div className="flex min-w-0 flex-wrap items-center gap-4">
-        <Button onClick={() => setReplay((current) => current + 1)}>Replay</Button>
+        <Button onClick={() => setReplay((current) => current + 1)}>{copy.replay}</Button>
         <Switch
           checked={slow}
           onCheckedChange={(next) => {
@@ -49,11 +54,40 @@ function HopPreview(args: CelebrationProps) {
             setReplay((current) => current + 1);
           }}
         >
-          Slow motion
+          {copy.slowMotion}
         </Switch>
       </div>
       <Celebration {...args} key={replay} timeScale={slow ? 4 : 1} />
     </div>
+  );
+}
+
+function TranslatedHopPreview(args: CelebrationProps) {
+  const { locale } = useKumiko();
+  const copy = pickStoryCopy(storyCopy.celebrationHop, locale);
+  const [beforeCompany, afterCompany] = copy.description.split("{company}");
+  const statLabels: Record<string, string> = { Applications: copy.applications, Profile: copy.profile };
+  return (
+    <HopPreview
+      {...args}
+      copy={copy}
+      title={copy.title}
+      description={
+        afterCompany === undefined ? (
+          beforeCompany
+        ) : (
+          <>
+            {beforeCompany}
+            <bdi lang="en" dir="ltr">
+              Acme
+            </bdi>
+            {afterCompany}
+          </>
+        )
+      }
+      stats={args.stats?.map((stat) => ({ ...stat, label: statLabels[stat.label] ?? stat.label }))}
+      progress={args.progress && { ...args.progress, label: copy.weeklyGoal }}
+    />
   );
 }
 
@@ -80,11 +114,12 @@ function finalValues(root: HTMLElement, args: CelebrationProps, locale: string) 
 
 export const Hop: Story = {
   args: { streak: { ...meta.args.streak, gained: true } },
-  render: (args) => <HopPreview {...args} />,
+  render: (args) => <TranslatedHopPreview {...args} />,
   play: async ({ args, canvas, canvasElement, globals, userEvent }) => {
     args.onContinue?.mockClear();
-    const locale = globals.dir === "rtl" ? "ar-u-nu-arab" : "en";
-    const scene = () => canvas.getByRole("region", { name: args.title });
+    const { language, locale } = storySettings(globals);
+    const copy = pickStoryCopy(storyCopy.celebrationHop, locale);
+    const scene = () => canvas.getByRole("region", { name: copy.title });
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) finalValues(scene(), args, locale);
     await waitFor(
       () => {
@@ -95,10 +130,10 @@ export const Hop: Story = {
     );
     const original = scene();
     await userEvent.tab();
-    await waitFor(() => expect(canvas.getByRole("button", { name: "Replay" })).toHaveFocus());
+    await waitFor(() => expect(canvas.getByRole("button", { name: copy.replay })).toHaveFocus());
     await userEvent.keyboard("{Enter}");
     await waitFor(() => expect(scene()).not.toBe(original));
-    const slow = canvas.getByRole("switch", { name: "Slow motion" });
+    const slow = canvas.getByRole("switch", { name: copy.slowMotion });
     await userEvent.click(slow);
     await userEvent.tab();
     await userEvent.keyboard("{Enter}");
@@ -114,7 +149,7 @@ export const Hop: Story = {
         finalValues(scene(), args, locale);
         expect(scene().querySelector('[data-slot="streak-increment"]')).toBeVisible();
         expect(within(canvasElement.ownerDocument.body).getByRole("status")).toHaveTextContent(
-          `${args.title} ${formatLabel(labels[globals.dir === "rtl" ? "ar" : "en"].streak, locale, args.streak!.count)} +${new Intl.NumberFormat(locale).format(1)}`,
+          `${copy.title} ${formatLabel(labels[language].streak, locale, args.streak!.count)} +${new Intl.NumberFormat(locale).format(1)}`,
         );
       },
       { timeout: 1600 },
@@ -128,7 +163,7 @@ export const SameDayAchievement: Story = {
   render: (args) => <HopPreview {...args} />,
   play: async ({ args, canvas, canvasElement, globals }) => {
     const root = canvas.getByRole("region", { name: args.title });
-    const locale = globals.dir === "rtl" ? "ar-u-nu-arab" : "en";
+    const { language, locale } = storySettings(globals);
     const streak = root.querySelector('[data-slot="streak"]')!;
     await waitFor(() => {
       expect(streak.querySelector('[data-slot="count-up-value"]')).toHaveTextContent(
@@ -143,7 +178,7 @@ export const SameDayAchievement: Story = {
         finalValues(root, args, locale);
         expect(streak.querySelector('[data-slot="streak-increment"]')).toBeNull();
         expect(within(canvasElement.ownerDocument.body).getByRole("status").textContent).toBe(
-          `${args.title} ${formatLabel(labels[globals.dir === "rtl" ? "ar" : "en"].streak, locale, args.streak!.count)}`,
+          `${args.title} ${formatLabel(labels[language].streak, locale, args.streak!.count)}`,
         );
       },
       { timeout: 1600 },
@@ -166,7 +201,7 @@ export const WithoutFaces: Story = {
     await waitFor(
       () => {
         expect(root).toHaveAttribute("data-finished");
-        finalValues(root, args, globals.dir === "rtl" ? "ar-u-nu-arab" : "en");
+        finalValues(root, args, storySettings(globals).locale);
         expect(root.querySelector('[data-slot="illustration"]')).toHaveAttribute("data-illustration", "trophy");
         expect(root.querySelector('[data-slot="character"]')).toBeNull();
       },
@@ -180,14 +215,13 @@ export const Interrupted: Story = {
   args: { streak: { ...meta.args.streak, gained: true } },
   play: async ({ args, canvas, globals, userEvent }) => {
     args.onContinue?.mockClear();
-    await userEvent.click(
-      canvas.getByRole("button", { name: globals.dir === "rtl" ? labels.ar.continue : labels.en.continue }),
-    );
+    const { language, locale } = storySettings(globals);
+    await userEvent.click(canvas.getByRole("button", { name: labels[language].continue }));
     await waitFor(() => {
       expect(args.onContinue).toHaveBeenCalledOnce();
       const root = canvas.getByRole("region", { name: args.title });
       expect(root).toHaveAttribute("data-finished");
-      finalValues(root, args, globals.dir === "rtl" ? "ar-u-nu-arab" : "en");
+      finalValues(root, args, locale);
     });
   },
 };

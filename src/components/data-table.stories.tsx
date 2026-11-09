@@ -2,10 +2,11 @@
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ColumnDef, PaginationState, RowSelectionState, SortingState } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { expect, fn, type UserEventObject, waitFor, within } from "storybook/test";
 import { formatLabel, labels } from "../labels.ts";
 import { useKumiko } from "../provider.tsx";
+import { Alert } from "./alert.tsx";
 import { Badge } from "./badge.tsx";
 import { Button } from "./button.tsx";
 import { Character } from "./character.tsx";
@@ -34,15 +35,16 @@ const pendingApplications: Application[] = [];
 const rowLabel = (row: Application) => `${row.role} at ${row.company}`;
 const disabledReason = "Withdrawn applications cannot be selected.";
 
-function applicationColumns(locale: string): ColumnDef<DataTableFeatures, Application>[] {
+function applicationColumns(locale: string, compact = false): ColumnDef<DataTableFeatures, Application>[] {
   const currency = new Intl.NumberFormat(locale, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
   const dates = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" });
   return [
-    { accessorKey: "role", header: "Role" },
-    { accessorKey: "company", header: "Company" },
+    { accessorKey: "role", header: "Role", meta: { card: compact ? "title" : "detail" } },
+    { accessorKey: "company", header: "Company", meta: { card: compact ? "subtitle" : "detail" } },
     {
       accessorKey: "applied",
       header: "Applied date",
+      meta: { card: "detail" },
       cell: ({ cell }) => {
         const date = cell.getValue<string>();
         return <time dateTime={date}>{dates.format(new Date(date))}</time>;
@@ -51,6 +53,7 @@ function applicationColumns(locale: string): ColumnDef<DataTableFeatures, Applic
     {
       accessorKey: "status",
       header: "Status",
+      meta: { card: compact ? "badge" : "detail" },
       cell: ({ row }) => (
         <Badge
           tone={row.original.status === "Offer" ? "success" : row.original.status === "Interview" ? "info" : "neutral"}
@@ -62,15 +65,15 @@ function applicationColumns(locale: string): ColumnDef<DataTableFeatures, Applic
     {
       accessorKey: "salary",
       header: "Salary",
-      meta: { align: "end" },
+      meta: { align: "end", card: compact ? "badge" : "detail" },
       cell: ({ cell }) => currency.format(cell.getValue<number>()),
     },
   ];
 }
 
-function ApplicationsTable(props: DataTableProps<Application>) {
+function ApplicationsTable({ compact = false, ...props }: DataTableProps<Application> & { compact?: boolean }) {
   const { locale } = useKumiko();
-  const columns = useMemo(() => applicationColumns(locale), [locale]);
+  const columns = useMemo(() => applicationColumns(locale, compact), [locale, compact]);
   return <DataTable {...props} columns={columns} />;
 }
 
@@ -442,9 +445,13 @@ async function settled(table: HTMLElement) {
 }
 
 const fetchApplications = fn(
-  (data: Application[], sorting: SortingState, filter: string, pagination: PaginationState) =>
-    new Promise<{ rows: Application[]; rowCount: number }>((resolve) => {
+  (data: Application[], sorting: SortingState, filter: string, pagination: PaginationState, fail = false) =>
+    new Promise<{ rows: Application[]; rowCount: number }>((resolve, reject) => {
       setTimeout(() => {
+        if (fail) {
+          reject(new Error("We couldn't refresh the results."));
+          return;
+        }
         const matches = data.filter((row) =>
           Object.values(row).some((value) => String(value).toLowerCase().includes(filter.toLowerCase())),
         );
@@ -466,7 +473,7 @@ const fetchApplications = fn(
     }),
 );
 
-function ServerTable(props: DataTableProps<Application>) {
+function ServerTable({ failRefresh = false, ...props }: DataTableProps<Application> & { failRefresh?: boolean }) {
   const { locale } = useKumiko();
   const data = useMemo(() => manyApplications(200, locale), [locale]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -474,32 +481,59 @@ function ServerTable(props: DataTableProps<Application>) {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
   const [response, setResponse] = useState<{ rows: Application[]; rowCount: number }>({ rows: [], rowCount: 200 });
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const loaded = useRef(false);
   useEffect(() => {
     let current = true;
     setLoading(true);
-    void fetchApplications(data, sorting, globalFilter, pagination).then((page) => {
-      if (!current) return;
-      setResponse(page);
-      setLoading(false);
-    });
+    const fail = failRefresh && loaded.current && retry === 0 && (sorting.length > 0 || globalFilter !== "");
+    void fetchApplications(data, sorting, globalFilter, pagination, fail).then(
+      (page) => {
+        if (!current) return;
+        loaded.current = true;
+        setResponse(page);
+        setFailed(false);
+        setLoading(false);
+      },
+      () => {
+        if (!current) return;
+        setFailed(true);
+        setLoading(false);
+      },
+    );
     return () => {
       current = false;
     };
-  }, [data, sorting, globalFilter, pagination]);
+  }, [data, sorting, globalFilter, pagination, failRefresh, retry]);
   return (
-    <ApplicationsTable
-      {...props}
-      manual
-      data={response.rows}
-      rowCount={response.rowCount}
-      loading={loading}
-      sorting={sorting}
-      onSortingChange={setSorting}
-      globalFilter={globalFilter}
-      onGlobalFilterChange={setFilter}
-      pagination={pagination}
-      onPaginationChange={setPagination}
-    />
+    <div className="grid min-w-0 gap-4">
+      {failed && (
+        <Alert
+          status="danger"
+          role="alert"
+          title="We couldn't refresh the results."
+          action={
+            <Button size="sm" loading={loading} onClick={() => setRetry((count) => count + 1)}>
+              Try again
+            </Button>
+          }
+        />
+      )}
+      <ApplicationsTable
+        {...props}
+        manual
+        data={response.rows}
+        rowCount={response.rowCount}
+        loading={loading}
+        sorting={sorting}
+        onSortingChange={setSorting}
+        globalFilter={globalFilter}
+        onGlobalFilterChange={setFilter}
+        pagination={pagination}
+        onPaginationChange={setPagination}
+      />
+    </div>
   );
 }
 
@@ -556,30 +590,62 @@ export const ServerMode: Story = {
   },
 };
 
+export const ServerModeFailure: Story = {
+  name: "Server mode failure",
+  args: { manual: true },
+  render: (args) => <ServerTable {...args} failRefresh />,
+  play: async ({ canvas, globals, userEvent }) => {
+    const catalog = globals.dir === "rtl" ? labels.ar : labels.en;
+    const table = canvas.getByRole("table");
+    await waitFor(() => expect(table).not.toHaveAttribute("aria-busy"));
+    const previous = table.querySelector("tbody")!.textContent;
+    const input = canvas.getByRole("searchbox", { name: catalog.filterRows });
+    await userEvent.type(input, "Maple");
+    await waitFor(() => {
+      expect(canvas.getByRole("alert")).toHaveTextContent("We couldn't refresh the results.");
+      expect(table).not.toHaveAttribute("aria-busy");
+      expect(table.querySelector("tbody")!.textContent).toBe(previous);
+      expect(input).toHaveValue("Maple");
+    });
+    await userEvent.click(canvas.getByRole("button", { name: "Try again" }));
+    await waitFor(() => {
+      expect(canvas.queryByRole("alert")).not.toBeInTheDocument();
+      expect(table).not.toHaveAttribute("aria-busy");
+      expect(input).toHaveValue("Maple");
+      expect(table.querySelector("tbody")!.textContent).not.toBe(previous);
+      expect(table.querySelectorAll("tbody tr")).toHaveLength(10);
+      for (const row of table.querySelectorAll("tbody tr")) expect(row).toHaveTextContent("Maple Studio");
+    });
+  },
+};
+
 export const Phone: Story = {
   render: (args) => (
     <div className="w-80 max-w-full">
-      <ApplicationsTable {...args} />
+      <ApplicationsTable {...args} compact />
     </div>
   ),
   play: async ({ canvas, canvasElement, globals, userEvent }) => {
     const catalog = globals.dir === "rtl" ? labels.ar : labels.en;
     const locale = globals.dir === "rtl" ? "ar-u-nu-arab" : "en";
     const table = canvas.getByRole("table");
-    const headings = within(table)
-      .getAllByRole("columnheader")
-      .slice(1)
-      .map((header) => header.getAttribute("aria-label"));
     await waitFor(() => {
       expect(table).toHaveAttribute("role", "table");
       expect(getComputedStyle(table).display).toBe("block");
-      for (const row of table.querySelectorAll("tbody tr")) {
-        const labels = Array.from(row.querySelectorAll("[data-slot=data-table-card-label]"));
-        expect(labels.map((label) => label.textContent)).toEqual(headings);
-        for (const label of labels) {
-          expect(label).toBeVisible();
-          expect(label).toHaveAttribute("aria-hidden", "true");
-        }
+      for (const row of table.querySelectorAll<HTMLTableRowElement>("tbody tr")) {
+        const title = row.querySelector('[data-card="title"]')!;
+        expect(title).toBeVisible();
+        expect(title.querySelector("[data-slot=data-table-card-label]")).toBeNull();
+        expect(Array.from(row.querySelectorAll("td[data-card]"), (cell) => cell.getAttribute("data-card"))).toEqual([
+          "title",
+          "subtitle",
+          "badge",
+          "badge",
+          "detail",
+        ]);
+        const label = within(row).getByText("Applied date");
+        expect(label).toBeVisible();
+        expect(label).toHaveAttribute("aria-hidden", "true");
         expect(row.querySelector("td:first-child [data-slot=checkbox]")).toBeInTheDocument();
       }
     });
@@ -597,7 +663,7 @@ export const Phone: Story = {
     const currency = new Intl.NumberFormat(locale, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
     await waitFor(() => {
       expect(table.querySelector("th[aria-sort=descending]")).toHaveTextContent("Salary");
-      expect(table.querySelector("tbody tr td:last-child")).toHaveTextContent(
+      expect(table.querySelector('tbody tr [data-card="badge"][data-align="end"]')).toHaveTextContent(
         currency.format(128000).replace(/\s/g, " "),
       );
       expect(body.queryByRole("listbox")).not.toBeInTheDocument();

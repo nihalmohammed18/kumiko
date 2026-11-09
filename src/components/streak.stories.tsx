@@ -1,6 +1,10 @@
+"use client";
+
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
-import { Streak } from "./streak.tsx";
+import { pickStoryCopy, storyCopy, storySettings } from "../../.storybook/story-copy.ts";
+import { useKumiko } from "../provider.tsx";
+import { Streak, type StreakProps } from "./streak.tsx";
 
 const meta = {
   title: "Delight/Streak",
@@ -29,7 +33,7 @@ export const Default: Story = {
 export const WeekStart: Story = {
   name: "Week start",
   play: async ({ canvas, globals }) => {
-    const locale = new Intl.Locale(globals.dir === "rtl" ? "ar-u-nu-arab" : "en") as Intl.Locale & {
+    const locale = new Intl.Locale(storySettings(globals).locale) as Intl.Locale & {
       getWeekInfo?: () => { firstDay: number };
       weekInfo?: { firstDay: number };
     };
@@ -45,7 +49,7 @@ export const Increment: Story = {
   args: { increment: true },
   play: async ({ canvasElement, globals }) => {
     const chip = canvasElement.querySelector('[data-slot="streak-increment"]');
-    const one = new Intl.NumberFormat(globals.dir === "rtl" ? "ar-u-nu-arab" : "en").format(1);
+    const one = new Intl.NumberFormat(storySettings(globals).locale).format(1);
     await waitFor(() => {
       expect(chip).toBeVisible();
       expect(chip).toHaveTextContent(`+${one}`);
@@ -68,13 +72,22 @@ export const DoneWithGoal: Story = {
   args: { ...Done.args, goal: 14 },
 };
 
-export const States: Story = {
-  render: (args) => (
+function StreakStates(args: StreakProps) {
+  const { locale } = useKumiko();
+  const copy = pickStoryCopy(storyCopy.streakStates, locale);
+  const date = new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
+    new Date(`${args.today}T00:00:00Z`),
+  );
+  return (
     <div className="flex min-w-0 flex-wrap items-start gap-6">
-      <Streak {...args} count={0} done={[]} />
-      <Streak {...args} />
-      <Streak {...args} done={[...args.done, args.today]} />
-      <Streak {...args} done={[...args.done, args.today]} goal={14} />
+      <Streak {...args} count={0} done={[]} role="group" aria-label={`${copy.zero}, ${date}`} />
+      <Streak {...args} role="group" aria-label={`${copy.pending}, ${date}`} />
+      <Streak {...args} done={[...args.done, args.today]} role="group" aria-label={`${copy.done}, ${date}`} />
+      <Streak {...args} done={[...args.done, args.today]} goal={14} role="group" aria-label={`${copy.goal}, ${date}`} />
     </div>
-  ),
+  );
+}
+
+export const States: Story = {
+  render: (args) => <StreakStates {...args} />,
 };

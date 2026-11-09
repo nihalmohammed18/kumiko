@@ -49,6 +49,7 @@ import { Pagination } from "./pagination.tsx";
 import { SearchField } from "./search-field.tsx";
 import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "./select.tsx";
 import { Skeleton } from "./skeleton.tsx";
+import { Spinner } from "./spinner.tsx";
 import {
   Table,
   TableBody,
@@ -71,10 +72,39 @@ const features = tableFeatures({
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(),
   rowSelectionFeature,
-  columnMeta: metaHelper<{ align?: "start" | "end"; label?: string }>(),
+  columnMeta: metaHelper<{
+    align?: "start" | "end";
+    label?: string;
+    card?: "title" | "subtitle" | "badge" | "detail" | "hidden";
+  }>(),
 });
 
-/** DataTable's TanStack v9 feature type, with optional logical alignment and plain header text in meta.
+const cardOrder = { title: 0, subtitle: 1, badge: 2, detail: 3, hidden: 4 };
+const cardSelectionStyle: CSSProperties = {
+  position: "absolute",
+  insetBlockStart: 0,
+  insetInlineEnd: 0,
+  display: "grid",
+  placeItems: "center",
+  inlineSize: "3rem",
+  blockSize: "3rem",
+  padding: 0,
+  borderBlockEnd: 0,
+};
+const cardCellStyles: Partial<Record<keyof typeof cardOrder, CSSProperties>> = {
+  title: { borderBlockEnd: 0, paddingBlockEnd: "0.25rem" },
+  subtitle: { borderBlockEnd: 0, paddingBlockStart: 0, paddingBlockEnd: "0.25rem" },
+  badge: {
+    display: "inline-flex",
+    flexWrap: "wrap",
+    maxInlineSize: "100%",
+    minInlineSize: 0,
+    overflowWrap: "anywhere",
+    borderBlockEnd: 0,
+  },
+};
+
+/** DataTable's TanStack v9 feature type, with optional logical alignment, plain header text and card placement in meta.
  * Use when: typing ColumnDef<DataTableFeatures, Row> or createColumnHelper<DataTableFeatures, Row>().
  * Avoid when: defining a separate TanStack table with different features.
  */
@@ -149,6 +179,8 @@ function DataTableRow<TData extends RowData>({
   row,
   selectionLabel,
   disabledReason,
+  cardMode,
+  headerId,
   index,
   rowIndex,
   measure,
@@ -156,12 +188,21 @@ function DataTableRow<TData extends RowData>({
   row: Row<DataTableFeatures, TData>;
   selectionLabel?: string;
   disabledReason?: string | null;
+  cardMode: boolean;
+  headerId: string;
   index?: number;
   rowIndex?: number;
   measure?: Ref<HTMLTableRowElement>;
 }) {
   const reasonId = useId();
   const reason = !row.getCanSelect() ? disabledReason : undefined;
+  const cells = row.getAllCells();
+  const orderedCells = cardMode
+    ? cells.toSorted(
+        (a, b) =>
+          cardOrder[a.column.columnDef.meta?.card ?? "detail"] - cardOrder[b.column.columnDef.meta?.card ?? "detail"],
+      )
+    : cells;
   return (
     <TableRow
       role="row"
@@ -169,9 +210,10 @@ function DataTableRow<TData extends RowData>({
       data-index={index}
       aria-rowindex={rowIndex}
       selected={selectionLabel !== undefined && row.getIsSelected()}
+      style={cardMode && selectionLabel !== undefined ? { position: "relative", minBlockSize: "3rem" } : undefined}
     >
       {selectionLabel !== undefined && (
-        <TableCell role="cell" data-selection className="w-12">
+        <TableCell role="cell" data-selection className="w-12" style={cardMode ? cardSelectionStyle : undefined}>
           <Checkbox
             nativeButton
             render={<BaseButton focusableWhenDisabled={Boolean(reason)} tabIndex={reason ? 0 : undefined} />}
@@ -183,11 +225,34 @@ function DataTableRow<TData extends RowData>({
           />
         </TableCell>
       )}
-      {row.getAllCells().map((cell, index) => (
-        <TableCell key={cell.id} role="cell" align={cell.column.columnDef.meta?.align}>
-          <span data-slot="data-table-card-label" aria-hidden className="text-label font-bold text-ink-muted">
-            {columnLabel(cell.column)}
-          </span>
+      {orderedCells.map((cell, index) => (
+        <TableCell
+          key={cell.id}
+          role="cell"
+          headers={cardMode ? `${headerId}-${cell.column.id}` : undefined}
+          align={cell.column.columnDef.meta?.align}
+          data-card={cell.column.columnDef.meta?.card ?? "detail"}
+          style={
+            cardMode
+              ? {
+                  ...cardCellStyles[cell.column.columnDef.meta?.card ?? "detail"],
+                  paddingInlineEnd: selectionLabel !== undefined && index === 0 ? "3.5rem" : undefined,
+                }
+              : undefined
+          }
+          className={
+            cardMode && cell.column.columnDef.meta?.card === "title"
+              ? "font-display text-body font-bold"
+              : cardMode && cell.column.columnDef.meta?.card === "subtitle"
+                ? "text-ink-muted"
+                : undefined
+          }
+        >
+          {(cell.column.columnDef.meta?.card ?? "detail") === "detail" && (
+            <span data-slot="data-table-card-label" aria-hidden className="text-label font-bold text-ink-muted">
+              {columnLabel(cell.column)}
+            </span>
+          )}
           <FlexRender cell={cell} />
           {selectionLabel !== undefined && reason && index === 0 && (
             <span id={reasonId} className="block wrap-break-word text-body-sm text-ink-muted">
@@ -212,6 +277,8 @@ function DataTableSpacer({ height, columns }: { height: number; columns: number 
  * Use when: browsing client data or server pages with Kumiko's table parts. Avoid when: laying out unrelated content.
  * Keep data and columns stable; column meta.align="end" aligns numeric headers and cells.
  * Rows become cards below 30rem of card width (phones). Supply meta.label for headers that render custom markup.
+ * meta.card groups title, subtitle, badge and detail cells in reading order; hidden cells remain screen-reader readable. Defaults to detail.
+ * For a failed server refresh, compose a danger Alert with a retry Button above the table and retain its rows and filter.
  * virtualize requires a CSS height; use pageSize=0 to virtualize the whole dataset. --kumiko-data-table-height sizes its scroll area.
  *
  * @example
@@ -268,6 +335,7 @@ export function DataTable<TData extends RowData>({
   ...props
 }: DataTableProps<TData>) {
   const { labels, locale, announce } = useKumiko();
+  const headerId = useId();
   const [sort, changeSorting] = useDataTableState(sorting, defaultSorting, onSortingChange);
   const [query, changeFilter] = useDataTableState(globalFilter, defaultGlobalFilter, onGlobalFilterChange);
   const [paging, changePagination] = useDataTableState(
@@ -349,6 +417,23 @@ export function DataTable<TData extends RowData>({
     count: showSkeleton ? placeholderCount : rows.length,
     getItemKey,
   });
+  const [cardMode, setCardMode] = useState(false);
+  useEffect(() => {
+    const card = rootRef.current?.querySelector<HTMLElement>("[data-slot=table-card]");
+    if (!card) return;
+    // Match the card's content width to the CSS query so DOM reading order changes only in cards.
+    const observer = new ResizeObserver(([entry]) => {
+      const rem = Number.parseFloat(getComputedStyle(card.ownerDocument.documentElement).fontSize);
+      setCardMode(entry!.contentRect.width < 30 * rem);
+    });
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [rootRef]);
+  const cardColumns = cardMode
+    ? leafColumns.toSorted(
+        (a, b) => cardOrder[a.columnDef.meta?.card ?? "detail"] - cardOrder[b.columnDef.meta?.card ?? "detail"],
+      )
+    : leafColumns;
   const items = virtualizer.getVirtualItems();
   const indexes = virtualize
     ? items.map((item) => item.index)
@@ -433,6 +518,16 @@ export function DataTable<TData extends RowData>({
           )}
         </div>
       )}
+      {manual && (
+        <div
+          data-slot="data-table-updating"
+          role="status"
+          className={`flex min-w-0 items-center gap-2 text-body-sm text-ink-muted${loading && rows.length > 0 ? "" : " invisible"}`}
+        >
+          <Spinner />
+          <span className="min-w-0 wrap-break-word">{formatLabel(labels.updatingResults, locale)}</span>
+        </div>
+      )}
       <Table
         {...props}
         role="table"
@@ -493,6 +588,7 @@ export function DataTable<TData extends RowData>({
                   <TableHead
                     key={header.id}
                     role="columnheader"
+                    id={header.isPlaceholder ? undefined : `${headerId}-${header.column.id}`}
                     aria-label={columnLabel(header.column)}
                     colSpan={header.colSpan}
                     scope={header.subHeaders.length ? "colgroup" : "col"}
@@ -538,17 +634,42 @@ export function DataTable<TData extends RowData>({
                 aria-hidden
                 data-index={virtualize ? index : undefined}
                 ref={virtualize ? virtualizer.measureElement : undefined}
+                style={cardMode && selectable ? { position: "relative", minBlockSize: "3rem" } : undefined}
               >
                 {selectable && (
-                  <TableCell role="cell" data-selection className="w-12">
+                  <TableCell
+                    role="cell"
+                    data-selection
+                    className="w-12"
+                    style={cardMode ? cardSelectionStyle : undefined}
+                  >
                     <Skeleton className="size-6" />
                   </TableCell>
                 )}
-                {leafColumns.map((column) => (
-                  <TableCell key={column.id} role="cell" align={column.columnDef.meta?.align}>
-                    <span data-slot="data-table-card-label" aria-hidden className="text-label font-bold text-ink-muted">
-                      {columnLabel(column)}
-                    </span>
+                {cardColumns.map((column, columnIndex) => (
+                  <TableCell
+                    key={column.id}
+                    role="cell"
+                    align={column.columnDef.meta?.align}
+                    data-card={column.columnDef.meta?.card ?? "detail"}
+                    style={
+                      cardMode
+                        ? {
+                            ...cardCellStyles[column.columnDef.meta?.card ?? "detail"],
+                            paddingInlineEnd: selectable && columnIndex === 0 ? "3.5rem" : undefined,
+                          }
+                        : undefined
+                    }
+                  >
+                    {(column.columnDef.meta?.card ?? "detail") === "detail" && (
+                      <span
+                        data-slot="data-table-card-label"
+                        aria-hidden
+                        className="text-label font-bold text-ink-muted"
+                      >
+                        {columnLabel(column)}
+                      </span>
+                    )}
                     <Skeleton shape="text" className="w-full min-w-6" />
                   </TableCell>
                 ))}
@@ -561,6 +682,8 @@ export function DataTable<TData extends RowData>({
                 <DataTableRow
                   key={row.id}
                   row={row}
+                  cardMode={cardMode}
+                  headerId={headerId}
                   index={virtualize ? index : undefined}
                   rowIndex={virtualize ? rowOffset + index + groups.length + 1 : undefined}
                   measure={virtualize ? virtualizer.measureElement : undefined}
