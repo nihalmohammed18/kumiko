@@ -15,6 +15,7 @@ import {
   Minus,
   Plus,
   Search,
+  Star,
   TriangleAlert,
   Upload,
   X,
@@ -168,6 +169,13 @@ export function UploadIcon(props: LucideProps) {
  */
 export function FileIcon(props: LucideProps) {
   return <File {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
+}
+
+/** A decorative star with Kumiko's stroke weight; colour its inside with a `fill-*` class.
+ * Use when: drawing a rating. Avoid when: the icon must provide its own accessible name.
+ */
+export function StarIcon(props: LucideProps) {
+  return <Star {...props} aria-hidden strokeWidth={2.5} data-slot="icon" />;
 }
 
 /** A small inline version of the flame illustration, using sun palette slots.

@@ -179,6 +179,7 @@ export { ProgressRing, type ProgressRingProps } from "./components/progress-ring
 export { ProgressSteps, type ProgressStepsProps } from "./components/progress-steps.tsx";
 export { Radio, type RadioProps } from "./components/radio.tsx";
 export { RadioGroup, type RadioGroupProps } from "./components/radio-group.tsx";
+export { Rating, type RatingProps } from "./components/rating.tsx";
 export { SearchField, type SearchFieldProps } from "./components/search-field.tsx";
 export {
   Select,
@@ -290,6 +291,7 @@ export {
   MinusIcon,
   PlusIcon,
   SearchIcon,
+  StarIcon,
   TriangleAlertIcon,
   UploadIcon,
   XIcon,
