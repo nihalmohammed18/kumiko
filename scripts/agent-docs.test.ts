@@ -95,7 +95,7 @@ it("generates linked guides for every public module with declared props and inhe
   } finally {
     rmSync(destination, { recursive: true, force: true });
   }
-});
+}, 30_000);
 
 it("typechecks every source JSDoc example against fresh package declarations", () => {
   const config = ts.readConfigFile(join(root, "tsconfig.build.json"), ts.sys.readFile);

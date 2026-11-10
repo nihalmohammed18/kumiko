@@ -191,4 +191,82 @@ export const storyCopy = {
     replay: string;
     slowMotion: string;
   }>,
+  prose: {
+    en: {
+      title: "How to pick your first Python course",
+      introStart: "Most beginners stall because they switch courses too often. Pick one from ",
+      link: "our Python guide",
+      introEnd: " and finish it before starting another.",
+      stepsTitle: "Before you enrol",
+      steps: ["Read the syllabus to the end.", "Check when the course was last updated.", "Try a free lesson first."],
+      quote: "The best course is the one you finish.",
+      codeTitle: "Your first program",
+      codeStart: "Save this as ",
+      codeEnd: " and run it.",
+      tableTitle: "Two ways to start",
+      headers: ["Option", "Time", "Cost"],
+      rows: [
+        ["Video course", "30 hours", "Paid"],
+        ["Interactive lessons", "20 hours", "Free"],
+      ],
+      cardTitle: "Not sure yet?",
+      cardPoints: ["Take the short quiz.", "Compare two courses."],
+    },
+    ar: {
+      title: "كيف تختار أول دورة لك في بايثون",
+      introStart: "يتعثر معظم المبتدئين لأنهم يتنقلون بين الدورات كثيرًا. اختر دورة واحدة من ",
+      link: "دليل بايثون",
+      introEnd: " وأكملها قبل أن تبدأ غيرها.",
+      stepsTitle: "قبل التسجيل",
+      steps: ["اقرأ المنهج حتى نهايته.", "تحقق من تاريخ آخر تحديث للدورة.", "جرّب درسًا مجانيًا أولًا."],
+      quote: "أفضل دورة هي التي تكملها.",
+      codeTitle: "برنامجك الأول",
+      codeStart: "احفظ هذا باسم ",
+      codeEnd: " ثم شغّله.",
+      tableTitle: "طريقتان للبدء",
+      headers: ["الخيار", "المدة", "التكلفة"],
+      rows: [
+        ["دورة فيديو", "٣٠ ساعة", "مدفوعة"],
+        ["دروس تفاعلية", "٢٠ ساعة", "مجانية"],
+      ],
+      cardTitle: "لست متأكدًا بعد؟",
+      cardPoints: ["جرّب الاختبار القصير.", "قارن بين دورتين."],
+    },
+    ur: {
+      title: "پائتھون کا پہلا کورس کیسے چنیں",
+      introStart: "زیادہ تر نئے سیکھنے والے اس لیے رک جاتے ہیں کہ وہ بار بار کورس بدلتے ہیں۔ ",
+      link: "ہماری پائتھون گائیڈ",
+      introEnd: " سے ایک کورس چنیں اور دوسرا شروع کرنے سے پہلے اسے مکمل کریں۔",
+      stepsTitle: "داخلے سے پہلے",
+      steps: ["نصاب آخر تک پڑھیں۔", "دیکھیں کہ کورس آخری بار کب اپ ڈیٹ ہوا۔", "پہلے ایک مفت سبق آزمائیں۔"],
+      quote: "بہترین کورس وہ ہے جو آپ مکمل کریں۔",
+      codeTitle: "آپ کا پہلا پروگرام",
+      codeStart: "اسے ",
+      codeEnd: " کے نام سے محفوظ کریں اور چلائیں۔",
+      tableTitle: "شروع کرنے کے دو طریقے",
+      headers: ["انتخاب", "وقت", "لاگت"],
+      rows: [
+        ["ویڈیو کورس", "30 گھنٹے", "قیمت کے ساتھ"],
+        ["انٹرایکٹو اسباق", "20 گھنٹے", "مفت"],
+      ],
+      cardTitle: "ابھی یقین نہیں؟",
+      cardPoints: ["مختصر کوئز آزمائیں۔", "دو کورسز کا موازنہ کریں۔"],
+    },
+  } satisfies Copy<{
+    title: string;
+    introStart: string;
+    link: string;
+    introEnd: string;
+    stepsTitle: string;
+    steps: string[];
+    quote: string;
+    codeTitle: string;
+    codeStart: string;
+    codeEnd: string;
+    tableTitle: string;
+    headers: string[];
+    rows: string[][];
+    cardTitle: string;
+    cardPoints: string[];
+  }>,
 };

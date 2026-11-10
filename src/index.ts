@@ -177,6 +177,7 @@ export {
 export { Progress, type ProgressProps } from "./components/progress.tsx";
 export { ProgressRing, type ProgressRingProps } from "./components/progress-ring.tsx";
 export { ProgressSteps, type ProgressStepsProps } from "./components/progress-steps.tsx";
+export { Prose, type ProseProps } from "./components/prose.tsx";
 export { Radio, type RadioProps } from "./components/radio.tsx";
 export { RadioGroup, type RadioGroupProps } from "./components/radio-group.tsx";
 export { Rating, type RatingProps } from "./components/rating.tsx";
