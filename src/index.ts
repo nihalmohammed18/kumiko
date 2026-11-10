@@ -180,6 +180,7 @@ export { ProgressSteps, type ProgressStepsProps } from "./components/progress-st
 export { Prose, type ProseProps } from "./components/prose.tsx";
 export { Radio, type RadioProps } from "./components/radio.tsx";
 export { RadioGroup, type RadioGroupProps } from "./components/radio-group.tsx";
+export { Rating, type RatingProps } from "./components/rating.tsx";
 export { SearchField, type SearchFieldProps } from "./components/search-field.tsx";
 export {
   Select,
@@ -291,6 +292,7 @@ export {
   MinusIcon,
   PlusIcon,
   SearchIcon,
+  StarIcon,
   TriangleAlertIcon,
   UploadIcon,
   XIcon,
