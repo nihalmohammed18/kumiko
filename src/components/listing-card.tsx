@@ -69,7 +69,10 @@ export function ListingCard({
       {(present(highlight) || present(action)) && (
         <div data-slot="listing-card-footer" className="flex min-w-0 flex-wrap items-center gap-3">
           {present(highlight) && (
+            // A price such as "$62,000 a year" takes its direction from its own text, so it doesn't reorder in an
+            // Arabic or Urdu page.
             <p
+              dir="auto"
               data-slot="listing-card-highlight"
               className="min-w-0 wrap-anywhere font-display text-title-sm font-bold"
             >

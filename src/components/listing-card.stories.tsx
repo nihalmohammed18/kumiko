@@ -97,6 +97,11 @@ export const Job: Story = {
       <Badge tone="sun">Visa sponsorship</Badge>
     </ListingCard>
   ),
+  play: async ({ canvasElement }) => {
+    // Latin text stays left to right even in a right-to-left page, so the figure reads "$62,000 a year".
+    const highlight = canvasElement.querySelector('[data-slot="listing-card-highlight"]')!;
+    await waitFor(() => expect(getComputedStyle(highlight).direction).toBe("ltr"));
+  },
 };
 
 export const TitleOnly: Story = {
