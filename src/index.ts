@@ -129,6 +129,7 @@ export { Input, type InputProps } from "./components/input.tsx";
 export { Kbd, type KbdProps } from "./components/kbd.tsx";
 export { Link, type LinkProps } from "./components/link.tsx";
 export { LinkButton, type LinkButtonProps } from "./components/link-button.tsx";
+export { ListingCard, type ListingCardProps } from "./components/listing-card.tsx";
 export {
   Menu,
   MenuCheckboxItem,
