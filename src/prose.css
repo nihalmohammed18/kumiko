@@ -1,0 +1,197 @@
+/* Article typography for rendered Markdown and MDX. Needs Tailwind's preflight, which zeroes the default margins. */
+@utility kumiko-prose {
+  min-inline-size: 0;
+  max-inline-size: 70ch;
+  color: var(--kumiko-ink);
+  font-family: var(--kumiko-font-body);
+  font-size: var(--kumiko-text-body);
+  line-height: var(--kumiko-text-body-leading);
+  /* Long words and links wrap, and table cells may shrink, so nothing scrolls sideways on a phone. */
+  overflow-wrap: anywhere;
+
+  /* Rhythm applies to every direct child, Kumiko components included, so a card in the flow gets the same gaps. */
+  & > :where(* + *) {
+    margin-block-start: 1rem;
+  }
+
+  & > :where(h1, h2, hr):where(:not(:first-child)) {
+    margin-block-start: 2rem;
+  }
+
+  & > :where(h3, h4):where(:not(:first-child)) {
+    margin-block-start: 1.5rem;
+  }
+
+  & > :where(h1, h2, h3, h4) + :where(*) {
+    margin-block-start: 0.5rem;
+  }
+
+  & > :where(hr) + :where(*) {
+    margin-block-start: 2rem;
+  }
+
+  /* Typography applies only to plain elements: anything with a data-slot, and everything inside it, keeps its own
+     styling, so Kumiko components can sit in an article.
+     Ceiling: a Prose nested in a component that is itself inside a Prose stays unstyled. Use @scope when the
+     browsers Tailwind v4 supports all have it. */
+  & :not(:where([data-slot], & [data-slot] *)) {
+    &:where(h1, h2, h3, h4) {
+      font-family: var(--kumiko-font-display);
+      font-weight: 700;
+      text-wrap: balance;
+    }
+
+    &:where(h1) {
+      font-size: var(--kumiko-text-headline);
+      line-height: var(--kumiko-text-headline-leading);
+    }
+
+    &:where(h2) {
+      font-size: var(--kumiko-text-title);
+      line-height: var(--kumiko-text-title-leading);
+    }
+
+    &:where(h3) {
+      font-size: var(--kumiko-text-title-sm);
+      line-height: var(--kumiko-text-title-sm-leading);
+    }
+
+    &:where(p) {
+      text-wrap: pretty;
+    }
+
+    /* The same look and states as Link. */
+    &:where(a) {
+      cursor: pointer;
+      border-radius: 0.25rem;
+      color: var(--kumiko-brand-text);
+      text-decoration-line: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+
+      @media (hover: hover) {
+        &:hover {
+          text-decoration-thickness: 3px;
+        }
+      }
+
+      &:active {
+        background-color: var(--kumiko-brand-tint);
+      }
+
+      &:focus-visible {
+        outline: var(--kumiko-ring-width) solid var(--kumiko-focus);
+        outline-offset: var(--kumiko-ring-gap);
+      }
+    }
+
+    &:where(ul, ol) {
+      padding-inline-start: 1.5rem;
+    }
+
+    &:where(ul) {
+      list-style-type: disc;
+    }
+
+    &:where(ol) {
+      list-style-type: decimal;
+    }
+
+    &:where(li) {
+      &::marker {
+        color: var(--kumiko-ink-muted);
+      }
+
+      & + :where(li),
+      & > :where(* + *) {
+        margin-block-start: 0.5rem;
+      }
+    }
+
+    &:where(blockquote) {
+      border-inline-start: var(--kumiko-edge-h) solid var(--kumiko-brand);
+      padding-inline-start: 1rem;
+      color: var(--kumiko-ink-muted);
+
+      & > :where(* + *) {
+        margin-block-start: 0.5rem;
+      }
+    }
+
+    &:where(hr) {
+      border: 0;
+      border-block-start: var(--kumiko-border) solid var(--kumiko-line);
+    }
+
+    /* Code reads left to right in every language, and its punctuation must not reorder inside Arabic or Urdu. */
+    &:where(code, pre) {
+      direction: ltr;
+      unicode-bidi: isolate;
+      font-family: var(--kumiko-font-code);
+      background-color: var(--kumiko-surface);
+      border: 1px solid var(--kumiko-line);
+    }
+
+    &:where(code) {
+      border-radius: var(--kumiko-radius-choice);
+      padding-inline: 0.25rem;
+      font-size: 0.875em;
+    }
+
+    /* Code blocks wrap instead of scrolling: a scrolling block would need a tab stop Markdown can't give it. */
+    &:where(pre) {
+      border-radius: var(--kumiko-radius-control);
+      padding: 1rem;
+      font-size: var(--kumiko-text-body-sm);
+      line-height: var(--kumiko-text-body-sm-leading);
+      white-space: pre-wrap;
+      tab-size: 2;
+    }
+
+    &:where(pre code) {
+      border: 0;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    &:where(img, video) {
+      border-radius: var(--kumiko-radius-control);
+    }
+
+    &:where(figcaption) {
+      margin-block-start: 0.5rem;
+      color: var(--kumiko-ink-muted);
+      font-size: var(--kumiko-text-body-sm);
+      line-height: var(--kumiko-text-body-sm-leading);
+    }
+
+    /* For small tables. A wide comparison belongs in Table or DataTable, which scroll and turn into cards. */
+    &:where(table) {
+      inline-size: 100%;
+      border-collapse: collapse;
+      font-size: var(--kumiko-text-body-sm);
+      line-height: var(--kumiko-text-body-sm-leading);
+    }
+
+    &:where(th, td) {
+      padding-block: 0.5rem;
+      padding-inline: 0.75rem;
+      text-align: start;
+      vertical-align: top;
+      border-block-end: 1px solid var(--kumiko-line);
+    }
+
+    &:where(thead th) {
+      vertical-align: bottom;
+      border-block-end: var(--kumiko-border) solid var(--kumiko-control-line);
+    }
+
+    &:where(th) {
+      font-weight: 700;
+    }
+
+    &:where(tbody tr:last-child > *) {
+      border-block-end: 0;
+    }
+  }
+}

@@ -142,6 +142,7 @@ Field is documented with Input, Fieldset with Form, and Spinner with Toast.
 [Card](https://nihalmohammed18.github.io/kumiko/?path=/docs/display-card--docs),
 [EmptyState](https://nihalmohammed18.github.io/kumiko/?path=/docs/display-emptystate--docs),
 [Kbd](https://nihalmohammed18.github.io/kumiko/?path=/docs/display-kbd--docs),
+[Prose](https://nihalmohammed18.github.io/kumiko/?path=/docs/display-prose--docs),
 [Separator](https://nihalmohammed18.github.io/kumiko/?path=/docs/display-separator--docs).
 
 **Data:**
