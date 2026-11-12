@@ -57,7 +57,7 @@ export function StatTile({ label, value, icon, tone = "brand", caption, classNam
       </p>
       <div
         data-slot="stat-tile-value"
-        className="min-w-0 wrap-anywhere font-display text-headline font-bold text-ink tabular-nums"
+        className="min-w-0 wrap-anywhere font-display text-headline font-extrabold text-ink tabular-nums"
       >
         {value}
       </div>

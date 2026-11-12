@@ -131,7 +131,7 @@
   --kumiko-forced-ink: CanvasText;
   --kumiko-forced-surface: Canvas;
   --kumiko-forced-disabled: GrayText;
-  --kumiko-font-display: 'Fredoka Variable', 'Baloo Bhaijaan 2 Variable', ui-rounded, system-ui, sans-serif;
+  --kumiko-font-display: 'Nunito Variable', 'Baloo Bhaijaan 2 Variable', ui-sans-serif, system-ui, sans-serif;
   --kumiko-font-body: 'Nunito Variable', 'Baloo Bhaijaan 2 Variable', ui-sans-serif, system-ui, sans-serif;
   --kumiko-font-code: ui-monospace, 'SF Mono', Menlo, monospace;
   --kumiko-text-caption: 0.75rem;

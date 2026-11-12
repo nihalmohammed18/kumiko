@@ -164,7 +164,7 @@ export function Celebration({
             id={titleId}
             data-slot="celebration-title"
             tabIndex={-1}
-            className="min-w-0 wrap-anywhere font-display text-headline font-bold focus-visible:outline-solid focus-visible:outline-(length:--kumiko-ring-width) focus-visible:outline-offset-(--kumiko-ring-gap) focus-visible:outline-focus"
+            className="min-w-0 wrap-anywhere font-display text-headline font-extrabold focus-visible:outline-solid focus-visible:outline-(length:--kumiko-ring-width) focus-visible:outline-offset-(--kumiko-ring-gap) focus-visible:outline-focus"
           >
             {title}
           </h2>

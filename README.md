@@ -1,7 +1,7 @@
 # Kumiko
 
 Kumiko (`kumiko-ui`) is a playful React component library in the spirit of Duolingo. Buttons press down onto a
-darker edge, type is round and chunky, colours are bright, and three characters, Pip, Mori and Tuck, cheer people on
+darker edge, type is round and easy to read, colours are bright, and three characters, Pip, Mori and Tuck, cheer people on
 when they finish something. It's built on Base UI and Tailwind CSS v4, it's accessible, and it works in dark mode and
 right to left.
 
@@ -47,7 +47,7 @@ Import from JavaScript so the bundler resolves the font files.
 import "kumiko-ui/fonts.css";
 ```
 
-This loads self-hosted Fredoka, Nunito and Baloo Bhaijaan 2. Skip the import if the app already loads these fonts.
+This loads self-hosted Nunito and Baloo Bhaijaan 2, plus Fredoka for apps that opt into it. Skip the import if the app already loads these fonts.
 
 ### 3. Add KumikoProvider
 
@@ -205,8 +205,7 @@ function signInHtml(url: string) {
 - **Images:** mail clients can't show SVG, so the kit ships 13 PNGs of the characters and objects at 2× in
   `node_modules/kumiko-ui/dist/email/art/`. Copy them to your public folder or CDN and pass that base URL to
   `emailArt(name, baseUrl)`. They use Kumiko's default colours; for your own brand, pass any image to `art`.
-- **Fonts:** Gmail and Outlook ignore web fonts and use the fallbacks; Apple devices get Arial Rounded. To load
-  Fredoka and Nunito where a client allows it, pass `fontHref` (Google Fonts or your own CSS). It's off by default
+- **Fonts:** Gmail and Outlook ignore web fonts and use the fallbacks. To load Nunito where a client allows it, pass `fontHref` (Google Fonts or your own CSS). It's off by default
   because a remote font lets its host see when an email is opened.
 - **Your own layouts:** compose `Email`, `EmailCard` with a `hero`, `EmailHero`, `EmailText`, `EmailButton`
   (primary or secondary), `EmailCode`, `EmailChip`, `EmailDivider` and `EmailFooter`. Pass the same `theme` to each

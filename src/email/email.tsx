@@ -15,7 +15,7 @@ export interface EmailProps {
   dir?: "ltr" | "rtl";
   preview: string;
   title: string;
-  /** Optional hosted Fredoka/Nunito CSS; off by default because fetching it can disclose recipient activity. */
+  /** Optional hosted Nunito CSS; off by default because fetching it can disclose recipient activity. */
   fontHref?: string;
   /** Pass these overrides to each coloured part too; themes are explicit props, not inherited context. */
   theme?: Partial<EmailTheme>;

@@ -99,7 +99,7 @@ export function Pagination({
       "aria-current": selected ? ("page" as const) : undefined,
       "data-slot": slot,
       className: cn(
-        "press inline-flex size-control-sm shrink-0 items-center justify-center font-body text-label font-extrabold tabular-nums @md:size-control",
+        "press inline-flex size-control-sm shrink-0 items-center justify-center font-body text-label font-bold tabular-nums @md:size-control",
         selected ? "press-selected underline decoration-2 underline-offset-4" : "press-secondary",
       ),
     };

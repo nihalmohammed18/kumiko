@@ -46,6 +46,18 @@ Nine colour families each come in four parts: the fill (`brand`), the text on th
 Fonts are `--kumiko-font-display`, `--kumiko-font-body` and `--kumiko-font-code`. Radii are
 `--kumiko-radius-control` (buttons and fields), `-card`, `-overlay` and `-pill`.
 
+## A chunkier display face
+
+Headings use Nunito, the same face as body text, at a heavier weight. Fredoka ships with `kumiko-ui/fonts.css` for
+apps that want a rounder, more playful heading. It is drawn for large sizes, so keep it for a few big moments rather
+than every title:
+
+```css
+:root {
+  --kumiko-font-display: "Fredoka Variable", "Baloo Bhaijaan 2 Variable", ui-rounded, system-ui, sans-serif;
+}
+```
+
 ## Check a theme before you ship it
 
 A new brand colour can quietly break contrast: white text on a light teal, or a focus ring that disappears on the

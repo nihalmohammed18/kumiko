@@ -36,7 +36,7 @@ export function Chip({ accent = "brand", children, className, ...props }: ChipPr
       {...props}
       data-slot="chip"
       className={cn(
-        "group/chip press press-secondary [--press-radius:var(--kumiko-radius-pill)] inline-flex min-h-control-sm min-w-0 max-w-full items-center gap-1.5 px-4 font-body text-label font-extrabold focus-visible:transition-none",
+        "group/chip press press-secondary [--press-radius:var(--kumiko-radius-pill)] inline-flex min-h-control-sm min-w-0 max-w-full items-center gap-1.5 px-4 font-body text-label font-bold focus-visible:transition-none",
         accents[accent],
         className,
       )}
