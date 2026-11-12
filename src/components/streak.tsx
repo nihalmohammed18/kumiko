@@ -95,7 +95,7 @@ export function Streak({
         >
           <FlameIcon className="size-full" />
         </span>
-        <p data-slot="streak-label" className="min-w-0 wrap-anywhere font-display text-headline font-bold">
+        <p data-slot="streak-label" className="min-w-0 wrap-anywhere font-display text-headline font-extrabold">
           <span aria-hidden>
             {placeholder < 0 ? "" : template.slice(0, placeholder)}
             {countDisplay ?? <CountUp value={count} />}

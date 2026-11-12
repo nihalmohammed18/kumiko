@@ -33,7 +33,8 @@ Import the fonts once, from JavaScript, so your bundler resolves the files:
 import "kumiko-ui/fonts.css";
 ```
 
-That loads Fredoka (headings), Nunito (text) and Baloo Bhaijaan 2 (Arabic and Urdu), self-hosted from Fontsource.
+That loads Nunito (headings and text) and Baloo Bhaijaan 2 (Arabic and Urdu), self-hosted from Fontsource. Fredoka
+is included for apps that opt into a chunkier display face (see [theming](theming.md)).
 Skip it only if you load the same fonts another way.
 
 ## 3. The root layout

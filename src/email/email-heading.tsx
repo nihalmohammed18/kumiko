@@ -9,7 +9,7 @@ export interface EmailHeadingProps extends EmailPartProps<"h1"> {
   align?: "center" | "start";
 }
 
-/** A Fredoka-first heading with email-safe fallback fonts and token type sizes.
+/** A bold heading with email-safe fallback fonts and token type sizes.
  * Use when: naming an email or its sections. Avoid when: adding supporting body copy; use EmailText.
  *
  * @example

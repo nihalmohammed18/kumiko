@@ -165,11 +165,12 @@ export const art = {
   "calendar-font-weight": 800,
 } as const;
 
-/** Font stacks for display, body and code text.
+/** Font stacks for display, body and code text. Headings use the body face at a heavier weight, so pages read
+ * cleanly; an app that wants a chunkier display face overrides `--kumiko-font-display` (see docs/theming.md).
  * Use when: choosing a type role. Avoid when: assuming these values install the fonts.
  */
 export const fonts = {
-  display: "'Fredoka Variable', 'Baloo Bhaijaan 2 Variable', ui-rounded, system-ui, sans-serif",
+  display: "'Nunito Variable', 'Baloo Bhaijaan 2 Variable', ui-sans-serif, system-ui, sans-serif",
   body: "'Nunito Variable', 'Baloo Bhaijaan 2 Variable', ui-sans-serif, system-ui, sans-serif",
   code: "ui-monospace, 'SF Mono', Menlo, monospace",
 } as const;

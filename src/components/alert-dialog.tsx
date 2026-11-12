@@ -121,7 +121,7 @@ export function AlertDialogTitle({ className, ...props }: AlertDialogTitleProps)
     <BaseAlertDialog.Title
       {...props}
       data-slot="alert-dialog-title"
-      className={cn("min-w-0 shrink-0 font-display text-title font-bold", className)}
+      className={cn("min-w-0 shrink-0 font-display text-title font-extrabold", className)}
     />
   );
 }

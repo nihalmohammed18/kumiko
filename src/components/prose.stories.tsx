@@ -110,7 +110,7 @@ export const Default: Story = {
     await waitFor(() => expect(link).toHaveFocus());
     await waitFor(() => expect(getComputedStyle(link).outlineStyle).toBe("solid"));
     const heading = canvas.getByRole("heading", { level: 2 });
-    expect(getComputedStyle(heading).fontFamily).toContain("Fredoka");
+    expect(getComputedStyle(heading).fontFamily).toContain("Nunito");
     expect(getComputedStyle(heading).marginBlockStart).toBe("32px");
     expect(getComputedStyle(canvas.getByRole("list")).listStyleType).toBe("decimal");
   },

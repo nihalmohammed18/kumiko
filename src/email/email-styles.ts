@@ -1,10 +1,10 @@
 import { email } from "../tokens.ts";
 
-/** Email font stacks with rounded system fallbacks when optional web fonts are unavailable.
+/** Email font stacks with system fallbacks when optional web fonts are unavailable. Headings share the body stack.
  * Use when: styling email text. Avoid when: styling browser UI; use the theme's font utilities.
  */
 export const emailFonts = {
-  display: "Fredoka, 'Arial Rounded MT Bold', Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  display: "Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
   body: "Nunito, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
   plain: "Arial, Helvetica, sans-serif",
 } as const;

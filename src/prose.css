@@ -37,7 +37,7 @@
   & :not(:where([data-slot], & [data-slot] *)) {
     &:where(h1, h2, h3, h4) {
       font-family: var(--kumiko-font-display);
-      font-weight: 700;
+      font-weight: 800;
       text-wrap: balance;
     }
 

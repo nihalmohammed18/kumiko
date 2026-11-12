@@ -23,9 +23,9 @@
  * EmailArtName lists the thirteen shipped images; the ./email/art/* package export exposes the files.
  * The PNGs use Kumiko's default colours and theme overrides do not recolour them; pass any image to art instead.
  *
- * Optional fontHref accepts Google Fonts' Fredoka 600/700 and Nunito 400/700/800 CSS URL or self-hosted CSS,
+ * Optional fontHref accepts Google Fonts' Nunito 400/700/800 CSS URL or self-hosted CSS,
  * and defaults off because remote font requests can disclose recipient activity.
- * Gmail and classic Outlook ignore web fonts; rounded system fonts and Arial remain the fallbacks.
+ * Gmail and classic Outlook ignore web fonts; Segoe UI, Roboto, Helvetica and Arial remain the fallbacks.
  * Outlook may square corners and simplify edges; each button cell retains its fill and padding fallback.
  * PlainEmail uses Arial 15px/22px, white canvas, start alignment and inline underlined links in native HTML children.
  * Branded templates accept art (or null), subline and footer; all English copy is replaceable.

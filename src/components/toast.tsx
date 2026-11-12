@@ -210,7 +210,7 @@ function ToastViewport({ className }: Pick<ToasterProps, "className">) {
                   )}
                 </span>
                 <div className="min-w-0 flex-1 wrap-anywhere">
-                  <BaseToast.Title data-slot="toast-title" className="font-extrabold" />
+                  <BaseToast.Title data-slot="toast-title" className="font-bold" />
                   {item.description != null && <BaseToast.Description data-slot="toast-description" />}
                 </div>
                 {item.actionProps && (

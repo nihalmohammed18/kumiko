@@ -63,7 +63,7 @@ export function Tab({ className, render, ...props }: TabProps) {
     <BaseTabs.Tab
       {...props}
       data-slot="tab"
-      className={cn("tabs-tab font-body text-label font-extrabold", className)}
+      className={cn("tabs-tab font-body text-label font-bold", className)}
       render={(elementProps, state) => {
         // Retain each bar's previous position for transitions; only the selected tab's indicator is visible.
         const tabProps = mergeProps(
